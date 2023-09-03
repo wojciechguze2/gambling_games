@@ -10,10 +10,20 @@ html, body {
   min-height: 100vh;
 }
 
+.min-vh-80 {
+  min-height: 80vh;
+}
+
 .disabled {
   user-select: none !important;
   cursor: not-allowed;
   pointer-events: none;
+}
+
+.footer {
+  .footer-link {
+    text-decoration: none;
+  }
 }
 
 .custom-bg-primary {

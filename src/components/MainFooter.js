@@ -1,7 +1,7 @@
 const MainFooter = () => {
     return (
         <footer
-            className="footer footer-animation custom-bg-primary text-white w-100 mt-auto mb-0"
+            className="footer footer-animation custom-bg-primary text-white text-decoration-none w-100 mt-auto mb-0"
             role="contentinfo"
         >
             <div className="flex-grow-1">

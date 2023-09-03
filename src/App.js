@@ -9,7 +9,7 @@ const App = () => {
   return (
       <div className="wrapper">
         <MainHeader />
-        <main>
+        <main className="min-vh-80 bg-dark text-white" role="main">
             <React.Suspense fallback={<Loader />}>
                 <RouterProvider router={router} />
             </React.Suspense>
