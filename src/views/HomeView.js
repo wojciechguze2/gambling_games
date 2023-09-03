@@ -1,4 +1,4 @@
-import WheelOfFortune from '../components/WheelOfFortune'
+import HomepageSpecial from '../components/HomepageSpecial'
 
 const HomeView = () => {
     return (
@@ -14,14 +14,7 @@ const HomeView = () => {
                     <p className="lead fw-bold fs-5">
                         Nie ma tutaj możliwości wygrania, przegrania prawdziwych pieniędzy.
                     </p>
-                    <WheelOfFortune
-                        colorClass={'bg-primary'}
-                    />
-                    <div className="mt-auto mb-5">
-                        <button className="btn btn-warning btn-lg w-50">
-                            Zagraj
-                        </button>
-                    </div>
+                    <HomepageSpecial />
                 </div>
             </div>
         </div>

@@ -1,55 +1,90 @@
+import React, {Component} from "react";
 import '../styles/wheel-of-fortune.scss';
 
-const WheelOfFortune = ({ colorClass }) => {
-    const choices = [
-        {
-            probability: 20,
-            text: 'Prawdopodobieństwo 20%',
-        },
-        {
-            probability: 30,
-            text: 'Prawdopodobieństwo 30%',
-        },
-        {
-            probability: 20,
-            text: 'Prawdopodobieństwo 20%',
-        },
-        {
-            probability: 20,
-            text: 'Prawdopodobieństwo 20%',
-        },
-        {
-            probability: 10,
-            text: 'Prawdopodobieństwo 10%',
-        },
-    ];
+class WheelOfFortune extends Component {
+    constructor(props) {
+        super(props);
 
-    const totalProbability = choices.reduce((sum, choice) => sum + choice.probability, 0);
+        this.state = {
+            result: null,
+            isSpinning: false,
+            gameId: 1
+        };
+    }
 
-    let currentAngle = 0;
+    async componentDidMount() {
+        const choices = await this.getChoicesData(this.state.gameId);
+        this.setState({ choices });
+    }
 
-    const choiceElements = choices.map((choice, index) => {
-        const angle = (360 * choice.probability) / totalProbability;
-        const rotateStyle = { transform: `rotate(${currentAngle}deg)` };
-        currentAngle += angle;
+    getChoicesData = async (gameId) => {
+        const url = `${process.env.REACT_APP_BACKEND_URL}/api/games/${gameId}`
+        const response = await fetch(url);
+
+        const gameData = await response.json();
+        const choices = gameData['GameValues']
+
+        let currentAngle = 0;
+
+        return choices.map((choice, index) => {
+            const rotate = `rotate(${currentAngle}deg)`;
+            currentAngle += 360 / choices.length;
+
+            return (
+                <div
+                    key={index}
+                    className="wheel-of-fortune--choice"
+                    style={{ transform: rotate, backgroundColor: 'red' }} // todo: choice.color
+                >
+                    {choice.value} {choice.Currency.name}
+                </div>
+            );
+        });
+    };
+
+    getRandomGameResult = async (gameId) => {
+        const url = `${process.env.REACT_APP_BACKEND_URL}/api/games/${gameId}/result`
+        const response = await fetch(url);
+
+        return await response.json();
+    };
+
+    spinWheel = async () => {
+        this.setState({ isSpinning: true });
+
+        try {
+            const result = await this.getRandomGameResult(this.state.gameId);
+
+            setTimeout(() => {
+                this.setState({ result: result, isSpinning: false });
+            }, 10000) // todo: fix animation and add result info
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    render() {
+        const { containerClass, contentClass } = this.props;
+        const { choices, isSpinning } = this.state;
 
         return (
-            <div
-                key={index}
-                className="wheel-of-fortune--choice"
-                style={rotateStyle}
-                data-probability={choice.probability}
-            >
-                {choice.text}
+            <div>
+                <div className={`wheel-of-fortune ${containerClass}`}>
+                    <div className={`wheel-of-fortune--content ${isSpinning ? 'spin' : ''} ${contentClass}`}>
+                        {choices}
+                    </div>
+                </div>
+                <div className="mt-auto mb-5">
+                    <button
+                        className="btn btn-warning btn-lg w-50 text-dark"
+                        onClick={this.spinWheel}
+                    >
+                        Zagraj
+                    </button>
+                </div>
             </div>
         );
-    });
-
-    return (
-        <div className="wheel-of-fortune">
-            <div className={`wheel-of-fortune--content ${colorClass}`}>{choiceElements}</div>
-        </div>
-    );
-};
+    }
+}
 
 export default WheelOfFortune;

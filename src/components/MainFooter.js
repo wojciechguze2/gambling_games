@@ -8,10 +8,10 @@ const MainFooter = () => {
                 <div className="container py-5">
                     <div className="row">
                         <div className="col-md-4 text-center footer-start">
-                            <p className="footer-section-header">
+                            <p className="footer-section-header fs-3">
                                 Informacje
                             </p>
-                            <ul className="list-unstyled">
+                            <ul className="list-unstyled fs-5">
                                 <li>
                                     <a href="/about" className="text-white footer-link">
                                         O stronie
@@ -25,20 +25,20 @@ const MainFooter = () => {
                             </ul>
                         </div>
                         <div className="col-md-4 text-center footer-middle">
-                            <p className="footer-section-header">
+                            <p className="footer-section-header fs-3">
                                 Section 2
                             </p>
-                            <ul className="list-unstyled">
+                            <ul className="list-unstyled fs-5">
                                 <li>
                                     Section 2 el
                                 </li>
                             </ul>
                         </div>
                         <div className="col-md-4 text-center footer-end">
-                            <p className="footer-section-header">
+                            <p className="footer-section-header fs-3">
                                 Section 3
                             </p>
-                            <ul className="list-unstyled">
+                            <ul className="list-unstyled fs-5">
                                 <li>
                                     Section 3 el
                                 </li>

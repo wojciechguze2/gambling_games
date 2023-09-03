@@ -20,6 +20,12 @@ html, body {
   pointer-events: none;
 }
 
+.navbar {
+  .nav-link {
+    color: white;
+  }
+}
+
 .footer {
   .footer-link {
     text-decoration: none;
