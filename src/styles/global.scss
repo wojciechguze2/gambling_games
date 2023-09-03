@@ -1,0 +1,25 @@
+@import 'variables';
+
+html, body {
+  min-height: 100vh;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.disabled {
+  user-select: none !important;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.custom-bg-primary {
+  background-color: $custom-bg-primary;
+}
+
+.custom-bg-primary-light {
+  background-color: $custom-bg-primary-light;
+}
