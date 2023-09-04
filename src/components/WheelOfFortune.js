@@ -27,16 +27,6 @@ class WheelOfFortune extends Component {
         document.documentElement.style.setProperty('--finalAngle', `${this.state.finalAngle}deg`);
     }
 
-    setChoicesData = async (gameId) => {
-        const url = `${process.env.REACT_APP_BACKEND_URL}/api/games/${gameId}`
-        const response = await fetch(url);
-
-        const gameData = await response.json();
-        const choicesData = gameData['GameValues']
-
-        this.setState({ choicesData })
-    }
-
     isGamePlayed = () => {
         return (
             !this.state.isSpinning
@@ -48,6 +38,16 @@ class WheelOfFortune extends Component {
 
     isWinningChoice = (choiceId) => {
         return !this.state.isSpinning && this.state.result && this.state.result.id === choiceId
+    }
+
+    setChoicesData = async (gameId) => {
+        const url = `${process.env.REACT_APP_BACKEND_URL}/api/games/${gameId}`
+        const response = await fetch(url);
+
+        const gameData = await response.json();
+        const choicesData = gameData['GameValues']
+
+        this.setState({ choicesData })
     }
 
     getChoices = () => {
