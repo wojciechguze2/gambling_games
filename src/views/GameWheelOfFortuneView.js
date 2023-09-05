@@ -10,6 +10,7 @@ const GameWheelOfFortuneView = () => {
             <WheelOfFortune
                 containerClass={'m-auto d-inline-flex bg-dark my-5'}
                 contentClass={'custom-bg-primary shadow-lg fw-bold border border-light border-2'}
+                jackpotChoiceClass={'text-danger'}
                 winChoiceClass={'text-warning blink-text fw-bolder'}
                 winIndicatorClass={'active'}
                 playButtonLabel={'Zagraj'}

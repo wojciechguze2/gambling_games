@@ -91,20 +91,23 @@ class WheelOfFortune extends Component {
     }
 
     getChoices = () => {
-        const { winChoiceClass, winChoiceTextAddition } = this.props
+        const { winChoiceClass, winChoiceTextAddition, jackpotChoiceClass } = this.props
         let currentAngle = 0;
 
         return this.state.choicesData.map((choice, index) => {
-            const rotate = `rotate(${currentAngle}deg)`;
-            currentAngle += this.state.circleAngle / this.state.choicesData.length;
+            const rotate = `rotate(${currentAngle}deg)`
+            currentAngle += this.state.circleAngle / this.state.choicesData.length
+
+            const _isWinningChoice = this.isWinningChoice(choice.id)
+            const _isJackpot = !_isWinningChoice && choice.isJackpot
 
             return (
                 <div
                     key={index}
-                    className={`wheel-of-fortune--choice ${this.isWinningChoice(choice.id) ? winChoiceClass : ''}`}
+                    className={`wheel-of-fortune--choice ${_isJackpot ? jackpotChoiceClass : ''} ${_isWinningChoice ? winChoiceClass : ''}`}
                     style={{ transform: rotate }}
                 >
-                    {choice.value} {choice.Currency.name} {this.isWinningChoice(choice.id) ? winChoiceTextAddition : ''}
+                    {choice.value} {choice.Currency.name} {_isWinningChoice ? winChoiceTextAddition : ''}
                 </div>
             );
         });

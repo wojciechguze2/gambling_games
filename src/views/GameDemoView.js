@@ -8,7 +8,8 @@ const GameDemoView = () => {
         <div className="game-demo container text-center">
             <WheelOfFortune
                 containerClass={'m-auto d-inline-flex bg-dark my-5'}
-                contentClass={'custom-bg-primary shadow-lg fs-6 fw-bold border border-light border-2'}
+                contentClass={'custom-bg-primary shadow-lg fw-bold border border-light border-2'}
+                jackpotChoiceClass={'text-danger'}
                 winChoiceClass={'text-warning blink-text fw-bolder'}
                 winIndicatorClass={'active'}
                 playButtonLabel={'Zagraj w demo'}
