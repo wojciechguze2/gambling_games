@@ -50,7 +50,7 @@ const AccountView = () => {
                             Nazwa użytkownika: {user.username}
                         </p>
                         <p className="card-text">
-                            Stan konta: <span className="fw-bold">{user.accountBalance} EuroDachshund</span>
+                            Stan konta: <span className="fw-bold">{user.accountBalance} <span className="text-warning">EuroDachshund</span></span>
                         </p>
                         <p className="card-text">
                             Data utworzenia: {new Date(user.createdAt).toLocaleString()}

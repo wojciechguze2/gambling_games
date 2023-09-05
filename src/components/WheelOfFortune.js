@@ -62,8 +62,6 @@ class WheelOfFortune extends Component {
             const url = 'api/user/account-balance'
             const response = await axios.get(url)
 
-            console.log(response.data)
-
             if (response.status <= 299) {
                 this.props.dispatch({ type: SET_USER_ACCOUNT_BALANCE, payload: response.data })
             }

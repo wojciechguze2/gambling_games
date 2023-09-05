@@ -76,6 +76,7 @@ const RegisterView = () => {
                                 id="username"
                                 name="username"
                                 value={username}
+                                autoComplete="off"
                                 onChange={handleChange}
                             />
                         </div>

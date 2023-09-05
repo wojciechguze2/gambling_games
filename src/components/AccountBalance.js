@@ -43,7 +43,7 @@ const AccountBalance = ({ disabled }) => {
                 ) : (
                     <>
                         <p className="mb-0 d-inline-block">
-                            Stan konta: <span className="fw-bold">{user.accountBalance} EuroDachshund</span>
+                            Stan konta: <span className="fw-bold">{user.accountBalance} <span className="text-warning">EuroDachshund</span></span>
                         </p>
                         {/*
                             <button
