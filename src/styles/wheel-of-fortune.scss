@@ -19,7 +19,15 @@
 .wheel-of-fortune-container {
   display: flex;
 
+  @media (max-width: $mobile-max-width) {
+    margin-top: 5%;
+  }
+
   .wheel-of-fortune-win-indicator {
+    @media (max-width: $mobile-max-width) {
+      display: none !important;
+    }
+
     &:before {
       content: '';
       width: 0;
@@ -48,6 +56,13 @@
       border-radius: 50%;
       display: flex;
       justify-content: center;
+      font-size: 1rem;
+
+      @media (max-width: $mobile-max-width) {
+        width: 90vw;
+        height: 90vw;
+        font-size: 0.7rem;
+      }
     }
 
     &--choice {
@@ -61,7 +76,20 @@
       justify-content: space-between;
       padding-left: 5%;
       padding-right: 5%;
+
+      @media (max-width: $mobile-max-width) {
+        padding-left: 1%;
+        padding-right: 1%;
+      }
     }
+  }
+}
+
+.wheel-of-fortune-alerts {
+  width: 50%;
+
+  @media (max-width: $mobile-max-width) {
+    width: 100%;
   }
 }
 

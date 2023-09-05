@@ -286,13 +286,13 @@ class WheelOfFortune extends Component {
                     </div>
                 </div>
                 <div className="mt-auto mb-5">
-                    <div className="alerts w-50 mx-auto">
+                    <div className="wheel-of-fortune-alerts alerts mx-auto">
                         {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
                         {costMessage && !isDemo && <div className="alert alert-warning">{costMessage}</div>}
                         {winMessage && !isDemo && <div className={`alert alert-${isWin === false ? 'danger' : 'success'}`}>{winMessage}</div>}
                     </div>
                     <button
-                        className={`btn btn-warning btn-lg w-50 text-dark fw-bold my-2 ${isSpinning || isFakeSpinning ? 'disabled' : ''}`}
+                        className={`btn btn-warning play-button btn-lg text-dark fw-bold my-2 ${isSpinning || isFakeSpinning ? 'disabled' : ''}`}
                         onClick={this.fakeSpinWheel}
                         disabled={isSpinning || !this.hasRequiredAccountBalance()}
                     >
