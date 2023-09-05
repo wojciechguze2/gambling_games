@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import axios from '../utils/axiosConfig'
-import {useNavigate} from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+import TopUpAccountButton from '../components/TopUpAccountButton'
 
 const AccountView = () => {
     const [user, setUser] = useState(null)
@@ -33,6 +34,13 @@ const AccountView = () => {
         )
     }
 
+    const handleTopUpChange = (accountBalance) => {
+        setUser((prevUser) => ({
+            ...prevUser,
+            accountBalance: accountBalance,
+        }));
+    }
+
     return (
         <div className="account container my-5">
             {user &&
@@ -49,9 +57,10 @@ const AccountView = () => {
                         <p className="card-text">
                             Nazwa użytkownika: {user.username}
                         </p>
-                        <p className="card-text">
+                        <p className="card-text d-inline-block">
                             Stan konta: <span className="fw-bold">{user.accountBalance} <span className="text-warning">EuroDachshund</span></span>
                         </p>
+                        <TopUpAccountButton handleTopUpChange={handleTopUpChange} additionalClass={"ms-1"} />
                         <p className="card-text">
                             Data utworzenia: {new Date(user.createdAt).toLocaleString()}
                         </p>

@@ -6,6 +6,7 @@ import {
     UPDATE_USER_ACCOUNT_BALANCE
 } from '../types/authTypes'
 import AccountBalance from './AccountBalance'
+import TopUpAccountButton from './TopUpAccountButton'
 
 class WheelOfFortune extends Component {
     constructor(props) {
@@ -55,6 +56,15 @@ class WheelOfFortune extends Component {
 
     isWinningChoice = (choiceId) => {
         return this.state.result && this.state.result.id === choiceId
+    }
+
+    hasRequiredAccountBalance = () => {
+        return this.state.isDemo ? true : this.state.user.accountBalance >= this.state.costValue
+    }
+
+    handleTopUpChange = (accountBalance) => {
+        this.setState({ userAccountBalance: accountBalance })
+        this.props.dispatch({type: SET_USER_ACCOUNT_BALANCE, payload: accountBalance})
     }
 
     setAccountBalance = async () => {
@@ -138,6 +148,10 @@ class WheelOfFortune extends Component {
     }
 
     fakeSpinWheel = async () => {
+        if (!this.hasRequiredAccountBalance()) {
+            return false
+        }
+
         this.setState({
             isFakeSpinning: true,
             result: {},
@@ -177,10 +191,12 @@ class WheelOfFortune extends Component {
             const errorResponse = (err || {}).response
             let errorMessage
 
-            console.error(errorResponse)
-
             if (errorResponse.status === 409) {
                 errorMessage = 'Brak środków na koncie. Doładuj swoje konto'
+
+                if (this.state.user && !this.state.isDemo) {
+                    this.props.dispatch({type: UPDATE_USER_ACCOUNT_BALANCE, payload: +this.state.costValue})
+                }
             } else if (errorResponse.status === 400) {
                 errorMessage = 'Niepoprawne dane wejściowe. Prosimy o kontakt'
             }  else if (errorResponse.status === 404) {
@@ -249,7 +265,7 @@ class WheelOfFortune extends Component {
             costValue,
             currencyName,
             isWin,
-            isDemo
+            isDemo,
         } = this.state;
 
         const costLabel = ' za ' + costValue + ' ' + currencyName
@@ -278,12 +294,13 @@ class WheelOfFortune extends Component {
                     <button
                         className={`btn btn-warning btn-lg w-50 text-dark fw-bold my-2 ${isSpinning || isFakeSpinning ? 'disabled' : ''}`}
                         onClick={this.fakeSpinWheel}
-                        disabled={isSpinning}
+                        disabled={isSpinning || !this.hasRequiredAccountBalance()}
                     >
                         {playButtonLabel}
                         {costLabel && !isDemo ? costLabel : ''}
                     </button>
                     {!isDemo && <AccountBalance disabled={isSpinning || isFakeSpinning}/>}
+                    {!this.hasRequiredAccountBalance() && <TopUpAccountButton handleTopUpChange={this.handleTopUpChange} disabled={isSpinning || isFakeSpinning} />}
                 </div>
             </div>
         );
