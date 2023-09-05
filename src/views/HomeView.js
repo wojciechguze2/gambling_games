@@ -4,6 +4,27 @@ import { useSelector } from 'react-redux';
 const HomeView = () => {
     const user = useSelector(state => state.auth.user)
 
+    const latestGames = [
+        {
+            title: 'Koło fortuny',
+            url: '/game/wheel-of-fortune',
+            description: 'Warto spróbować swojego szczęścia w najnowszej grze "Koło fortuny"! Za zaledwie 20 EuroJamników masz szansę wygrać aż 90 000 EuroJamników. Kręć kołem i zgarniaj doskonałe nagrody!',
+            imageUrl: '/images/homepage/latest-games--wheel-of-fortune.webp',
+        },
+        {
+            title: 'Koło fortuny',
+            url: '/game/wheel-of-fortune',
+            description: 'Warto spróbować swojego szczęścia w najnowszej grze "Koło fortuny"! Za zaledwie 20 EuroJamników masz szansę wygrać aż 90 000 EuroJamników. Kręć kołem i zgarniaj doskonałe nagrody!',
+            imageUrl: '/images/homepage/latest-games--wheel-of-fortune.webp',
+        },
+        {
+            title: 'Koło fortuny',
+            url: '/game/wheel-of-fortune',
+            description: 'Warto spróbować swojego szczęścia w najnowszej grze "Koło fortuny"! Za zaledwie 20 EuroJamników masz szansę wygrać aż 90 000 EuroJamników. Kręć kołem i zgarniaj doskonałe nagrody!',
+            imageUrl: '/images/homepage/latest-games--wheel-of-fortune.webp',
+        },
+    ];
+
     return (
         <div className="homepage">
             <div className="container py-5">
@@ -21,14 +42,33 @@ const HomeView = () => {
                 <div className="text-center my-5">
                     {user ? (
                         <div className="card custom-bg-primary m-5">
+                            <div className="card-header">
+                                <h5 className="card-title">Najnowsze Gry</h5>
+                            </div>
                             <div className="card-body">
-                                <h5 className="card-title fs-5 text-white">
-                                    Witaj, {user.username}!
-                                </h5>
-                                <div>
-                                    <Link to="/logout" className="btn btn-dark mx-2">
-                                        Wyloguj się
-                                    </Link>
+                                <div className="row">
+                                    {latestGames.map((latestGame, index) => (
+                                        <div key={index} className="col-md-4 mb-4">
+                                            <div className="card">
+                                                <img
+                                                    src={latestGame.imageUrl}
+                                                    className="card-img-top"
+                                                    alt={latestGame.title}
+                                                />
+                                                <div className="card-body custom-bg-info">
+                                                    <h5 className="card-title">
+                                                        {latestGame.title}
+                                                    </h5>
+                                                    <p className="card-text">
+                                                        {latestGame.description}
+                                                    </p>
+                                                    <Link to={latestGame.url} className="btn custom-bg-primary border-0 btn-info">
+                                                        Zagraj
+                                                    </Link>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
                                 </div>
                             </div>
                         </div>
