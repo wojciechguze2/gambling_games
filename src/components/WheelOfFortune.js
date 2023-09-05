@@ -6,6 +6,7 @@ class WheelOfFortune extends Component {
         super(props);
 
         this.state = {
+            isDemo: this.props.isDemo || true,
             result: {},
             isFakeSpinning: false,
             isSpinning: false,
@@ -21,7 +22,7 @@ class WheelOfFortune extends Component {
     }
 
     async componentDidMount() {
-        await this.setChoicesData(this.state.gameId)
+        await this.setChoicesData()
 
         document.documentElement.style.setProperty('--startAngle', `${this.state.startAngle}deg`);
         document.documentElement.style.setProperty('--finalAngle', `${this.state.finalAngle}deg`);
@@ -40,8 +41,8 @@ class WheelOfFortune extends Component {
         return !this.state.isSpinning && this.state.result && this.state.result.id === choiceId
     }
 
-    setChoicesData = async (gameId) => {
-        const url = `${process.env.REACT_APP_BACKEND_URL}/api/games/${gameId}`
+    setChoicesData = async () => {
+        const url = `${process.env.REACT_APP_BACKEND_URL}/api/games/${this.state.gameId}`
         const response = await fetch(url);
 
         const gameData = await response.json();
@@ -70,8 +71,8 @@ class WheelOfFortune extends Component {
         });
     };
 
-    getRandomGameResult = async (gameId) => {
-        const url = `${process.env.REACT_APP_BACKEND_URL}/api/games/${gameId}/result`
+    getRandomGameResult = async () => {
+        const url = `${process.env.REACT_APP_BACKEND_URL}/api/games/${this.state.gameId}/${this.state.isDemo ? 'demo' : 'result'}`
         const response = await fetch(url);
 
         return await response.json();
@@ -88,7 +89,7 @@ class WheelOfFortune extends Component {
     spinWheel = async () => {
         this.setState({ isFakeSpinning: false, isSpinning: true });
 
-        const result = await this.getRandomGameResult(this.state.gameId);
+        const result = await this.getRandomGameResult();
         const totalChoices = this.state.choicesData.length;
         const resultIndex = this.state.choicesData.findIndex(choice => choice.id === result.id) + 1;
 
@@ -113,7 +114,7 @@ class WheelOfFortune extends Component {
     }
 
     render() {
-        const { containerClass, contentClass, winIndicatorClass } = this.props;
+        const { containerClass, contentClass, winIndicatorClass, playButtonLabel } = this.props;
         const { isSpinning, isFakeSpinning } = this.state;
 
         return (
@@ -137,7 +138,7 @@ class WheelOfFortune extends Component {
                         onClick={this.fakeSpinWheel}
                         disabled={isSpinning}
                     >
-                        Zagraj
+                        {playButtonLabel}
                     </button>
                 </div>
             </div>

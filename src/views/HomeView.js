@@ -1,4 +1,4 @@
-import HomepageSpecial from '../components/HomepageSpecial'
+import { Link } from 'react-router-dom';
 
 const HomeView = () => {
     return (
@@ -14,7 +14,52 @@ const HomeView = () => {
                     <p className="lead fw-bold fs-5">
                         Nie ma tutaj możliwości wygrania, przegrania prawdziwych pieniędzy.
                     </p>
-                    <HomepageSpecial />
+                </div>
+                <div className="text-center my-5">
+                    <div className="card-deck">
+                        <div className="card custom-bg-primary m-5">
+                            <div className="card-body">
+                                <h5 className="card-title fs-5 text-white">
+                                    Posiadasz już u nas konto?
+                                </h5>
+                                <p className="card-text fs-5 text-white">
+                                    Zaloguj się, aby rozpocząć grę
+                                </p>
+                                <Link to="/login" className="btn btn-dark mx-2">
+                                    Zaloguj się
+                                </Link>
+                            </div>
+                        </div>
+                        <div className="card custom-bg-primary m-5">
+                            <div className="card-body">
+                                <h5 className="card-title fs-5 text-white">
+                                    Nie posiadasz jeszcze konta?
+                                </h5>
+                                <p className="card-text fs-5 text-white">
+                                    Zarejestruj się, aby zdobyć&nbsp;
+                                    <span className="text-warning fw-bold">
+                                        1000 bonusowych Euro Jamników na start!
+                                    </span>
+                                </p>
+                                <Link to="/register" className="btn btn-warning mx-2">
+                                    Zarejestruj się
+                                </Link>
+                            </div>
+                        </div>
+                        <div className="card custom-bg-primary m-5">
+                            <div className="card-body">
+                                <h5 className="card-title fs-5 text-white">
+                                    Nie wiesz na czym polega gra?
+                                </h5>
+                                <p className="card-text fs-5 text-white">
+                                    Wypróbuj wersję DEMO!
+                                </p>
+                                <Link to="/game/demo" className="btn btn-light mx-2">
+                                    Zagraj w DEMO
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

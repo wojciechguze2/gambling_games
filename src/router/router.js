@@ -8,6 +8,13 @@ const router = createBrowserRouter([
             return { Component: HomeView.default }
         },
     },
+    {
+        path: "/game/demo",
+        async lazy() {
+            let GameDemoView = await import('../views/GameDemoView')
+            return { Component: GameDemoView.default }
+        },
+    },
 ]);
 
 export default router
