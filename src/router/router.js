@@ -8,6 +8,7 @@ const LazyGameDemoView = React.lazy(() => import('../views/GameDemoView'))
 const LazyRegisterView = React.lazy(() => import('../views/RegisterView'))
 const LazyLoginView = React.lazy(() => import('../views/LoginView'))
 const LazyLogoutView = React.lazy(() => import('../views/LogoutView'))
+const LazyAccountView = React.lazy(() => import('../views/AccountView'))
 const LazyGameWheelOfFortuneView = React.lazy(() => import('../views/GameWheelOfFortuneView'))
 
 const RoutesConfig = () => {
@@ -20,6 +21,14 @@ const RoutesConfig = () => {
                     <Route path="/register" element={<LazyRegisterView />} />
                     <Route path="/login" element={<LazyLoginView />} />
                     <Route path="/logout" element={<LazyLogoutView />} />
+                    <Route
+                        path="/account"
+                        element={
+                            <ProtectedRoute>
+                                <LazyAccountView />
+                            </ProtectedRoute>
+                        }
+                    />
                     <Route
                         path="/game/wheel-of-fortune"
                         element={

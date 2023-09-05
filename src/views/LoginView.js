@@ -45,11 +45,13 @@ const LoginView = () => {
             if (response.status <= 299) {
                 setSuccess('Zalogowano pomyślnie.')
 
-                const user = await response.data
+                const user = response.data
 
                 dispatch({ type: SET_USER, payload: user })
 
                 navigate('/')
+            } else {
+                navigate('/login')
             }
         } catch (err) {
             const errorResponse = (err || {}).response
