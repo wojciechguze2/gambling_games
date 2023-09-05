@@ -15,6 +15,27 @@ const router = createBrowserRouter([
             return { Component: GameDemoView.default }
         },
     },
+    {
+        path: "/register",
+        async lazy() {
+            let RegisterView = await import('../views/RegisterView')
+            return { Component: RegisterView.default }
+        },
+    },
+    {
+        path: "/login",
+        async lazy() {
+            let LoginView = await import('../views/LoginView')
+            return { Component: LoginView.default }
+        },
+    },
+    {
+        path: "/logout",
+        async lazy() {
+            let LogoutView = await import('../views/LogoutView')
+            return { Component: LogoutView.default }
+        },
+    },
 ]);
 
 export default router

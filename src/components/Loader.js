@@ -1,6 +1,6 @@
 const Loader = () => {
     return (
-        <div>Loading...</div>
+        <div className="spinner-border text-warning" role="status" />
     )
 };
 
