@@ -1,6 +1,9 @@
-import WheelOfFortune from "../components/WheelOfFortune"
+import WheelOfFortune from '../components/WheelOfFortune'
+import { useSelector } from 'react-redux'
 
 const GameDemoView = () => {
+    const user = useSelector(state => state.auth.user)
+
     return (
         <div className="game-demo container text-center">
             <WheelOfFortune
@@ -10,6 +13,7 @@ const GameDemoView = () => {
                 winIndicatorClass={'active'}
                 playButtonLabel={'Zagraj w DEMO'}
                 isDemo={true}
+                user={user}
             />
         </div>
     )

@@ -1,12 +1,12 @@
-import React, {Component} from "react";
-import '../styles/wheel-of-fortune.scss';
+import React, { Component } from 'react'
+import '../styles/wheel-of-fortune.scss'
 
 class WheelOfFortune extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            isDemo: this.props.isDemo || true,
+            isDemo: this.props.isDemo || !this.props.user,
             result: {},
             isFakeSpinning: false,
             isSpinning: false,

@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { encodeRequestValue } from '../utils/securityHelper'
 import Loader from '../components/Loader'
+import { useDispatch } from 'react-redux'
+import { SET_USER } from '../types/authTypes'
 
 const LoginView = () => {
     const [
@@ -12,6 +14,7 @@ const LoginView = () => {
         password: '',
     });
 
+    const dispatch = useDispatch();
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -48,9 +51,9 @@ const LoginView = () => {
             if (response.ok) {
                 setSuccess('Zalogowano pomyślnie.')
 
-                const data = await response.json()
-                const authToken = data.token
-                localStorage.setItem('jwtToken', authToken)
+                const user = await response.json()
+
+                dispatch({ type: SET_USER, payload: user });
 
                 navigate('/');
             } else if (response.status === 401) {

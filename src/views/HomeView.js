@@ -1,6 +1,9 @@
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const HomeView = () => {
+    const user = useSelector(state => state.auth.user)
+
     return (
         <div className="homepage">
             <div className="container py-5">
@@ -16,7 +19,21 @@ const HomeView = () => {
                     </p>
                 </div>
                 <div className="text-center my-5">
-                    <div className="card-deck">
+                    {user ? (
+                        <div className="card custom-bg-primary m-5">
+                            <div className="card-body">
+                                <h5 className="card-title fs-5 text-white">
+                                    Witaj, {user.username}!
+                                </h5>
+                                <div>
+                                    <Link to="/logout" className="btn btn-dark mx-2">
+                                        Wyloguj się
+                                    </Link>
+                                </div>
+                            </div>
+                        </div>
+                    ) : (
+                        <div className="card-deck">
                         <div className="card custom-bg-primary m-5">
                             <div className="card-body">
                                 <h5 className="card-title fs-5 text-white">
@@ -60,6 +77,7 @@ const HomeView = () => {
                             </div>
                         </div>
                     </div>
+                    )}
                 </div>
             </div>
         </div>
