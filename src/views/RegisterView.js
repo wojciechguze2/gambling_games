@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { encodeRequestValue } from '../utils/securityHelper'
-import { useNavigate } from 'react-router-dom'
+import {Link, useNavigate} from 'react-router-dom'
 import Loader from '../components/Loader'
 
 const RegisterView = () => {
@@ -108,6 +108,12 @@ const RegisterView = () => {
                                 <button type="submit" className="btn btn-dark">
                                     Zarejestruj
                                 </button>
+                                <div>
+                                    Posiadasz już konto?
+                                    <Link to="/login" className="text-warning text-decoration-none mx-2">
+                                        Zaloguj się
+                                    </Link>
+                                </div>
                             </>
                         )}
                     </form>

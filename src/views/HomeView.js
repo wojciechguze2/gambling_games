@@ -42,7 +42,7 @@ const HomeView = () => {
                                 <p className="card-text fs-5 text-white">
                                     Zaloguj się, aby rozpocząć grę
                                 </p>
-                                <Link to="/login" className="btn btn-dark mx-2">
+                                <Link to="/login" className="btn btn-light mx-2">
                                     Zaloguj się
                                 </Link>
                             </div>
@@ -69,10 +69,10 @@ const HomeView = () => {
                                     Nie wiesz na czym polega gra?
                                 </h5>
                                 <p className="card-text fs-5 text-white">
-                                    Wypróbuj wersję DEMO!
+                                    Wypróbuj wersję demo!
                                 </p>
-                                <Link to="/game/demo" className="btn btn-light mx-2">
-                                    Zagraj w DEMO
+                                <Link to="/game/demo" className="btn btn-dark mx-2">
+                                    Zagraj w demo
                                 </Link>
                             </div>
                         </div>

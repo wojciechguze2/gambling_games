@@ -73,7 +73,14 @@ class WheelOfFortune extends Component {
 
     getRandomGameResult = async () => {
         const url = `${process.env.REACT_APP_BACKEND_URL}/api/games/${this.state.gameId}/${this.state.isDemo ? 'demo' : 'result'}`
-        const response = await fetch(url);
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+
+        console.log(response)
 
         return await response.json();
     };

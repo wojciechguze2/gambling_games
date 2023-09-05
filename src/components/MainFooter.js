@@ -26,7 +26,7 @@ const MainFooter = () => {
                         </div>
                         <div className="col-md-4 text-center footer-middle">
                             <p className="footer-section-header fs-3">
-                                Section 2
+                                Informacje 2
                             </p>
                             <ul className="list-unstyled fs-5">
                                 <li>
@@ -36,7 +36,7 @@ const MainFooter = () => {
                         </div>
                         <div className="col-md-4 text-center footer-end">
                             <p className="footer-section-header fs-3">
-                                Section 3
+                                Informacje 3
                             </p>
                             <ul className="list-unstyled fs-5">
                                 <li>

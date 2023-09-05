@@ -1,41 +1,37 @@
-import { createBrowserRouter } from 'react-router-dom'
+import React from 'react'
+import ProtectedRoute from '../components/ProtectedRoute'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import Loader from '../components/Loader'
 
-const router = createBrowserRouter([
-    {
-        path: "/",
-        async lazy() {
-            let HomeView = await import('../views/HomeView')
-            return { Component: HomeView.default }
-        },
-    },
-    {
-        path: "/game/demo",
-        async lazy() {
-            let GameDemoView = await import('../views/GameDemoView')
-            return { Component: GameDemoView.default }
-        },
-    },
-    {
-        path: "/register",
-        async lazy() {
-            let RegisterView = await import('../views/RegisterView')
-            return { Component: RegisterView.default }
-        },
-    },
-    {
-        path: "/login",
-        async lazy() {
-            let LoginView = await import('../views/LoginView')
-            return { Component: LoginView.default }
-        },
-    },
-    {
-        path: "/logout",
-        async lazy() {
-            let LogoutView = await import('../views/LogoutView')
-            return { Component: LogoutView.default }
-        },
-    },
-]);
+const LazyHomeView = React.lazy(() => import('../views/HomeView'))
+const LazyGameDemoView = React.lazy(() => import('../views/GameDemoView'))
+const LazyRegisterView = React.lazy(() => import('../views/RegisterView'))
+const LazyLoginView = React.lazy(() => import('../views/LoginView'))
+const LazyLogoutView = React.lazy(() => import('../views/LogoutView'))
+const LazyGameWheelOfFortuneView = React.lazy(() => import('../views/GameWheelOfFortuneView'))
 
-export default router
+const RoutesConfig = () => {
+    return (
+        <React.Suspense fallback={<Loader />}>
+            <BrowserRouter>
+                <Routes>
+                    <Route index element={<LazyHomeView />} />
+                    <Route path="/game/demo" element={<LazyGameDemoView />} />
+                    <Route path="/register" element={<LazyRegisterView />} />
+                    <Route path="/login" element={<LazyLoginView />} />
+                    <Route path="/logout" element={<LazyLogoutView />} />
+                    <Route
+                        path="/game/wheel-of-fortune"
+                        element={
+                            <ProtectedRoute>
+                                <LazyGameWheelOfFortuneView />
+                            </ProtectedRoute>
+                        }
+                    />
+                </Routes>
+            </BrowserRouter>
+        </React.Suspense>
+    );
+};
+
+export default RoutesConfig;

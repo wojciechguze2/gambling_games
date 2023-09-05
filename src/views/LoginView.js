@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import {Link, useNavigate} from 'react-router-dom'
 import { encodeRequestValue } from '../utils/securityHelper'
 import Loader from '../components/Loader'
 import { useDispatch } from 'react-redux'
@@ -113,6 +113,12 @@ const LoginView = () => {
                                 <button type="submit" className="btn btn-dark">
                                     Zaloguj
                                 </button>
+                                <div>
+                                    Nie posiadasz jeszcze konta?
+                                    <Link to="/register" className="text-warning text-decoration-none mx-2">
+                                        Zarejestruj się
+                                    </Link>
+                                </div>
                             </>
                         )}
                     </form>
