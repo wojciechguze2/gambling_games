@@ -6,11 +6,9 @@ const middleware = [
     thunk
 ]
 
-const configureStore = () => {
-    return createStore(
-        rootReducer,
-        applyMiddleware(...middleware)
-    );
-}
+const store = createStore(
+    rootReducer,
+    applyMiddleware(...middleware)
+)
 
-export default configureStore
+export default store

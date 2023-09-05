@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
-import {Link, useNavigate} from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { encodeRequestValue } from '../utils/securityHelper'
 import Loader from '../components/Loader'
 import { useDispatch } from 'react-redux'
 import { SET_USER } from '../types/authTypes'
+import axios from '../utils/axiosConfig'
 
 const LoginView = () => {
     const [
@@ -30,40 +31,36 @@ const LoginView = () => {
         setError(null)
         setSuccess(null)
         setIsLoading(true)
-        const url = `${process.env.REACT_APP_BACKEND_URL}/api/user/login`;
+
+        const url = '/api/user/login';
 
         const postData = {
             username,
             initiallyEncryptedPassword: encodeRequestValue(password)
         };
 
-        const requestOptions = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(postData),
-        };
-
         try {
-            const response = await fetch(url, requestOptions);
+            const response = await axios.post(url, postData)
 
-            if (response.ok) {
+            if (response.status <= 299) {
                 setSuccess('Zalogowano pomyślnie.')
 
-                const user = await response.json()
+                const user = await response.data
 
-                dispatch({ type: SET_USER, payload: user });
+                dispatch({ type: SET_USER, payload: user })
 
-                navigate('/');
-            } else if (response.status === 401) {
+                navigate('/')
+            }
+        } catch (err) {
+            const errorResponse = (err || {}).response
+
+            if (errorResponse.status === 403) {
                 setError('Nieprawidłowe dane logowania. Spróbuj ponownie.');
+            } else if (errorResponse.status === 400) {
+                setError('Wystąpiły błędy podczas walidacji formularza. Sprawdź poprawność wprowadzanych danych.')
             } else {
                 setError('Wystąpiły błędy podczas logowania. Prosimy o kontakt.');
             }
-        } catch (err) {
-            console.error(err);
-            setError('Wystąpiły błędy podczas logowania. Prosimy o kontakt.');
         }
 
         setIsLoading(false)

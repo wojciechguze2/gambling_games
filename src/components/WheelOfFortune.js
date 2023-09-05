@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import '../styles/wheel-of-fortune.scss'
+import axios from '../utils/axiosConfig'
 
 class WheelOfFortune extends Component {
     constructor(props) {
@@ -42,10 +43,12 @@ class WheelOfFortune extends Component {
     }
 
     setChoicesData = async () => {
-        const url = `${process.env.REACT_APP_BACKEND_URL}/api/games/${this.state.gameId}`
-        const response = await fetch(url);
+        const url = `/api/games/${this.state.gameId}`
+        const response = await axios.get(url)
 
-        const gameData = await response.json();
+        // todo: handle error
+
+        const gameData = response.data
         const choicesData = gameData['GameValues']
 
         this.setState({ choicesData })
@@ -73,16 +76,11 @@ class WheelOfFortune extends Component {
 
     getRandomGameResult = async () => {
         const url = `${process.env.REACT_APP_BACKEND_URL}/api/games/${this.state.gameId}/${this.state.isDemo ? 'demo' : 'result'}`
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        });
+        const response = await axios.get(url)
 
-        console.log(response)
+        // todo: handle error
 
-        return await response.json();
+        return response.data
     };
 
     fakeSpinWheel = async () => {

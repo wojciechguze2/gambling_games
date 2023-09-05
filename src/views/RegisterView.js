@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { encodeRequestValue } from '../utils/securityHelper'
-import {Link, useNavigate} from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Loader from '../components/Loader'
+import axios from '../utils/axiosConfig'
 
 const RegisterView = () => {
     const [
@@ -28,37 +29,30 @@ const RegisterView = () => {
         setSuccess(null)
         setIsLoading(true)
 
-        const url = `${process.env.REACT_APP_BACKEND_URL}/api/user/register`
+        const url = '/api/user/register'
 
         const postData = {
             username,
             initiallyEncryptedPassword: encodeRequestValue(password)
         }
 
-        const requestOptions = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(postData)
-        }
-
         try {
-            const response = await fetch(url, requestOptions)
+            const response = await axios.post(url, postData)
 
-            if (response.ok) {
+            if (response.status <= 299) {
                 setSuccess('Konto zostało utworzone pomyślnie. Zostaniesz przekierowany na stronę logowania.')
                 navigate('/login')
-            } else if (response.status === 409) {
+            }
+        } catch (err) {
+            const errorResponse = (err || {}).response
+
+            if (errorResponse.status === 409) {
                 setError('Podany użytkownik już istnieje.')
-            } else if (response.status === 400) {
+            } else if (errorResponse.status === 400) {
                 setError('Wystąpiły błędy podczas walidacji formularza. Sprawdź poprawność wprowadzanych danych.')
             } else {
                 setError('Wystąpiły błędy podczas rejestacji. Prosimy o kontakt.')
             }
-        } catch (err) {
-            console.error(err)
-            setError('Wystąpiły błędy podczas rejestacji. Prosimy o kontakt.')
         }
 
         setIsLoading(false)
