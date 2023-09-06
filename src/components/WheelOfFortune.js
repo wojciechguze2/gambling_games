@@ -73,6 +73,18 @@ class WheelOfFortune extends Component {
 
     changeGameMultiplier = (gameMultiplier) => {
         this.setState({ gameMultiplier })
+        this.resetResult()
+    }
+
+    resetResult = () => {
+        this.setState({
+            result: {},
+            resultCurrencyName: null,
+            winMessage: null,
+            costMessage: null,
+            errorMessage: null,
+            isWin: null
+        });
     }
 
     setAccountBalance = async () => {
@@ -166,15 +178,10 @@ class WheelOfFortune extends Component {
             return false
         }
 
+        this.resetResult()
         this.setState({
             isFakeSpinning: true,
-            result: {},
-            resultCurrencyName: null,
-            winMessage: null,
-            costMessage: null,
-            errorMessage: null,
-            isWin: null
-        });
+        })
 
         if (this.state.user) {
             const { costValue, gameMultiplier } = this.state
@@ -323,7 +330,7 @@ class WheelOfFortune extends Component {
                                 disabled={isSpinning || isFakeSpinning}
                                 handleGameMultiplierChange={this.changeGameMultiplier}
                                 currentMultiplier={gameMultiplier}
-                                availableMultipliers={[1, 2, 5]}
+                                availableMultipliers={[0.5, 1, 2, 5]}
                             />
                         )}
                     </div>
