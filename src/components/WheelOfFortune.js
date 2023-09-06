@@ -7,6 +7,7 @@ import {
 } from '../types/authTypes'
 import AccountBalance from './AccountBalance'
 import TopUpAccountButton from './TopUpAccountButton'
+import GameMultiplier from "./GameMultiplier";
 
 class WheelOfFortune extends Component {
     constructor(props) {
@@ -33,7 +34,8 @@ class WheelOfFortune extends Component {
             costMessage: null,
             winMessage: null,
             isWin: null,
-            userAccountBalance: this.props.user ? this.props.user.accountBalance : null
+            userAccountBalance: this.props.user ? this.props.user.accountBalance : null,
+            gameMultiplier: this.props.initialMultiplier ? this.props.initialMultiplier : 1,
         };
     }
 
@@ -59,12 +61,18 @@ class WheelOfFortune extends Component {
     }
 
     hasRequiredAccountBalance = () => {
-        return this.state.isDemo ? true : this.state.user.accountBalance >= this.state.costValue
+        return this.state.isDemo ? true : (
+            this.state.user.accountBalance >= this.state.costValue * this.state.gameMultiplier
+        )
     }
 
     handleTopUpChange = (accountBalance) => {
         this.setState({ userAccountBalance: accountBalance })
         this.props.dispatch({type: SET_USER_ACCOUNT_BALANCE, payload: accountBalance})
+    }
+
+    changeGameMultiplier = (gameMultiplier) => {
+        this.setState({ gameMultiplier })
     }
 
     setAccountBalance = async () => {
@@ -100,15 +108,16 @@ class WheelOfFortune extends Component {
 
             const _isWinningChoice = this.isWinningChoice(choice.id)
             const _isJackpot = !_isWinningChoice && choice.isJackpot
+            const choiceValue = choice.value * this.state.gameMultiplier
 
             return (
                 <div
                     key={index}
                     className={`wheel-of-fortune--choice ${_isJackpot ? jackpotChoiceClass : ''} ${_isWinningChoice ? winChoiceClass : ''}`}
                     style={{ transform: rotate }}
-                    data-value={choice.value}
+                    data-value={choiceValue}
                 >
-                    {choice.value} {choice.Currency.name} {_isWinningChoice ? winChoiceTextAddition : ''}
+                    {choiceValue} {choice.Currency.name} {_isWinningChoice ? winChoiceTextAddition : ''}
                 </div>
             );
         });
@@ -122,9 +131,10 @@ class WheelOfFortune extends Component {
             return response.data
         } else {
             const url = `/api/games/${this.state.gameId}/result`
-            const { costValue } = this.state;
+            const { costValue, gameMultiplier } = this.state;
             const postData = {
-                costValue
+                costValue: costValue * gameMultiplier,
+                gameMultiplier
             }
             const response = await axios.post(url, postData)
 
@@ -167,9 +177,9 @@ class WheelOfFortune extends Component {
         });
 
         if (this.state.user) {
-            const { costValue } = this.state
+            const { costValue, gameMultiplier } = this.state
 
-            this.props.dispatch({ type: UPDATE_USER_ACCOUNT_BALANCE, payload: -costValue })
+            this.props.dispatch({ type: UPDATE_USER_ACCOUNT_BALANCE, payload: -(costValue * gameMultiplier) })
         }
 
         await new Promise(resolve => setTimeout(resolve, this.state.fakeSpinDelay));
@@ -199,7 +209,10 @@ class WheelOfFortune extends Component {
                 errorMessage = 'Brak środków na koncie. Doładuj swoje konto'
 
                 if (this.state.user && !this.state.isDemo) {
-                    this.props.dispatch({type: UPDATE_USER_ACCOUNT_BALANCE, payload: +this.state.costValue})
+                    this.props.dispatch({
+                        type: UPDATE_USER_ACCOUNT_BALANCE,
+                        payload: +(this.state.costValue * this.state.gameMultiplier)
+                    })
                 }
             } else if (errorResponse.status === 400) {
                 errorMessage = 'Niepoprawne dane wejściowe. Prosimy o kontakt'
@@ -240,8 +253,8 @@ class WheelOfFortune extends Component {
     };
 
     setWheelResult = async (finalAngle) => {
-        const costMessage = 'Zapłacono: ' + this.state.costValue + ' ' + this.state.currencyName
-        const winMessage = 'Wylosowano: ' + this.state.result.value + ' ' + this.state.resultCurrencyName
+        const costMessage = 'Zapłacono: ' + this.state.costValue * this.state.gameMultiplier + ' ' + this.state.currencyName
+        const winMessage = 'Wylosowano: ' + this.state.result.value * this.state.gameMultiplier + ' ' + this.state.resultCurrencyName
 
         this.setState({ contentAngle: finalAngle, isSpinning: false, costMessage, winMessage })
 
@@ -270,9 +283,10 @@ class WheelOfFortune extends Component {
             currencyName,
             isWin,
             isDemo,
+            gameMultiplier
         } = this.state;
 
-        const costLabel = ' za ' + costValue + ' ' + currencyName
+        const costLabel = ' za ' + costValue * gameMultiplier + ' ' + currencyName
 
         return (
             <div>
@@ -295,15 +309,29 @@ class WheelOfFortune extends Component {
                         {costMessage && !isDemo && <div className="alert alert-warning">{costMessage}</div>}
                         {winMessage && !isDemo && <div className={`alert alert-${isWin === false ? 'danger' : 'success'}`}>{winMessage}</div>}
                     </div>
-                    <button
-                        className={`btn btn-warning play-button btn-lg text-dark fw-bold my-2 ${isSpinning || isFakeSpinning ? 'disabled' : ''}`}
-                        onClick={this.fakeSpinWheel}
-                        disabled={isSpinning || !this.hasRequiredAccountBalance()}
-                    >
-                        {playButtonLabel}
-                        {costLabel && !isDemo ? costLabel : ''}
-                    </button>
-                    {!isDemo && <AccountBalance disabled={isSpinning || isFakeSpinning}/>}
+                    <div className="wheel-of-fortune-game-buttons">
+                        <button
+                            className={`btn btn-warning play-button btn-lg text-dark fw-bold my-2 ${isSpinning || isFakeSpinning ? 'disabled' : ''}`}
+                            onClick={this.fakeSpinWheel}
+                            disabled={isSpinning || !this.hasRequiredAccountBalance()}
+                        >
+                            {playButtonLabel}
+                            {costLabel && !isDemo ? costLabel : ''}
+                        </button>
+                        {!isDemo && (
+                            <GameMultiplier
+                                disabled={isSpinning || isFakeSpinning}
+                                handleGameMultiplierChange={this.changeGameMultiplier}
+                                currentMultiplier={gameMultiplier}
+                                availableMultipliers={[1, 2, 5]}
+                            />
+                        )}
+                    </div>
+                    {!isDemo && (
+                        <AccountBalance
+                            disabled={isSpinning || isFakeSpinning}
+                        />
+                    )}
                     {!this.hasRequiredAccountBalance() && <TopUpAccountButton handleTopUpChange={this.handleTopUpChange} disabled={isSpinning || isFakeSpinning} />}
                 </div>
             </div>

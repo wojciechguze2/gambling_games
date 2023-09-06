@@ -77,7 +77,7 @@ const AccountView = () => {
                                     <th>Data gry</th>
                                     <th>Koszt (EuroDachshund)</th>
                                     <th>Wygrana</th>
-                                    <th>Waluta wygranej</th>
+                                    <th>Mnożnik</th>
                                     <th>Wynik</th>
                                 </tr>
                             </thead>
@@ -87,9 +87,9 @@ const AccountView = () => {
                                         <td>{history.id}</td>
                                         <td>{history.Game.name}</td>
                                         <td>{new Date(history.playDate).toLocaleString()}</td>
-                                        <td>{history.costBaseValue}</td>
-                                        <td>{history.winBaseValue}</td>
-                                        <td>{history.Currency.name}</td>
+                                        <td>{history.costBaseValue * history.gameMultiplier}</td>
+                                        <td>{history.winBaseValue * history.gameMultiplier} <span className="text-warning">{history.Currency.name}</span></td>
+                                        <td>x{history.gameMultiplier}</td>
                                         <td className={`fw-bold text-${getHistoryResultClass(history)}`}>
                                             {getHistoryResultMessage(history)}
                                         </td>

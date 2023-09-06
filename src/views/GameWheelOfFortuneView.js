@@ -17,6 +17,7 @@ const GameWheelOfFortuneView = () => {
                 isDemo={false}
                 user={user}
                 dispatch={dispatch}
+                initialMultiplier={1}
             />
         </div>
     )
