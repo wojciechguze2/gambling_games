@@ -20,9 +20,29 @@ html, body {
   pointer-events: none;
 }
 
-.navbar {
-  .nav-link {
-    color: white;
+.main-header {
+  .navbar-brand {
+    font-size: calc(1.3rem + 0.25vw);
+
+    @media (max-width: $mobile-max-width) {
+      font-size: calc(0.5rem + 3vw);
+    }
+  }
+
+  .navbar {
+    .nav-link {
+      color: white;
+    }
+
+    @media (max-width: $mobile-max-width) {
+      .navbar-right {
+        .btn {
+          width: 100%;
+          padding-left: 3px;
+          padding-right: 3px;
+        }
+      }
+    }
   }
 }
 

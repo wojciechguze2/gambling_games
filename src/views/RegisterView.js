@@ -41,7 +41,10 @@ const RegisterView = () => {
 
             if (response.status <= 299) {
                 setSuccess('Konto zostało utworzone pomyślnie. Zostaniesz przekierowany na stronę logowania.')
-                navigate('/login')
+
+                setTimeout(() => {
+                    navigate('/login')
+                }, 1000)
             }
         } catch (err) {
             const errorResponse = (err || {}).response
@@ -99,7 +102,12 @@ const RegisterView = () => {
                         ) : (
                             <>
                                 {error && <div className="alert alert-danger">{error}</div>}
-                                {success && <div className="alert alert-success">{success}</div>}
+                                {success && (
+                                    <div className="alert alert-success">
+                                        <p>{success}</p>
+                                        <Loader />
+                                    </div>
+                                )}
                                 <button type="submit" className="btn btn-dark">
                                     Zarejestruj
                                 </button>

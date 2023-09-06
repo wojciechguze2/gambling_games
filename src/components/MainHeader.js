@@ -4,7 +4,7 @@ const MainHeader = () => {
     const user = useSelector(state => state.auth.user)
 
     return (
-        <header>
+        <header className={"main-header"}>
             <nav className="navbar navbar-inverse navbar-expand-lg navbar-light custom-bg-primary">
                 <div className="container">
                     <button
@@ -19,7 +19,7 @@ const MainHeader = () => {
                         <span className="navbar-toggler-icon"></span>
                     </button>
                     <div className="navbar-header">
-                        <a href="/" className="navbar-brand text-white fs-3 fw-bold">
+                        <a href="/" className="navbar-brand text-white fw-bold">
                             EuroDachshund
                         </a>
                     </div>

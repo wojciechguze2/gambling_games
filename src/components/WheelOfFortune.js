@@ -106,6 +106,7 @@ class WheelOfFortune extends Component {
                     key={index}
                     className={`wheel-of-fortune--choice ${_isJackpot ? jackpotChoiceClass : ''} ${_isWinningChoice ? winChoiceClass : ''}`}
                     style={{ transform: rotate }}
+                    data-value={choice.value}
                 >
                     {choice.value} {choice.Currency.name} {_isWinningChoice ? winChoiceTextAddition : ''}
                 </div>

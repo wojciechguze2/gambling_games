@@ -8,19 +8,19 @@ const HomeView = () => {
         {
             title: 'Koło fortuny',
             url: '/game/wheel-of-fortune',
-            description: 'Warto spróbować swojego szczęścia w najnowszej grze "Koło fortuny"! Za zaledwie 20 EuroJamników masz szansę wygrać aż 90 000 EuroJamników. Kręć kołem i zgarniaj doskonałe nagrody!',
+            description: 'Warto spróbować swojego szczęścia w najnowszej grze "Koło fortuny"! Za zaledwie 100 EuroJamników masz szansę wygrać aż 50 000 EuroJamników. Kręć kołem i zgarniaj doskonałe nagrody!',
             imageUrl: '/images/homepage/latest-games--wheel-of-fortune.webp',
         },
         {
             title: 'Koło fortuny',
             url: '/game/wheel-of-fortune',
-            description: 'Warto spróbować swojego szczęścia w najnowszej grze "Koło fortuny"! Za zaledwie 20 EuroJamników masz szansę wygrać aż 90 000 EuroJamników. Kręć kołem i zgarniaj doskonałe nagrody!',
+            description: 'Warto spróbować swojego szczęścia w najnowszej grze "Koło fortuny"! Za zaledwie 100 EuroJamników masz szansę wygrać aż 50 000 EuroJamników. Kręć kołem i zgarniaj doskonałe nagrody!',
             imageUrl: '/images/homepage/latest-games--wheel-of-fortune.webp',
         },
         {
             title: 'Koło fortuny',
             url: '/game/wheel-of-fortune',
-            description: 'Warto spróbować swojego szczęścia w najnowszej grze "Koło fortuny"! Za zaledwie 20 EuroJamników masz szansę wygrać aż 90 000 EuroJamników. Kręć kołem i zgarniaj doskonałe nagrody!',
+            description: 'Warto spróbować swojego szczęścia w najnowszej grze "Koło fortuny"! Za zaledwie 100 EuroJamników masz szansę wygrać aż 50 000 EuroJamników. Kręć kołem i zgarniaj doskonałe nagrody!',
             imageUrl: '/images/homepage/latest-games--wheel-of-fortune.webp',
         },
     ];

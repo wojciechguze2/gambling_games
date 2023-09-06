@@ -24,20 +24,23 @@
   }
 
   .wheel-of-fortune-win-indicator {
-    @media (max-width: $mobile-max-width) {
-      display: none !important;
-    }
-
     &:before {
       content: '';
       width: 0;
       height: 0;
-      margin-top: -5vh !important;
       border-style: dashed;
+      margin-top: -5vh;
       border-left: 19vw solid rgb(35, 39, 43);
       border-top: 5vh solid transparent;
       border-bottom: 5vh solid transparent;
       position: absolute;
+
+      @media (max-width: $mobile-max-width) {
+        margin-top: -1.25vh;
+        border-left: 8vw solid rgb(35, 39, 43);
+        border-top: 1.25vh solid transparent;
+        border-bottom: 1.25vh solid transparent;
+      }
     }
 
     &.active {
@@ -59,9 +62,9 @@
       font-size: 1rem;
 
       @media (max-width: $mobile-max-width) {
-        width: 90vw;
-        height: 90vw;
-        font-size: 0.7rem;
+        width: 75vw;
+        height: 75vw;
+        font-size: calc(1rem - 1.4vw);
       }
     }
 
@@ -78,8 +81,9 @@
       padding-right: 5%;
 
       @media (max-width: $mobile-max-width) {
-        padding-left: 1%;
-        padding-right: 1%;
+        width: 94%;
+        padding-left: 0;
+        font-size: 2.5vw;
       }
     }
   }
