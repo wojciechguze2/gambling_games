@@ -4,11 +4,15 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Loader from '../components/Loader'
 
 const LazyHomeView = React.lazy(() => import('../views/HomeView'))
-const LazyGameDemoView = React.lazy(() => import('../views/GameDemoView'))
+
+// user
 const LazyRegisterView = React.lazy(() => import('../views/RegisterView'))
 const LazyLoginView = React.lazy(() => import('../views/LoginView'))
 const LazyLogoutView = React.lazy(() => import('../views/LogoutView'))
 const LazyAccountView = React.lazy(() => import('../views/AccountView'))
+
+// games
+const LazyGameDemoView = React.lazy(() => import('../views/GameDemoView'))
 const LazyGameWheelOfFortuneView = React.lazy(() => import('../views/GameWheelOfFortuneView'))
 
 const RoutesConfig = () => {

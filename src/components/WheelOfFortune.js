@@ -7,7 +7,7 @@ import {
 } from '../types/authTypes'
 import AccountBalance from './AccountBalance'
 import TopUpAccountButton from './TopUpAccountButton'
-import GameMultiplier from "./GameMultiplier";
+import GameMultiplier from './GameMultiplier'
 
 class WheelOfFortune extends Component {
     constructor(props) {
@@ -260,8 +260,12 @@ class WheelOfFortune extends Component {
     };
 
     setWheelResult = async (finalAngle) => {
-        const costMessage = 'Zapłacono: ' + this.state.costValue * this.state.gameMultiplier + ' ' + this.state.currencyName
-        const winMessage = 'Wylosowano: ' + this.state.result.value * this.state.gameMultiplier + ' ' + this.state.resultCurrencyName
+        const costMessage = (
+            'Zapłacono: ' + this.state.costValue * this.state.gameMultiplier + ' ' + this.state.currencyName
+        )
+        const winMessage = (
+            'Wylosowano: ' + this.state.result.value * this.state.gameMultiplier + ' ' + this.state.resultCurrencyName
+        )
 
         this.setState({ contentAngle: finalAngle, isSpinning: false, costMessage, winMessage })
 
@@ -312,9 +316,15 @@ class WheelOfFortune extends Component {
                 </div>
                 <div className="mt-auto mb-5">
                     <div className="wheel-of-fortune-alerts alerts mx-auto">
-                        {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
-                        {costMessage && !isDemo && <div className="alert alert-warning">{costMessage}</div>}
-                        {winMessage && !isDemo && <div className={`alert alert-${isWin === false ? 'danger' : 'success'}`}>{winMessage}</div>}
+                        {errorMessage && (
+                            <div className="alert alert-danger">{errorMessage}</div>
+                        )}
+                        {costMessage && !isDemo && (
+                            <div className="alert alert-warning">{costMessage}</div>
+                        )}
+                        {winMessage && !isDemo && (
+                            <div className={`alert alert-${isWin === false ? 'danger' : 'success'}`}>{winMessage}</div>
+                        )}
                     </div>
                     <div className="wheel-of-fortune-game-buttons">
                         <button
@@ -339,7 +349,12 @@ class WheelOfFortune extends Component {
                             disabled={isSpinning || isFakeSpinning}
                         />
                     )}
-                    {!this.hasRequiredAccountBalance() && <TopUpAccountButton handleTopUpChange={this.handleTopUpChange} disabled={isSpinning || isFakeSpinning} />}
+                    {!this.hasRequiredAccountBalance() && (
+                        <TopUpAccountButton
+                            handleTopUpChange={this.handleTopUpChange}
+                            disabled={isSpinning || isFakeSpinning}
+                        />
+                    )}
                 </div>
             </div>
         );
