@@ -4,7 +4,7 @@ import axios from '../utils/axiosConfig'
 import { SET_USER_ACCOUNT_BALANCE } from '../types/authTypes'
 import Loader from './Loader'
 
-const AccountBalance = ({ disabled, handleTopUpChange, additionalClass = '' }) => {
+const TopUpAccountButton = ({ disabled, handleTopUpChange, additionalClass = '' }) => {
     const user = useSelector(state => state.auth.user)
     const dispatch = useDispatch()
     const [isLoading, setLoading] = useState(false)
@@ -58,4 +58,4 @@ const AccountBalance = ({ disabled, handleTopUpChange, additionalClass = '' }) =
     );
 };
 
-export default AccountBalance;
+export default TopUpAccountButton;
