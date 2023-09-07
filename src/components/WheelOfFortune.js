@@ -119,49 +119,24 @@ class WheelOfFortune extends AbstractLotteryComponent {
     spinWheel = async () => {
         this.setState({ isFakeSpinning: false, isSpinning: true });
 
-        let result,
-            resultCurrencyName,
-            isWin,
-            userAccountBalance
+        const data = await this.getRandomGameResult()
 
-        try {
-            const response = await this.getRandomGameResult()
-            result = response.result
-            resultCurrencyName = response.currencyName
-            isWin = response.isWin
-            userAccountBalance = response.userAccountBalance
-        } catch (err) {
-            const errorResponse = (err || {}).response
-            let errorMessage
-
-            if (errorResponse.status === 409) {
-                errorMessage = 'Brak środków na koncie. Doładuj swoje konto'
-
-                if (this.state.user && !this.state.isDemo) {
-                    this.props.dispatch({
-                        type: UPDATE_USER_ACCOUNT_BALANCE,
-                        payload: +(this.state.costValue * this.state.gameMultiplierValue)
-                    })
-                }
-            } else if (errorResponse.status === 400) {
-                errorMessage = 'Niepoprawne dane wejściowe. Prosimy o kontakt'
-            }  else if (errorResponse.status === 404) {
-                errorMessage = 'Gra jest obecnie niedostępna.'
-            } else {
-                console.error(errorResponse)
-                errorMessage = 'Wystąpił błąd. Prosimy o kontakt.'
-            }
-
-            this.setError(errorMessage)
-
+        if (!data) {
             return null
         }
 
-        if (!result) {
+        if (!data.result) {
             this.setError()
 
             return null
         }
+
+        const {
+            result,
+            resultCurrencyName,
+            isWin,
+            userAccountBalance
+        } = data
 
         const totalChoices = this.state.gameValuesData.length;
         const resultIndex = this.state.gameValuesData.findIndex(choice => choice.id === result.id) + 1;

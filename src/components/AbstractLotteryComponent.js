@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import axios from '../utils/axiosConfig'
 import {
-    SET_USER_ACCOUNT_BALANCE
+    SET_USER_ACCOUNT_BALANCE,
+    UPDATE_USER_ACCOUNT_BALANCE
 } from '../types/authTypes'
 
 
@@ -59,23 +60,50 @@ class AbstractLotteryComponent extends Component {
     }
 
     getRandomGameResult = async () => {
-        if (this.state.isDemo) {
-            const url = `/api/games/${this.state.gameId}/demo`
-            const response = await axios.get(url)
+        try {
+            if (this.state.isDemo) {
+                const url = `/api/games/${this.state.gameId}/demo`
+                const response = await axios.get(url)
 
-            return response.data
-        } else {
-            const url = `/api/games/${this.state.gameId}/result`
-            const { costValue, gameMultiplierValue } = this.state
-            const postData = {
-                costValue: costValue * gameMultiplierValue,
-                gameMultiplier: gameMultiplierValue
+                return response.data
+            } else {
+                const url = `/api/games/${this.state.gameId}/result`
+                const {costValue, gameMultiplierValue} = this.state
+                const postData = {
+                    costValue: costValue * gameMultiplierValue,
+                    gameMultiplier: gameMultiplierValue
+                }
+
+                const response = await axios.post(url, postData)
+
+                return response.data
+            }
+        } catch (err) {
+            const errorResponse = (err || {}).response
+            let errorMessage
+
+            if (errorResponse.status === 409) {
+                errorMessage = 'Brak środków na koncie. Doładuj swoje konto'
+
+                if (this.state.user && !this.state.isDemo) {
+                    this.props.dispatch({
+                        type: UPDATE_USER_ACCOUNT_BALANCE,
+                        payload: +(this.state.costValue * this.state.gameMultiplierValue)
+                    })
+                }
+            } else if (errorResponse.status === 400) {
+                errorMessage = 'Niepoprawne dane wejściowe. Prosimy o kontakt'
+            }  else if (errorResponse.status === 404) {
+                errorMessage = 'Gra jest obecnie niedostępna.'
+            } else {
+                console.error(errorResponse)
+                errorMessage = 'Wystąpił błąd. Prosimy o kontakt.'
             }
 
-            const response = await axios.post(url, postData)
-
-            return response.data
+            this.setState({ errorMessage })
         }
+
+        return false
     };
 
 
