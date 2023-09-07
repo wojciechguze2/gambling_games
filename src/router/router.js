@@ -14,6 +14,7 @@ const LazyAccountView = React.lazy(() => import('../views/AccountView'))
 // games
 const LazyGameDemoView = React.lazy(() => import('../views/GameDemoView'))
 const LazyGameWheelOfFortuneView = React.lazy(() => import('../views/GameWheelOfFortuneView'))
+const LazyGameNumberLotteryView = React.lazy(() => import('../views/GameNumberLotteryView'))
 
 const RoutesConfig = () => {
     return (
@@ -38,6 +39,14 @@ const RoutesConfig = () => {
                         element={
                             <ProtectedRoute>
                                 <LazyGameWheelOfFortuneView />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/game/number-lottery"
+                        element={
+                            <ProtectedRoute>
+                                <LazyGameNumberLotteryView />
                             </ProtectedRoute>
                         }
                     />
