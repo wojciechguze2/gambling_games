@@ -1,14 +1,37 @@
-$circle-width: 50px;
+@import 'lottery';
+
+$circle-sm-width: 50px;
+$circle-md-width: 125px;
 $numbers-count: 6;
 $select-numbers-container-min-height: calc(300px + 300px);
 
-.max-circle-width {
-  max-width: $circle-width;
+@keyframes hide-element {
+  0% {
+    opacity: 1;
+    transform: scaleX(1) scaleY(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scaleX(0) scaleY(0);
+  }
 }
 
-.circle-sm {
-  width: $circle-width;
-  height: $circle-width;
+@keyframes show-element {
+  0% {
+    opacity: 0;
+    transform: scaleX(0) scaleY(0);
+  }
+  100% {
+    opacity: 1;
+    transform: scaleX(1) scaleY(1);
+  }
+}
+
+.max-circle-width {
+  max-width: $circle-sm-width;
+}
+
+.circle {
   border-radius: 50%;
   display: flex;
   justify-content: center;
@@ -16,28 +39,68 @@ $select-numbers-container-min-height: calc(300px + 300px);
   cursor: pointer;
   margin: 5px;
   font-weight: bold;
+  
+  &.circle-sm {
+    width: $circle-sm-width;
+    height: $circle-sm-width;
+  }
+
+  &.circle-md {
+    width: $circle-md-width;
+    height: $circle-md-width;
+  }
 }
 
 .number-lottery-picker {
   display: flex;
 
-  &--selected-numbers,
-  &--select-numbers {
+  &--selected-numbers--container,
+  &--select-numbers--container {
     height: $select-numbers-container-min-height;
     border: 1px solid white;
   }
 
-  &--select-numbers {
+  &--select-numbers--container {
     width: 90%;
     padding-left: 20%;
     padding-right: 20%;
 
-    .select-number {}
+    .select-numbers {
+      opacity: 1;
+
+      &.hidden {
+        animation: hide-element 1s ease-in forwards;
+      }
+
+      .select-number {}
+    }
+
+    .result-numbers {
+      animation: show-element 1.5s ease-out forwards;
+
+      .result-number {
+        margin: 30px;
+        flex-direction: column;
+        align-items: center;
+
+        &--number {
+          font-size: 20px;
+          font-weight: bold;
+        }
+
+        &--value,
+        &--currency {
+          font-size: 12px;
+        }
+      }
+    }
   }
 
-  &--selected-numbers {
+  &--selected-numbers--container {
     width: 10%;
 
-    .selected-number {}
+    .selected-numbers {
+      .selected-number {}
+    }
   }
 }

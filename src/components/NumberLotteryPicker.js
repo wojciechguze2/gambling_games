@@ -1,51 +1,78 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
-const NumberLotteryPicker = ({ requiredSelectedNumbersCount = 6, availableNumbersCount = 50 }) => {
-    const [selectedNumbers, setSelectedNumbers] = useState([])
-
-    const selectNumber = (number) => {
-        setSelectedNumbers([...selectedNumbers, number])
-    }
-
-    const unSelectNumber = (number) => {
-        setSelectedNumbers(selectedNumbers.filter((n) => n !== number))
-    }
+const NumberLotteryPicker = (props) => {
+    const {
+        availableNumbersCount,
+        selectedNumbers,
+        isLotteryRunning,
+        handleNumberClick,
+        resultNumbers,
+        resultCurrencyName
+    } = props
 
     const getAvailableNumbers = () => {
         return Array.from({ length: availableNumbersCount }, (_, index) => index + 1)
     }
 
-    const handleNumberClick = (number) => {
-        const isNumberSelected = selectedNumbers.includes(number)
+    const isSelectedNumber = (selectedNumbers, number) => {
+        return selectedNumbers.includes(number)
+    }
 
-        if (isNumberSelected) {
-            unSelectNumber(number)
-        } else if (selectedNumbers.length < requiredSelectedNumbersCount) {
-            selectNumber(number)
-        } else { // selectedNumbers.length >= requiredSelectedNumbersCount
-            // requiredSelectedNumbersCount has been achieved
-        }
+    const isAvailableNumber = (availableNumbers, number) => {
+        return availableNumbers.includes(number)
+    }
+
+    const isResultNumber = (availableNumbers, resultNumbers, number) => {
+        return (
+            resultNumbers
+            && resultNumbers.some(result => result.number === number)
+            && (!availableNumbers || isAvailableNumber(availableNumbers, number))
+        )
     }
 
     const numbers = getAvailableNumbers()
+    const [isSelectNumbersHidden, hideSelectNumbers] = useState(false)
+    const [isResultNumbersVisible, showResultNumbers] = useState(false)
+    const [isResultSelectedNumbersMarked, markResultSelectedNumbers] = useState(false)
+
+    useEffect(() => {
+        if (isLotteryRunning && resultNumbers) {
+            hideSelectNumbers(true)
+            setTimeout(() => {
+                showResultNumbers(true)
+
+                setTimeout(() => {
+                    markResultSelectedNumbers(true)
+                }, 1500)
+            }, 1000)
+        } else {
+            hideSelectNumbers(false)
+            showResultNumbers(false)
+        }
+    }, [isLotteryRunning, resultNumbers])
 
     return (
         <div className="number-lottery-picker">
-            <div className="number-lottery-picker--selected-numbers d-flex">
-                <div className="m-auto max-circle-width">
+            <div className="number-lottery-picker--selected-numbers--container d-flex">
+                <div className="m-auto max-circle-width selected-numbers">
                     {selectedNumbers.map((number) => (
-                        <div key={number} className="selected-number circle-sm bg-warning d-inline-flex">{number}</div>
+                        <div
+                            key={number}
+                            className={`selected-number circle circle-sm d-inline-flex ${isResultSelectedNumbersMarked && isResultNumber(numbers, resultNumbers, number) ? 'bg-warning' : 'custom-bg-info'}`}
+                        >
+                            {number}
+                        </div>
                     ))}
                 </div>
             </div>
-            <div className="number-lottery-picker--select-numbers d-flex">
-                <div className="m-auto">
+            <div className="number-lottery-picker--select-numbers--container d-flex">
+                <div className={`m-auto select-numbers ${isSelectNumbersHidden ? 'hidden' : ''} ${isResultNumbersVisible ? 'd-none' : ''}`}>
                     {
                         numbers.map((number) => (
                             <div
-                                key={+number}
+                                key={number}
                                 className={
-                                `select-number d-inline-flex circle-sm ${selectedNumbers.includes(number) ? 'bg-warning' : 'custom-bg-primary'}`}
+                                `select-number d-inline-flex circle circle-sm ${isSelectedNumber(selectedNumbers, number) ? 'custom-bg-info' : 'custom-bg-primary'}`}
                                 onClick={() => handleNumberClick(number)}
                             >
                                 {number}
@@ -53,6 +80,22 @@ const NumberLotteryPicker = ({ requiredSelectedNumbersCount = 6, availableNumber
                         ))
                     }
                 </div>
+                {isResultNumbersVisible && (
+                    <div className={`m-auto result-numbers show`}>
+                        {
+                            resultNumbers.map((number) => (
+                                <div
+                                    key={number.number}
+                                    className={`result-number d-inline-flex circle circle-md bg-warning ${isResultSelectedNumbersMarked && isSelectedNumber(selectedNumbers, number.number) ? 'blink-text' : ''}`}
+                                >
+                                    <span className="result-number--number">{number.number}</span>
+                                    <span className="result-number--value text-success">{number.value}</span>
+                                    <span className="result-number--currency text-success">{resultCurrencyName}</span>
+                                </div>
+                            ))
+                        }
+                    </div>
+                )}
             </div>
         </div>
     );

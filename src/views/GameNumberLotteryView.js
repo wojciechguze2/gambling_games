@@ -9,12 +9,11 @@ const GameNumberLotteryView = () => {
         <div className="game game--number-lottery-container container text-center my-5">
             <NumberLottery
                 gameCode={'number-lottery'}
-                playButtonLabel={''}
                 isDemo={false}
                 user={user}
                 dispatch={dispatch}
                 initialMultiplier={1}
-                initialNumbersCount={6}
+                requiredSelectedNumbersCount ={6}
             />
         </div>
     )
