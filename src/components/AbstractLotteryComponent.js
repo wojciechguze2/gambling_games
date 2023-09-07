@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import '../styles/wheel-of-fortune.scss'
 import axios from '../utils/axiosConfig'
 import {
     SET_USER_ACCOUNT_BALANCE
