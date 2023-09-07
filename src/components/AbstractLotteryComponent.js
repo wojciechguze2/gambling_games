@@ -13,8 +13,6 @@ class AbstractLotteryComponent extends Component {
         this.state = {
             isLoading: false,
             isWin: null,
-            hasPlayedGame: false,
-            isPlayingGame: false,
             gameId: null,
             gameValuesData: [],
             result: {},

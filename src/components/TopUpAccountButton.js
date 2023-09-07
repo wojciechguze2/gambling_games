@@ -48,6 +48,7 @@ const AccountBalance = ({ disabled, handleTopUpChange, additionalClass = '' }) =
                 <button
                     className={`top-up-account-button btn btn-sm btn-success ${additionalClass}`}
                     onClick={topUpAccount}
+                    disabled={disabled}
                 >
                     Doładuj
                 </button>
