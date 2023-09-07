@@ -22,14 +22,12 @@ class NumberLottery extends AbstractLotteryComponent {
             isDemo: props.isDemo || !props.user,
             gameCode: props.gameCode,
             ...super.state,
+            numbersCount: props.initialNumbersCount || 6
         };
     }
 
     async componentDidMount() {
         await this.lotteryComponentDidMount()
-
-        document.documentElement.style.setProperty('--startAngle', `${this.state.startAngle}deg`);
-        document.documentElement.style.setProperty('--finalAngle', `${this.state.finalAngle}deg`);
     }
 
     setError = (errorMessage = null) => {
@@ -43,7 +41,8 @@ class NumberLottery extends AbstractLotteryComponent {
     }
 
     render() {
+
     }
 }
 
-export default NumberLottery;
+export default NumberLottery
