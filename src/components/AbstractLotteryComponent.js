@@ -27,6 +27,13 @@ class AbstractLotteryComponent extends Component {
         };
     }
 
+    lotteryComponentDidMount = async () => {
+        this.setState({ isLoading: true })
+        await this.setGameData()
+        await this.setAccountBalance()
+        this.setState({ isLoading: false })
+    }
+
     setGameData = async () => {
         const gameCode = this.props.gameCode
 

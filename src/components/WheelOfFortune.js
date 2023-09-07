@@ -34,10 +34,7 @@ class WheelOfFortune extends AbstractLotteryComponent {
     }
 
     async componentDidMount() {
-        this.setState({ isLoading: true })
-        await this.setGameData()
-        await this.setAccountBalance()
-        this.setState({ isLoading: false })
+        await this.lotteryComponentDidMount()
 
         document.documentElement.style.setProperty('--startAngle', `${this.state.startAngle}deg`);
         document.documentElement.style.setProperty('--finalAngle', `${this.state.finalAngle}deg`);
