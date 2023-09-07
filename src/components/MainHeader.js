@@ -1,7 +1,27 @@
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { useEffect } from 'react'
+import { SET_GAMES } from '../types/gameTypes'
+import axios from '../utils/axiosConfig'
 
 const MainHeader = () => {
     const user = useSelector(state => state.auth.user)
+    const gamesData = useSelector(state => state.games)
+
+    // todo: consider moving api calls to separate dir/file f.e service/games.js
+    const getGames = () => async (dispatch) => {
+        const url = 'api/games'
+        const response = await axios.get(url)
+
+        dispatch({ type: SET_GAMES, payload: response.data })
+    }
+
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (!gamesData || !gamesData.games) {
+            dispatch(getGames());
+        }
+    }, [])
 
     return (
         <header className={"main-header"}>
@@ -39,11 +59,13 @@ const MainHeader = () => {
                                             Zagraj
                                         </button>
                                         <ul className="dropdown-menu" aria-labelledby="games-dropdown">
-                                            <li>
-                                                <a className="dropdown-item" href="/game/wheel-of-fortune">
-                                                    Koło fortuny
-                                                </a>
-                                            </li>
+                                            {gamesData.games.map(game => (
+                                                <li key={game.id}>
+                                                    <a className="dropdown-item" href={`/game/${game.code}`}>
+                                                        {game.name}
+                                                    </a>
+                                                </li>
+                                            ))}
                                         </ul>
                                     </li>
                                 </>
