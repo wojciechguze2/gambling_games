@@ -1,14 +1,7 @@
 import React from 'react'
-import '../styles/wheel-of-fortune.scss'
-import {
-    SET_USER_ACCOUNT_BALANCE,
-    UPDATE_USER_ACCOUNT_BALANCE
-} from '../types/authTypes'
-import AccountBalance from './AccountBalance'
-import TopUpAccountButton from './TopUpAccountButton'
-import GameMultiplier from './GameMultiplier'
-import Loader from './Loader'
+import '../styles/number-lottery.scss'
 import AbstractLotteryComponent from './AbstractLotteryComponent'
+import NumberLotteryPicker from './NumberLotteryPicker'
 
 
 class NumberLottery extends AbstractLotteryComponent {
@@ -41,7 +34,11 @@ class NumberLottery extends AbstractLotteryComponent {
     }
 
     render() {
-
+        return (
+            <div>
+                <NumberLotteryPicker />
+            </div>
+        )
     }
 }
 
