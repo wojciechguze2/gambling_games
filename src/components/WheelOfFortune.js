@@ -70,6 +70,15 @@ class WheelOfFortune extends AbstractLotteryComponent {
         });
     };
 
+    hasPlayedGame = () => {
+        return (
+            !this.state.isSpinning
+            && !this.state.isFakeSpinning
+            && this.state.result
+            && this.state.result.id
+        )
+    }
+
     setError = (errorMessage = null) => {
         if (!errorMessage) {
             errorMessage = 'Wystąpił niezidentyfikowany błąd. Prosimy o kontakt.'
@@ -208,8 +217,7 @@ class WheelOfFortune extends AbstractLotteryComponent {
             winMessage,
             costValue,
             currencyName,
-            gameMultiplierValue,
-            hasGamePlayed
+            gameMultiplierValue
         } = this.state;
 
         const costLabel = ' za ' + costValue * gameMultiplierValue + ' ' + currencyName
@@ -220,7 +228,7 @@ class WheelOfFortune extends AbstractLotteryComponent {
                     <>
                         <div className="wheel-of-fortune-container">
                             <div
-                                className={`wheel-of-fortune-win-indicator my-auto d-inline-flex ${hasGamePlayed ? winIndicatorClass : '' }`}
+                                className={`wheel-of-fortune-win-indicator my-auto d-inline-flex ${this.hasPlayedGame() ? winIndicatorClass : '' }`}
                             />
                             <div className={`wheel-of-fortune ${containerClass}`}>
                                 <div
