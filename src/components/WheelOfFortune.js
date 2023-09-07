@@ -1,6 +1,5 @@
-import React, { Component } from 'react'
+import React from 'react'
 import '../styles/wheel-of-fortune.scss'
-import axios from '../utils/axiosConfig'
 import {
     SET_USER_ACCOUNT_BALANCE,
     UPDATE_USER_ACCOUNT_BALANCE
@@ -9,38 +8,28 @@ import AccountBalance from './AccountBalance'
 import TopUpAccountButton from './TopUpAccountButton'
 import GameMultiplier from './GameMultiplier'
 import Loader from './Loader'
+import AbstractLotteryComponent from './AbstractLotteryComponent'
 
 
-// todo: consider creating abstract game component
-class WheelOfFortune extends Component {
+class WheelOfFortune extends AbstractLotteryComponent {
     constructor(props) {
-        super(props);
+        super(props)
 
         this.state = {
-            gameCode: 'wheel-of-fortune',
-            currencyName: null,
-            costValue: null,
-            gameId: null,
-            user: this.props.user,
-            result: {},
-            resultCurrencyName: null,
-            isDemo: this.props.isDemo || !this.props.user,
-            isLoading: true,
+            user: props.user,
+            gameMultiplierValue: props.initialMultiplier || 1,
+            userAccountBalance: props.user ? props.user.accountBalance : null,
+            isDemo: props.isDemo || !props.user,
+            gameCode: props.gameCode,
+            ...super.state,
             isFakeSpinning: false,
             isSpinning: false,
-            isWin: null,
-            choicesData: [],
             startAngle: 0,
             finalAngle: 0,
             contentAngle: 0,
             circleAngle: 360,
             fakeSpinDelay: 900,
             spinDelay: 4950,
-            errorMessage: null,
-            costMessage: null,
-            winMessage: null,
-            userAccountBalance: this.props.user ? this.props.user.accountBalance : null,
-            gameMultiplier: this.props.initialMultiplier ? this.props.initialMultiplier : 1,
         };
     }
 
@@ -54,87 +43,22 @@ class WheelOfFortune extends Component {
         document.documentElement.style.setProperty('--finalAngle', `${this.state.finalAngle}deg`);
     }
 
-    isGamePlayed = () => {
-        return (
-            !this.state.isSpinning
-            && !this.state.isFakeSpinning
-            && this.state.result
-            && this.state.result.id
-        )
-    }
-
-    isWinningChoice = (choiceId) => {
-        return this.state.result && this.state.result.id === choiceId
-    }
-
-    hasRequiredAccountBalance = () => {
-        return this.state.isDemo ? true : (
-            this.state.user.accountBalance >= this.state.costValue * this.state.gameMultiplier
-        )
-    }
-
-    handleTopUpChange = (accountBalance) => {
-        this.setState({ userAccountBalance: accountBalance })
-        this.props.dispatch({type: SET_USER_ACCOUNT_BALANCE, payload: accountBalance})
-    }
-
-    changeGameMultiplier = (gameMultiplier) => {
-        this.setState({ gameMultiplier })
-        this.resetResult()
-    }
-
-    resetResult = () => {
-        this.setState({
-            result: {},
-            resultCurrencyName: null,
-            winMessage: null,
-            costMessage: null,
-            errorMessage: null,
-            isWin: null
-        });
-    }
-
-    setAccountBalance = async () => {
-        if (this.state.user) {
-            const url = 'api/user/account-balance'
-            const response = await axios.get(url)
-
-            if (response.status <= 299) {
-                this.props.dispatch({ type: SET_USER_ACCOUNT_BALANCE, payload: response.data })
-            }
-        }
-    }
-
-    setGameData = async () => {
-        const url = `/api/games/${this.state.gameCode}`
-        const response = await axios.get(url)
-
-        const game = response.data.game
-
-        const gameId = game.id
-        const choicesData = game.GameValues
-        const costValue = response.data.costValue
-        const currencyName = response.data.currencyName
-
-        await this.setState({ gameId, choicesData, costValue, currencyName })
-    }
-
     getChoices = () => {
         const { winChoiceClass, winChoiceTextAddition, jackpotChoiceClass } = this.props
-        const { circleAngle, choicesData, gameMultiplier } = this.state
+        const { circleAngle, gameValuesData, gameMultiplierValue } = this.state
         let currentAngle = 0;
 
-        if (!choicesData || !choicesData.length) {
+        if (!gameValuesData || !gameValuesData.length) {
             return <Loader />
         }
 
-        return choicesData.map((choice, index) => {
+        return gameValuesData.map((choice, index) => {
             const rotate = `rotate(${currentAngle}deg)`
-            currentAngle += circleAngle / choicesData.length
+            currentAngle += circleAngle / gameValuesData.length
 
-            const _isWinningChoice = this.isWinningChoice(choice.id)
+            const _isWinningChoice = this.isWinningGameValue(choice.id)
             const _isJackpot = !_isWinningChoice && choice.isJackpot
-            const choiceValue = choice.value * gameMultiplier
+            const choiceValue = choice.value * gameMultiplierValue
 
             return (
                 <div
@@ -149,30 +73,12 @@ class WheelOfFortune extends Component {
         });
     };
 
-    getRandomGameResult = async () => {
-        if (this.state.isDemo) {
-            const url = `/api/games/${this.state.gameId}/demo`
-            const response = await axios.get(url)
-
-            return response.data
-        } else {
-            const url = `/api/games/${this.state.gameId}/result`
-            const { costValue, gameMultiplier } = this.state;
-            const postData = {
-                costValue: costValue * gameMultiplier,
-                gameMultiplier
-            }
-            const response = await axios.post(url, postData)
-
-            return response.data
-        }
-    };
-
     setError = (errorMessage = null) => {
         if (!errorMessage) {
             errorMessage = 'Wystąpił niezidentyfikowany błąd. Prosimy o kontakt.'
         }
 
+        this.resetResult()
         this.setState({
             errorMessage,
             contentAngle: 0,
@@ -180,11 +86,7 @@ class WheelOfFortune extends Component {
             finalAngle: 0,
             isSpinning: false,
             isFakeSpinning: false,
-            resultCurrencyName: null,
-            costMessage: null,
-            winMessage: null,
-            isWin: null
-        });
+        })
     }
 
     fakeSpinWheel = async () => {
@@ -198,9 +100,9 @@ class WheelOfFortune extends Component {
         })
 
         if (this.state.user) {
-            const { costValue, gameMultiplier } = this.state
+            const { costValue, gameMultiplierValue } = this.state
 
-            this.props.dispatch({ type: UPDATE_USER_ACCOUNT_BALANCE, payload: -(costValue * gameMultiplier) })
+            this.props.dispatch({ type: UPDATE_USER_ACCOUNT_BALANCE, payload: -(costValue * gameMultiplierValue) })
         }
 
         await new Promise(resolve => setTimeout(resolve, this.state.fakeSpinDelay));
@@ -217,7 +119,7 @@ class WheelOfFortune extends Component {
             userAccountBalance
 
         try {
-            const response = await this.getRandomGameResult();
+            const response = await this.getRandomGameResult()
             result = response.result
             resultCurrencyName = response.currencyName
             isWin = response.isWin
@@ -232,7 +134,7 @@ class WheelOfFortune extends Component {
                 if (this.state.user && !this.state.isDemo) {
                     this.props.dispatch({
                         type: UPDATE_USER_ACCOUNT_BALANCE,
-                        payload: +(this.state.costValue * this.state.gameMultiplier)
+                        payload: +(this.state.costValue * this.state.gameMultiplierValue)
                     })
                 }
             } else if (errorResponse.status === 400) {
@@ -255,8 +157,8 @@ class WheelOfFortune extends Component {
             return null
         }
 
-        const totalChoices = this.state.choicesData.length;
-        const resultIndex = this.state.choicesData.findIndex(choice => choice.id === result.id) + 1;
+        const totalChoices = this.state.gameValuesData.length;
+        const resultIndex = this.state.gameValuesData.findIndex(choice => choice.id === result.id) + 1;
 
         const finalAngle = (
             this.state.circleAngle * 10 // for prettier animation
@@ -275,10 +177,10 @@ class WheelOfFortune extends Component {
 
     setWheelResult = async (finalAngle) => {
         const costMessage = (
-            'Zapłacono: ' + this.state.costValue * this.state.gameMultiplier + ' ' + this.state.currencyName
+            'Zapłacono: ' + this.state.costValue * this.state.gameMultiplierValue + ' ' + this.state.currencyName
         )
         const winMessage = (
-            'Wylosowano: ' + this.state.result.value * this.state.gameMultiplier + ' ' + this.state.resultCurrencyName
+            'Wylosowano: ' + this.state.result.value * this.state.gameMultiplierValue + ' ' + this.state.resultCurrencyName
         )
 
         this.setState({ contentAngle: finalAngle, isSpinning: false, costMessage, winMessage })
@@ -309,10 +211,11 @@ class WheelOfFortune extends Component {
             winMessage,
             costValue,
             currencyName,
-            gameMultiplier
+            gameMultiplierValue,
+            hasGamePlayed
         } = this.state;
 
-        const costLabel = ' za ' + costValue * gameMultiplier + ' ' + currencyName
+        const costLabel = ' za ' + costValue * gameMultiplierValue + ' ' + currencyName
 
         return (
             <div>
@@ -320,7 +223,7 @@ class WheelOfFortune extends Component {
                     <>
                         <div className="wheel-of-fortune-container">
                             <div
-                                className={`wheel-of-fortune-win-indicator my-auto d-inline-flex ${this.isGamePlayed() ? winIndicatorClass : '' }`}
+                                className={`wheel-of-fortune-win-indicator my-auto d-inline-flex ${hasGamePlayed ? winIndicatorClass : '' }`}
                             />
                             <div className={`wheel-of-fortune ${containerClass}`}>
                                 <div
@@ -356,7 +259,7 @@ class WheelOfFortune extends Component {
                                     <GameMultiplier
                                         disabled={isSpinning || isFakeSpinning}
                                         handleGameMultiplierChange={this.changeGameMultiplier}
-                                        currentMultiplier={gameMultiplier}
+                                        currentMultiplier={gameMultiplierValue}
                                         availableMultipliers={[0.5, 1, 2, 5]}
                                     />
                                 )}

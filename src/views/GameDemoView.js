@@ -7,6 +7,7 @@ const GameDemoView = () => {
     return (
         <div className="game-demo container text-center">
             <WheelOfFortune
+                gameCode={'wheel-of-fortune'}
                 containerClass={'m-auto d-inline-flex bg-dark my-5'}
                 contentClass={'custom-bg-primary shadow-lg fw-bold border border-light border-2'}
                 jackpotChoiceClass={'text-danger'}
