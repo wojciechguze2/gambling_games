@@ -8,21 +8,27 @@ import {
 import AccountBalance from './AccountBalance'
 import TopUpAccountButton from './TopUpAccountButton'
 import GameMultiplier from './GameMultiplier'
+import Loader from './Loader'
 
+
+// todo: consider creating abstract game component
 class WheelOfFortune extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
+            gameCode: 'wheel-of-fortune',
             currencyName: null,
             costValue: null,
-            gameId: 1,
-            isDemo: this.props.isDemo || !this.props.user,
+            gameId: null,
             user: this.props.user,
             result: {},
             resultCurrencyName: null,
+            isDemo: this.props.isDemo || !this.props.user,
+            isLoading: true,
             isFakeSpinning: false,
             isSpinning: false,
+            isWin: null,
             choicesData: [],
             startAngle: 0,
             finalAngle: 0,
@@ -33,15 +39,16 @@ class WheelOfFortune extends Component {
             errorMessage: null,
             costMessage: null,
             winMessage: null,
-            isWin: null,
             userAccountBalance: this.props.user ? this.props.user.accountBalance : null,
             gameMultiplier: this.props.initialMultiplier ? this.props.initialMultiplier : 1,
         };
     }
 
     async componentDidMount() {
+        this.setState({ isLoading: true })
         await this.setGameData()
         await this.setAccountBalance()
+        this.setState({ isLoading: false })
 
         document.documentElement.style.setProperty('--startAngle', `${this.state.startAngle}deg`);
         document.documentElement.style.setProperty('--finalAngle', `${this.state.finalAngle}deg`);
@@ -99,28 +106,35 @@ class WheelOfFortune extends Component {
     }
 
     setGameData = async () => {
-        const url = `/api/games/${this.state.gameId}`
+        const url = `/api/games/${this.state.gameCode}`
         const response = await axios.get(url)
 
         const game = response.data.game
-        const choicesData = game['GameValues']
+
+        const gameId = game.id
+        const choicesData = game.GameValues
         const costValue = response.data.costValue
         const currencyName = response.data.currencyName
 
-        this.setState({ choicesData, costValue, currencyName })
+        await this.setState({ gameId, choicesData, costValue, currencyName })
     }
 
     getChoices = () => {
         const { winChoiceClass, winChoiceTextAddition, jackpotChoiceClass } = this.props
+        const { circleAngle, choicesData, gameMultiplier } = this.state
         let currentAngle = 0;
 
-        return this.state.choicesData.map((choice, index) => {
+        if (!choicesData || !choicesData.length) {
+            return <Loader />
+        }
+
+        return choicesData.map((choice, index) => {
             const rotate = `rotate(${currentAngle}deg)`
-            currentAngle += this.state.circleAngle / this.state.choicesData.length
+            currentAngle += circleAngle / choicesData.length
 
             const _isWinningChoice = this.isWinningChoice(choice.id)
             const _isJackpot = !_isWinningChoice && choice.isJackpot
-            const choiceValue = choice.value * this.state.gameMultiplier
+            const choiceValue = choice.value * gameMultiplier
 
             return (
                 <div
@@ -287,13 +301,14 @@ class WheelOfFortune extends Component {
         const {
             isSpinning,
             isFakeSpinning,
+            isWin,
+            isDemo,
+            isLoading,
             errorMessage,
             costMessage,
             winMessage,
             costValue,
             currencyName,
-            isWin,
-            isDemo,
             gameMultiplier
         } = this.state;
 
@@ -301,61 +316,66 @@ class WheelOfFortune extends Component {
 
         return (
             <div>
-                <div className="wheel-of-fortune-container">
-                    <div
-                        className={`wheel-of-fortune-win-indicator my-auto d-inline-flex ${this.isGamePlayed() ? winIndicatorClass : '' }`}
-                    />
-                    <div className={`wheel-of-fortune ${containerClass}`}>
-                        <div
-                            className={`wheel-of-fortune--content ${isSpinning ? 'spin' : ''} ${isFakeSpinning ? 'fake-spin' : ''} ${contentClass}`}
-                            style={{transform: `rotate(${this.state.contentAngle}deg)`}}
-                        >
-                            {this.getChoices()}
-                        </div>
-                    </div>
-                </div>
-                <div className="mt-auto mb-5">
-                    <div className="wheel-of-fortune-alerts alerts mx-auto">
-                        {errorMessage && (
-                            <div className="alert alert-danger">{errorMessage}</div>
-                        )}
-                        {costMessage && !isDemo && (
-                            <div className="alert alert-warning">{costMessage}</div>
-                        )}
-                        {winMessage && !isDemo && (
-                            <div className={`alert alert-${isWin === false ? 'danger' : 'success'}`}>{winMessage}</div>
-                        )}
-                    </div>
-                    <div className="wheel-of-fortune-game-buttons">
-                        <button
-                            className={`btn btn-warning play-button btn-lg text-dark fw-bold my-2 ${isSpinning || isFakeSpinning ? 'disabled' : ''}`}
-                            onClick={this.fakeSpinWheel}
-                            disabled={isSpinning || !this.hasRequiredAccountBalance()}
-                        >
-                            {playButtonLabel}
-                            {costLabel && !isDemo ? costLabel : ''}
-                        </button>
-                        {!isDemo && (
-                            <GameMultiplier
-                                disabled={isSpinning || isFakeSpinning}
-                                handleGameMultiplierChange={this.changeGameMultiplier}
-                                currentMultiplier={gameMultiplier}
-                                availableMultipliers={[0.5, 1, 2, 5]}
+                {isLoading ? <Loader/> : (
+                    <>
+                        <div className="wheel-of-fortune-container">
+                            <div
+                                className={`wheel-of-fortune-win-indicator my-auto d-inline-flex ${this.isGamePlayed() ? winIndicatorClass : '' }`}
                             />
-                        )}
-                    </div>
-                    {!isDemo && (
-                        <AccountBalance
-                            disabled={isSpinning || isFakeSpinning}
-                        />
-                    )}
-                    {!this.hasRequiredAccountBalance() && (
-                        <TopUpAccountButton
-                            handleTopUpChange={this.handleTopUpChange}
-                            disabled={isSpinning || isFakeSpinning}
-                        />
-                    )}
-                </div>
+                            <div className={`wheel-of-fortune ${containerClass}`}>
+                                <div
+                                    className={`wheel-of-fortune--content ${isSpinning ? 'spin' : ''} ${isFakeSpinning ? 'fake-spin' : ''} ${contentClass}`}
+                                    style={{transform: `rotate(${this.state.contentAngle}deg)`}}
+                                >
+                                    {this.getChoices()}
+                                </div>
+                            </div>
+                        </div>
+                        <div className="mt-auto mb-5">
+                            <div className="wheel-of-fortune-alerts alerts mx-auto">
+                                {errorMessage && (
+                                    <div className="alert alert-danger">{errorMessage}</div>
+                                )}
+                                {costMessage && !isDemo && (
+                                    <div className="alert alert-warning">{costMessage}</div>
+                                )}
+                                {winMessage && !isDemo && (
+                                    <div className={`alert alert-${isWin === false ? 'danger' : 'success'}`}>{winMessage}</div>
+                                )}
+                            </div>
+                            <div className="wheel-of-fortune-game-buttons">
+                                <button
+                                    className={`btn btn-warning play-button btn-lg text-dark fw-bold my-2 ${isSpinning || isFakeSpinning ? 'disabled' : ''}`}
+                                    onClick={this.fakeSpinWheel}
+                                    disabled={isSpinning || !this.hasRequiredAccountBalance()}
+                                >
+                                    {playButtonLabel}
+                                    {costLabel && !isDemo ? costLabel : ''}
+                                </button>
+                                {!isDemo && (
+                                    <GameMultiplier
+                                        disabled={isSpinning || isFakeSpinning}
+                                        handleGameMultiplierChange={this.changeGameMultiplier}
+                                        currentMultiplier={gameMultiplier}
+                                        availableMultipliers={[0.5, 1, 2, 5]}
+                                    />
+                                )}
+                            </div>
+                            {!isDemo && (
+                                <AccountBalance
+                                    disabled={isSpinning || isFakeSpinning}
+                                />
+                            )}
+                            {!this.hasRequiredAccountBalance() && (
+                                <TopUpAccountButton
+                                    handleTopUpChange={this.handleTopUpChange}
+                                    disabled={isSpinning || isFakeSpinning}
+                                />
+                            )}
+                        </div>
+                    </>
+                )}
+
             </div>
         );
     }
