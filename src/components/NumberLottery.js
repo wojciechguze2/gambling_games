@@ -109,7 +109,7 @@ class NumberLottery extends AbstractLotteryComponent {
             return resultNumbers.some(resultNumber => resultNumber.number === number)
         }
 
-        while (resultNumbers.length < resultNumbersCount) {
+        while (resultNumbers.length < resultNumbersCount) { // todo: fix maximum stack exceeded bug
             const number = Math.floor(Math.random() * availableNumbersCount) + 1
             const value = Math.floor(Math.random() * resultValue) + 1
 
