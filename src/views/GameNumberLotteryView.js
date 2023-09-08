@@ -13,7 +13,7 @@ const GameNumberLotteryView = () => {
                 user={user}
                 dispatch={dispatch}
                 initialMultiplier={1}
-                requiredSelectedNumbersCount ={6}
+                requiredSelectedNumbersCount={6}
             />
         </div>
     )

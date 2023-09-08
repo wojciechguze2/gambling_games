@@ -7,7 +7,8 @@ const NumberLotteryPicker = (props) => {
         isLotteryRunning,
         handleNumberClick,
         resultNumbers,
-        resultCurrencyName
+        resultCurrencyName,
+        gameMultiplierValue
     } = props
 
     const getAvailableNumbers = () => {
@@ -80,8 +81,8 @@ const NumberLotteryPicker = (props) => {
                         ))
                     }
                 </div>
-                {isResultNumbersVisible && (
-                    <div className={`m-auto result-numbers show`}>
+                {isResultNumbersVisible && resultNumbers && (
+                    <div className="m-auto result-numbers show">
                         {
                             resultNumbers.map((number) => (
                                 <div
@@ -89,7 +90,7 @@ const NumberLotteryPicker = (props) => {
                                     className={`result-number d-inline-flex circle circle-md bg-warning ${isResultSelectedNumbersMarked && isSelectedNumber(selectedNumbers, number.number) ? 'blink-text' : ''}`}
                                 >
                                     <span className="result-number--number">{number.number}</span>
-                                    <span className="result-number--value text-success">{number.value}</span>
+                                    <span className="result-number--value text-success">{number.value * gameMultiplierValue}</span>
                                     <span className="result-number--currency text-success">{resultCurrencyName}</span>
                                 </div>
                             ))

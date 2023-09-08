@@ -133,8 +133,8 @@ class WheelOfFortune extends AbstractLotteryComponent {
 
         const {
             result,
-            resultCurrencyName,
             isWin,
+            currencyName,
             userAccountBalance
         } = data
 
@@ -147,7 +147,7 @@ class WheelOfFortune extends AbstractLotteryComponent {
             + (this.state.circleAngle / totalChoices)  // it's single choice angle
         );
 
-        this.setState({result, resultCurrencyName, finalAngle, isWin, userAccountBalance})
+        this.setState({result, resultCurrencyName: currencyName, finalAngle, isWin, userAccountBalance})
         document.documentElement.style.setProperty('--startAngle', `0deg`);
         document.documentElement.style.setProperty('--finalAngle', `${finalAngle}deg`);
 
