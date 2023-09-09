@@ -60,6 +60,7 @@ const NumberLotteryPicker = (props) => {
                         <div
                             key={number}
                             className={`selected-number circle circle-sm d-inline-flex ${isResultSelectedNumbersMarked && isResultNumber(numbers, resultNumbers, number) ? 'bg-warning' : 'custom-bg-info'}`}
+                            onClick={() => handleNumberClick(number)}
                         >
                             {number}
                         </div>

@@ -288,10 +288,24 @@ class NumberLottery extends AbstractLotteryComponent {
         } = this.state
 
         const costLabel = ' za ' + costValue * gameMultiplierValue + ' ' + currencyName
+        const jackpotValue = this.getJackpotValue()
 
         return (
             <div>
-                <h3>Wybierz {requiredSelectedNumbersCount} liczb aby rozpocząć losowanie.</h3>
+                {isLotteryRunning ? (
+                    isWin === null ? (
+                        <h5>Rozpoczęto losowanie!</h5>
+                    ) : (
+                        <h5>Losowanie zakończone!</h5>
+                    )
+                ) : (
+                    <h5>Wybierz {requiredSelectedNumbersCount} liczb aby rozpocząć losowanie.</h5>
+                )}
+                {jackpotValue && (
+                    <h6>
+                        Maksymalna wygrana: <span className="text-danger">{jackpotValue} {currencyName}</span>
+                    </h6>
+                )}
                 <NumberLotteryPicker
                     availableNumbersCount={availableNumbersCount}
                     isLotteryRunning={isLotteryRunning}
@@ -301,7 +315,7 @@ class NumberLottery extends AbstractLotteryComponent {
                     resultCurrencyName={resultCurrencyName}
                     gameMultiplierValue={gameMultiplierValue}
                 />
-                <div className="float-start w-50 number-lottery--alerts">
+                <div className="number-lottery-alerts">
                     {errorMessage && (
                         <div className="alert alert-danger">
                             {errorMessage}
@@ -318,7 +332,7 @@ class NumberLottery extends AbstractLotteryComponent {
                         </div>
                     )}
                 </div>
-                <div className="float-end number-lottery-buttons mt-3 mb-5">
+                <div className="number-lottery-buttons mt-3 mb-5">
                     {isLotteryRunning && resultNumbers && isWin !== null ? (
                         <button
                             className={`btn btn-warning play-button btn-lg text-dark fw-bold my-2`}
