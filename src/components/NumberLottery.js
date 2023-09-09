@@ -73,7 +73,7 @@ class NumberLottery extends AbstractLotteryComponent {
         } else if (selectedNumbers.length < requiredSelectedNumbersCount) {
             this.selectNumber(number)
         } else { // selectedNumbers.length >= requiredSelectedNumbersCount
-            // requiredSelectedNumbersCount has been achieved
+            // do nothing - requiredSelectedNumbersCount has been achieved
         }
     }
 
@@ -88,55 +88,107 @@ class NumberLottery extends AbstractLotteryComponent {
         })
     }
 
+    isSelectedNumber = (number) => {
+        return this.state.selectedNumbers.includes(number)
+    }
+
+    isNumberAlreadyAdded = (resultNumbers, number) => {
+        return resultNumbers.some(resultNumber => resultNumber.number === number)
+    }
+
+    getTotalValue = (resultNumbers) => {
+        return resultNumbers.reduce((total, result) => total + result.value, 0)
+    }
+
+    getRandomResultNumbersCount = () => {
+        return Math.floor(Math.random() * this.state.requiredSelectedNumbersCount) + 1
+    }
+
+    getRandomSelectedNumber = (resultNumbers) => {
+        const randomSelectedNumber = this.state.selectedNumbers[Math.floor(Math.random() * this.state.selectedNumbers.length)]
+
+        if (
+            !this.isSelectedNumber(randomSelectedNumber)
+            || this.isNumberAlreadyAdded(resultNumbers, randomSelectedNumber)
+        ) {
+            return this.getRandomSelectedNumber(resultNumbers)
+        }
+
+        return randomSelectedNumber
+    }
+
+    getRandomNotSelectedNumber = (resultNumbers) => {
+        const randomNotSelectedNumber = Math.floor(Math.random() * this.state.availableNumbersCount) + 1
+
+        if (
+            this.isSelectedNumber(randomNotSelectedNumber)
+            || this.isNumberAlreadyAdded(resultNumbers, randomNotSelectedNumber)
+        ) {
+            return this.getRandomNotSelectedNumber(resultNumbers)
+        }
+
+        return randomNotSelectedNumber
+    }
+
     generateResultNumbers = (resultValue, resultNumbersCount = null) => {
         const {
-            availableNumbersCount,
             requiredSelectedNumbersCount,
-            selectedNumbers
         } = this.state
 
-
         if (!resultNumbersCount) {
-            resultNumbersCount = Math.floor(
-                Math.random() * requiredSelectedNumbersCount
-            ) + 1
+            resultNumbersCount = this.getRandomResultNumbersCount()
         }
 
         const resultNumbers = []
 
-        const isSelectedNumber = (number) => selectedNumbers.includes(number)
-        const isNumberAlreadyAdded = (resultNumbers, number) => {
-            return resultNumbers.some(resultNumber => resultNumber.number === number)
-        }
+        while (resultNumbers.length < resultNumbersCount) {
+            if (resultNumbers.length === resultNumbersCount - 1) {  // last loop index
+                const missingValue = resultValue - this.getTotalValue(resultNumbers)
 
-        while (resultNumbers.length < resultNumbersCount) { // todo: fix maximum stack exceeded bug
-            const number = Math.floor(Math.random() * availableNumbersCount) + 1
-            const value = Math.floor(Math.random() * resultValue) + 1
+                if (!missingValue) {
+                    break
+                }
 
-            if (isSelectedNumber(number) && !isNumberAlreadyAdded(resultNumbers, number)) {
+                const randomSelectedNumber = this.getRandomSelectedNumber(resultNumbers)
+
                 resultNumbers.push({
-                    number,
-                    value
+                    number: randomSelectedNumber,
+                    value: missingValue
                 })
+
+                break
             }
+
+            const currentValue = this.getTotalValue(resultNumbers)
+
+            if (currentValue === resultValue) {
+                break
+            }
+
+            const randomSelectedNumber = this.getRandomSelectedNumber(resultNumbers)
+
+            const value = Math.floor(Math.random() * (resultValue - currentValue)) + 1
+
+            resultNumbers.push({
+                number: randomSelectedNumber,
+                value
+            })
         }
 
-        const totalValue = resultNumbers.reduce((total, result) => total + result.value, 0)
+        const totalValue = this.getTotalValue(resultNumbers)
 
-        if (totalValue !== resultValue) {
-            return this.generateResultNumbers(resultValue, resultNumbersCount)  // recursion
+        if (totalValue !== resultValue) {  // potentially unnecessary
+            return this.generateResultNumbers(resultValue, resultNumbersCount)
         }
 
         while (resultNumbers.length < requiredSelectedNumbersCount) {
-            const number = Math.floor(Math.random() * availableNumbersCount) + 1
+            const randomNotSelectedNumber = this.getRandomNotSelectedNumber(resultNumbers)
             const value = Math.floor(Math.random() * resultValue) + 1
 
-            if (!isSelectedNumber(number) && !isNumberAlreadyAdded(resultNumbers, number)) {
-                resultNumbers.push({
-                    number,
-                    value
-                })
-            }
+            resultNumbers.push({
+                number: randomNotSelectedNumber,
+                value
+            })
         }
 
         return resultNumbers
@@ -211,7 +263,7 @@ class NumberLottery extends AbstractLotteryComponent {
                 })
 
                 if (this.state.user) {
-                    this.props.dispatch({type: SET_USER_ACCOUNT_BALANCE, payload: this.state.userAccountBalance})
+                    this.props.dispatch({type: SET_USER_ACCOUNT_BALANCE, payload: userAccountBalance})
                 }
             }, 1000)
         }, 1000)
@@ -266,7 +318,7 @@ class NumberLottery extends AbstractLotteryComponent {
                         </div>
                     )}
                 </div>
-                <div className="float-end number-lottery-buttons mb-5">
+                <div className="float-end number-lottery-buttons mt-3 mb-5">
                     {isLotteryRunning && resultNumbers && isWin !== null ? (
                         <button
                             className={`btn btn-warning play-button btn-lg text-dark fw-bold my-2`}
