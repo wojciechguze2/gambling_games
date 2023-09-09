@@ -6,6 +6,7 @@ import { SET_USER_ACCOUNT_BALANCE, UPDATE_USER_ACCOUNT_BALANCE } from '../types/
 import GameMultiplier from './GameMultiplier'
 import AccountBalance from './AccountBalance'
 import TopUpAccountButton from './TopUpAccountButton'
+import Loader from './Loader'
 
 
 class NumberLottery extends AbstractLotteryComponent {
@@ -284,7 +285,8 @@ class NumberLottery extends AbstractLotteryComponent {
             costMessage,
             winMessage,
             costValue,
-            gameMultiplierValue
+            gameMultiplierValue,
+            isLoading
         } = this.state
 
         const costLabel = ' za ' + costValue * gameMultiplierValue + ' ' + currencyName
@@ -292,81 +294,85 @@ class NumberLottery extends AbstractLotteryComponent {
 
         return (
             <div>
-                {isLotteryRunning ? (
-                    isWin === null ? (
-                        <h5>Rozpoczęto losowanie!</h5>
+                {isLoading ? <Loader/> : (
+                <>
+                    {isLotteryRunning ? (
+                        isWin === null ? (
+                            <h5>Rozpoczęto losowanie!</h5>
+                        ) : (
+                            <h5>Losowanie zakończone!</h5>
+                        )
                     ) : (
-                        <h5>Losowanie zakończone!</h5>
-                    )
-                ) : (
-                    <h5>Wybierz {requiredSelectedNumbersCount} liczb aby rozpocząć losowanie.</h5>
+                        <h5>Wybierz {requiredSelectedNumbersCount} liczb aby rozpocząć losowanie.</h5>
+                    )}
+                    {jackpotValue && (
+                        <h6>
+                            Maksymalna wygrana: <span className="text-danger">{jackpotValue} {currencyName}</span>
+                        </h6>
+                    )}
+                    <NumberLotteryPicker
+                        availableNumbersCount={availableNumbersCount}
+                        isLotteryRunning={isLotteryRunning}
+                        selectedNumbers={selectedNumbers}
+                        handleNumberClick={this.handleNumberClick}
+                        resultNumbers={resultNumbers}
+                        resultCurrencyName={resultCurrencyName}
+                        gameMultiplierValue={gameMultiplierValue}
+                    />
+                    <div className="number-lottery-alerts">
+                        {errorMessage && (
+                            <div className="alert alert-danger">
+                                {errorMessage}
+                            </div>
+                        )}
+                        {costMessage && !isDemo && (
+                            <div className="alert alert-warning">
+                                {costMessage}
+                            </div>
+                        )}
+                        {winMessage && !isDemo && (
+                            <div className={`alert alert-${isWin === false ? 'danger' : 'success'}`}>
+                                {winMessage}
+                            </div>
+                        )}
+                    </div>
+                    <div className="number-lottery-buttons mt-3 mb-5">
+                        {isLotteryRunning && resultNumbers && isWin !== null ? (
+                            <button
+                                className={`btn btn-warning play-button btn-lg text-dark fw-bold my-2`}
+                                onClick={this.runAgainLottery}
+                            >
+                                Rozpocznij nową grę
+                            </button>
+                        ) : (
+                            <button
+                                className={`btn btn-warning play-button btn-lg text-dark fw-bold my-2`}
+                                onClick={this.runLottery}
+                                disabled={!this.isRunLotteryAvailable()}
+                            >
+                                Losuj {costLabel}
+                            </button>
+                        )}
+                        {!isDemo && (
+                            <GameMultiplier
+                                disabled={isLotteryRunning}
+                                handleGameMultiplierChange={this.changeGameMultiplier}
+                                currentMultiplier={gameMultiplierValue}
+                                availableMultipliers={[0.5, 1, 2, 5]}
+                            />
+                        )}
+                        {!isDemo && (
+                            <AccountBalance />
+                        )}
+                        {!this.hasRequiredAccountBalance() && (
+                            <TopUpAccountButton
+                                handleTopUpChange={this.handleTopUpChange}
+                                disabled={isLotteryRunning && isWin === null}
+                            />
+                        )}
+                    </div>
+                </>
                 )}
-                {jackpotValue && (
-                    <h6>
-                        Maksymalna wygrana: <span className="text-danger">{jackpotValue} {currencyName}</span>
-                    </h6>
-                )}
-                <NumberLotteryPicker
-                    availableNumbersCount={availableNumbersCount}
-                    isLotteryRunning={isLotteryRunning}
-                    selectedNumbers={selectedNumbers}
-                    handleNumberClick={this.handleNumberClick}
-                    resultNumbers={resultNumbers}
-                    resultCurrencyName={resultCurrencyName}
-                    gameMultiplierValue={gameMultiplierValue}
-                />
-                <div className="number-lottery-alerts">
-                    {errorMessage && (
-                        <div className="alert alert-danger">
-                            {errorMessage}
-                        </div>
-                    )}
-                    {costMessage && !isDemo && (
-                        <div className="alert alert-warning">
-                            {costMessage}
-                        </div>
-                    )}
-                    {winMessage && !isDemo && (
-                        <div className={`alert alert-${isWin === false ? 'danger' : 'success'}`}>
-                            {winMessage}
-                        </div>
-                    )}
-                </div>
-                <div className="number-lottery-buttons mt-3 mb-5">
-                    {isLotteryRunning && resultNumbers && isWin !== null ? (
-                        <button
-                            className={`btn btn-warning play-button btn-lg text-dark fw-bold my-2`}
-                            onClick={this.runAgainLottery}
-                        >
-                            Rozpocznij nową grę
-                        </button>
-                    ) : (
-                        <button
-                            className={`btn btn-warning play-button btn-lg text-dark fw-bold my-2`}
-                            onClick={this.runLottery}
-                            disabled={!this.isRunLotteryAvailable()}
-                        >
-                            Losuj {costLabel}
-                        </button>
-                    )}
-                    {!isDemo && (
-                        <GameMultiplier
-                            disabled={isLotteryRunning}
-                            handleGameMultiplierChange={this.changeGameMultiplier}
-                            currentMultiplier={gameMultiplierValue}
-                            availableMultipliers={[0.5, 1, 2, 5]}
-                        />
-                    )}
-                    {!isDemo && (
-                        <AccountBalance />
-                    )}
-                    {!this.hasRequiredAccountBalance() && (
-                        <TopUpAccountButton
-                            handleTopUpChange={this.handleTopUpChange}
-                            disabled={isLotteryRunning && isWin === null}
-                        />
-                    )}
-                </div>
             </div>
         )
     }
