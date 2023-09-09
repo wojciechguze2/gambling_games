@@ -1,5 +1,5 @@
-import React from 'react'
 import '../styles/number-lottery.scss'
+import React from 'react'
 import AbstractLotteryComponent from './AbstractLotteryComponent'
 import NumberLotteryPicker from './NumberLotteryPicker'
 import { SET_USER_ACCOUNT_BALANCE, UPDATE_USER_ACCOUNT_BALANCE } from '../types/authTypes'

@@ -1,43 +1,6 @@
 @import 'variables';
 @import 'lottery';
 
-@keyframes hide-element {
-  0% {
-    opacity: 1;
-    transform: scaleX(1) scaleY(1);
-  }
-  100% {
-    opacity: 0;
-    transform: scaleX(0) scaleY(0);
-  }
-}
-
-@keyframes show-element {
-  0% {
-    opacity: 0;
-    transform: scaleX(0) scaleY(0);
-  }
-  100% {
-    opacity: 1;
-    transform: scaleX(1) scaleY(1);
-  }
-}
-
-@keyframes select-number {
-  0% {
-    opacity: 0.25;
-    transform: translateY(-200%) rotateY(0deg);
-  }
-  50% {
-    opacity: 0.75;
-    transform: translateY(-200%) rotateY(180deg);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) rotateY(0deg);
-  }
-}
-
 .max-circle-width {
   max-width: 50px;
 }
@@ -170,5 +133,42 @@
     margin-left: auto;
     margin-right: auto;
     float: initial;
+  }
+}
+
+@keyframes hide-element {
+  0% {
+    opacity: 1;
+    transform: scaleX(1) scaleY(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scaleX(0) scaleY(0);
+  }
+}
+
+@keyframes show-element {
+  0% {
+    opacity: 0;
+    transform: scaleX(0) scaleY(0);
+  }
+  100% {
+    opacity: 1;
+    transform: scaleX(1) scaleY(1);
+  }
+}
+
+@keyframes select-number {
+  0% {
+    opacity: 0.25;
+    transform: translateY(-200%) rotateY(0deg);
+  }
+  50% {
+    opacity: 0.75;
+    transform: translateY(-200%) rotateY(180deg);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) rotateY(0deg);
   }
 }
