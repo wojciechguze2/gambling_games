@@ -1,9 +1,10 @@
-import { Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
 const HomeView = () => {
     const user = useSelector(state => state.auth.user)
 
+    // todo: take it from api
     const latestGames = [
         {
             title: 'Koło fortuny',

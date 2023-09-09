@@ -139,6 +139,14 @@ class AbstractLotteryComponent extends Component {
     isWinningGameValue = (gameValueId) => {
         return this.state.result && this.state.result.id === gameValueId
     }
+
+    getJackpotValue = () => {
+        if (this.state.gameValuesData) {
+            return this.state.gameValuesData.find(value => value.isJackpot === true).value
+        }
+
+        return '?'
+    }
 }
 
 export default AbstractLotteryComponent
