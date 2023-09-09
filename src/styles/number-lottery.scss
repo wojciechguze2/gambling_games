@@ -1,0 +1,174 @@
+@import 'variables';
+@import 'lottery';
+
+.max-circle-width {
+  max-width: 50px;
+}
+
+.circle {
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  margin: 5px;
+  font-weight: bold;
+  
+  &.circle-sm {
+    width: 50px;
+    height: 50px;
+
+    @media (max-width: $mobile-max-width) {
+      width: 30px;
+      height: 30px;
+    }
+  }
+
+  &.circle-md {
+    width: 125px;
+    height: 125px;
+
+    @media (max-width: $mobile-max-width) {
+      width: 95px;
+      height: 95px;
+    }
+  }
+}
+
+.number-lottery-picker {
+  display: flex;
+
+  &--selected-numbers--container,
+  &--select-numbers--container {
+    height: 600px;
+    border: 1px solid white;
+
+    @media (max-width: $mobile-max-width) {
+      height: 500px;
+    }
+  }
+
+  &--select-numbers--container {
+    width: 90%;
+    padding-left: 20%;
+    padding-right: 20%;
+
+    @media (max-width: $mobile-max-width) {
+      width: 70%;
+      padding-left: 1%;
+      padding-right: 1%;
+    }
+
+    .select-numbers {
+      opacity: 1;
+
+      &.hidden {
+        animation: hide-element 1s ease-in forwards;
+      }
+
+      .select-number {}
+    }
+
+    .result-numbers {
+      animation: show-element 1.5s ease-out forwards;
+
+      .result-number {
+        margin: 30px;
+        flex-direction: column;
+        align-items: center;
+        cursor: default;
+
+        @media (max-width: $mobile-max-width) {
+          margin: 20px 5px;
+        }
+
+        &--number {
+          font-size: 20px;
+          font-weight: bold;
+        }
+
+        &--value,
+        &--currency {
+          font-size: 12px;
+
+          @media (max-width: $mobile-max-width) {
+            font-size: 10px;
+          }
+        }
+      }
+    }
+  }
+
+  &--selected-numbers--container {
+    width: 10%;
+
+    @media (max-width: $mobile-max-width) {
+      width: 30%;
+    }
+
+    .selected-numbers {
+      .selected-number {
+        animation: select-number 0.3s ease-in;
+      }
+    }
+  }
+}
+
+
+.number-lottery-alerts {
+  float: left;
+  width: 50%;
+
+  @media (max-width: $mobile-max-width) {
+    margin: 3% auto;
+    float: initial;
+    width: 100%;
+  }
+}
+
+.number-lottery-buttons {
+  float: right;
+
+  @media (max-width: $mobile-max-width) {
+    margin-left: auto;
+    margin-right: auto;
+    float: initial;
+  }
+}
+
+@keyframes hide-element {
+  0% {
+    opacity: 1;
+    transform: scaleX(1) scaleY(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scaleX(0) scaleY(0);
+  }
+}
+
+@keyframes show-element {
+  0% {
+    opacity: 0;
+    transform: scaleX(0) scaleY(0);
+  }
+  100% {
+    opacity: 1;
+    transform: scaleX(1) scaleY(1);
+  }
+}
+
+@keyframes select-number {
+  0% {
+    opacity: 0.25;
+    transform: translateY(-200%) rotateY(0deg);
+  }
+  50% {
+    opacity: 0.75;
+    transform: translateY(-200%) rotateY(180deg);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) rotateY(0deg);
+  }
+}

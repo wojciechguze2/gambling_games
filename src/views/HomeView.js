@@ -13,10 +13,10 @@ const HomeView = () => {
             imageUrl: '/images/homepage/latest-games--wheel-of-fortune.webp',
         },
         {
-            title: 'Koło fortuny',
-            url: '/game/wheel-of-fortune',
-            description: 'Warto spróbować swojego szczęścia w najnowszej grze "Koło fortuny"! Za zaledwie 100 EuroJamników masz szansę wygrać aż 50 000 EuroJamników. Kręć kołem i zgarniaj doskonałe nagrody!',
-            imageUrl: '/images/homepage/latest-games--wheel-of-fortune.webp',
+            title: 'Loteria liczbowa',
+            url: '/game/number-lottery',
+            description: 'Warto spróbować swojego szczęścia w najnowszej grze "Loteria liczbowa"! Za zaledwie 100 EuroJamników masz szansę wygrać aż 50 000 EuroJamników. Zgarniaj doskonałe nagrody!',
+            imageUrl: '/images/homepage/latest-games--number-lottery.webp',
         },
         {
             title: 'Koło fortuny',
