@@ -80,34 +80,37 @@ class FruitMachine extends AbstractLotteryComponent {
     }
 
     getFruitMachineGrid = () => {
-        const {
-            lines,
-            numberOfLines
-        } = this.state
-        const visibleLinesLength = lines.length
-        const rows = []
+        const { lines, numberOfLines } = this.state;
+        const visibleLinesLength = lines.length;
+        const rows = [];
 
-        for (let rowNumber = 0; rowNumber < lines.length; rowNumber++) {  // rows
-            const line = lines[rowNumber]
-            const opacity = 1 - Math.abs(rowNumber - (lines.length - 1) / 2) / (visibleLinesLength / 2)
-            const translateVar = (
-                line.visible ? 0 : '100%'
-            )
-            const cols = this.getFruitMachineCols(line)
+        const cyclicLines = [...lines];
+
+        for (let rowNumber = 0; rowNumber < numberOfLines; rowNumber++) {
+            const line = cyclicLines[rowNumber % visibleLinesLength];
+            const opacity = 1;
+            let translateY = 0;
+
+            if (!line.visible) {
+                translateY = '100%';
+            }
+
+            const cols = this.getFruitMachineCols(line);
 
             rows.push(
                 <div
                     key={rowNumber}
                     className={`fruit-machine--line ${line.type}`}
-                    style={{ opacity, transform: `translateY(${translateVar})` }}
+                    style={{ opacity, transform: `translateY(${translateY})` }}
+                    data-visible={line.visible}
+                    data-line-type={line.type}
                 >
                     {cols}
                 </div>
             );
         }
 
-
-        return rows
+        return rows;
     }
 
     setError = (errorMessage = null) => {
@@ -129,18 +132,28 @@ class FruitMachine extends AbstractLotteryComponent {
         this.resetResult()
 
         const lines = this.state.lines
-        const prependedElement = lines.pop()
-        const appendedElement = prependedElement
+        const newLines = [...lines]
+        const prependedElement = { type: 'normal', visible: true }
+        const appendedElement = newLines.pop()
         appendedElement.visible = false
+
+        if (appendedElement.type === 'result') {
+            newLines.unshift(appendedElement)
+        } else {
+            newLines.unshift(prependedElement)
+        }
 
         this.setState({
             isLotteryRunning: true,
-            lines: [prependedElement, ...lines, appendedElement],
-        })
+            lines: newLines,
+        });
 
         setTimeout(() => {
-            this.setState({ isLotteryRunning: false })
-        }, 500)
+            this.setState({
+                isLotteryRunning: false,
+                lines: newLines.map(line => ({ ...line, visible: true })),
+            })
+        }, 1000)
     }
 
     render() {
