@@ -19,9 +19,9 @@ const HomeView = () => {
             imageUrl: '/images/homepage/latest-games--number-lottery.webp',
         },
         {
-            title: 'Koło fortuny',
-            url: '/game/wheel-of-fortune',
-            description: 'Warto spróbować swojego szczęścia w najnowszej grze "Koło fortuny"! Za zaledwie 100 EuroJamników masz szansę wygrać aż 50 000 EuroJamników. Kręć kołem i zgarniaj doskonałe nagrody!',
+            title: 'Jednoręki bandyta',
+            url: '/game/fruit-machine',
+            description: 'Warto spróbować swojego szczęścia w najnowszej grze "Jednoręki bandyta"! Za zaledwie 100 EuroJamników masz szansę wygrać aż 50 000 EuroJamników. Zgarniaj doskonałe nagrody!',
             imageUrl: '/images/homepage/latest-games--wheel-of-fortune.webp',
         },
     ];

@@ -1,0 +1,24 @@
+@import 'variables';
+
+.fruit-machine {
+  margin: auto;
+  border: 1px solid white;
+  height: 600px;
+  width: 80%;
+
+  &--line {
+    height: 20%;
+    width: 100%;
+    padding: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    transition: transform 0.5s ease;
+
+    &--element {
+      display: inline-flex;
+      width: 20%;
+      height: 100%;
+      place-content: center;
+      color: $custom-bg-primary;
+    }
+  }
+}
