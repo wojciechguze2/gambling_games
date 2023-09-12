@@ -397,14 +397,6 @@ class FruitMachine extends AbstractLotteryComponent {
                         iconCombination.value,
                         combinationWithHigherValue.value
                     ]
-
-                    /*
-                    same as:
-                    const tmp = combinationWithHigherValue.value
-
-                    combinationWithHigherValue.value = iconCombination.value
-                    iconCombination.value = tmp
-                     */
                 }
             }
 
