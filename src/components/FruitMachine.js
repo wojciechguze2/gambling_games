@@ -21,16 +21,46 @@ import {  // not enough free fruit icons :(
 } from '@fortawesome/free-solid-svg-icons'
 
 const AVAILABLE_ICONS = {
-    'appleWhole': faAppleWhole,
-    'carrot': faCarrot,
-    'coffee': faCoffee,
-    'leaf': faLeaf,
-    'lemon': faLemon,
-    'pepperHot': faPepperHot,
-    'heart': faHeart,
-    'bomb': faBomb,
-    'bolt': faBolt,
-    'bug': faBug
+    'appleWhole': {
+        icon: faAppleWhole,
+        color: 'red'
+    },
+    'carrot': {
+        icon: faCarrot,
+        color: 'orange'
+    },
+    'coffee': {
+        icon: faCoffee,
+        color: 'white'
+    },
+    'leaf': {
+        icon: faLeaf,
+        color: 'green'
+    },
+    'lemon': {
+        icon: faLemon,
+        color: 'yellow'
+    },
+    'pepperHot': {
+        icon: faPepperHot,
+        color: 'orangered'
+    },
+    'heart': {
+        icon: faHeart,
+        color: 'crimson'
+    },
+    'bomb': {
+        icon: faBomb,
+        color: 'brown'
+    },
+    'bolt': {
+        icon: faBolt,
+        color: 'lightgray'
+    },
+    'bug': {
+        icon: faBug,
+        color: 'darkolivegreen'
+    }
 }
 
 const AVAILABLE_ICON_NAMES = Object.keys(AVAILABLE_ICONS)
@@ -46,19 +76,21 @@ class FruitMachine extends AbstractLotteryComponent {
             isDemo: props.isDemo || !props.user,
             gameCode: props.gameCode,
             ...super.state,
-            slideAnimationTimeMs: 2000,
+            slideAnimationTimeMs: 75,
             minWinningSameCols: 3,
+            minSpinCount: 10,
+            maxSpinCount: 30,
             isLotteryRunning: false,
             numberOfLines: props.numberOfLines ? props.numberOfLines : 5,
             lines: [],
+            winningCombinations: []
         };
     }
 
     async componentDidMount() {
         await this.lotteryComponentDidMount()
         await this.setRandomLines()
-        await this.generateFruitMachineWinningCombinations()
-        this.setSlideAnimationVariable()
+        await this.setSlideAnimationVariable()
     }
 
     isRunLotteryAvailable = () => {
@@ -68,24 +100,35 @@ class FruitMachine extends AbstractLotteryComponent {
         )
     }
     
-    getRandomColIcons = async (numberOfLines, isWin = false) => {
-       const randomIcons = []
-       const colIconNames = this.generateFruitMachineLineColIconNames(numberOfLines, false)
+    getRandomColIcons = async (numberOfLines, isResultSpin = false) => {
+        let resultCombination
+        const randomIcons = []
+
+        if (isResultSpin) {
+            const { winningCombinations, result } = this.state
+            const matchingWinningCombinations = winningCombinations.filter(
+                combination => combination.value.value === result.value
+            )
+            const randomMatchingWinningCombinationIndex = Math.floor(Math.random() * matchingWinningCombinations.length)
+            resultCombination = matchingWinningCombinations[randomMatchingWinningCombinationIndex]
+        }
+
+        const colsData = this.generateFruitMachineLineColData(numberOfLines, isResultSpin, resultCombination)
 
         for (let colNumber = 0; colNumber < numberOfLines; colNumber++) {
+            const colData = colsData[colNumber]
+            const iconData = AVAILABLE_ICONS[colData.iconName]
+
             randomIcons.push({
-                icon: AVAILABLE_ICONS[colIconNames[colNumber].iconName]
+                iconData,
+                isResult: colData.isResult || false
             })
         }
 
         return randomIcons
     }
 
-    getColIconName = (previousIconName = null, isWin = false) => {
-        if (isWin && previousIconName) {
-            return previousIconName
-        }
-
+    getRandomColIconName = (previousIconName = null) => {
         let availableIcons
 
         if (previousIconName) {
@@ -94,16 +137,13 @@ class FruitMachine extends AbstractLotteryComponent {
             availableIcons = AVAILABLE_ICON_NAMES
         }
 
-        return (
-            isWin && previousIconName ? previousIconName : (
-                availableIcons[Math.floor(Math.random() * availableIcons.length)]
-            )
-        )
+        return availableIcons[Math.floor(Math.random() * availableIcons.length)]
     }
 
     getFruitMachineCols = (line) => {
         const {
             numberOfLines,
+            winMessage
         } = this.state
         const cols = []
 
@@ -113,9 +153,13 @@ class FruitMachine extends AbstractLotteryComponent {
             cols.push(
                 <div
                     key={colNumber}
-                    className={`fruit-machine--line--element`}
+                    className={`fruit-machine--line--element ${colElement.isResult && winMessage ? 'result-line-element blink-text' : ''}`}
                 >
-                    <FontAwesomeIcon icon={colElement.icon} className="fa-5x" />
+                    <FontAwesomeIcon
+                        icon={colElement.iconData.icon}
+                        className="fa-5x"
+                        style={{color: colElement.iconData.color }}
+                    />
                 </div>
             );
         }
@@ -178,7 +222,19 @@ class FruitMachine extends AbstractLotteryComponent {
         return lines
     }
 
-    setSlideAnimationVariable = () => {
+    setWinningCombinations = async () => {
+        const winningCombinations = await this.generateFruitMachineWinningCombinations()
+
+        this.setState({ winningCombinations })
+    }
+
+    setSlideAnimationVariable = async (slideAnimationTimeMs) => {
+        if (slideAnimationTimeMs) {
+            await this.setState({
+                slideAnimationTimeMs
+            })
+        }
+
         document.documentElement.style.setProperty(
             '--slideAnimationTime',
             `${this.state.slideAnimationTimeMs / 1000}s`
@@ -196,7 +252,7 @@ class FruitMachine extends AbstractLotteryComponent {
         })
     }
 
-    generateFruitMachineWinningCombinations = () => {
+    generateFruitMachineWinningCombinations = async () => {
         const {
             numberOfLines,
             minWinningSameCols,
@@ -273,42 +329,235 @@ class FruitMachine extends AbstractLotteryComponent {
         return winningCombinations
     };
 
-    generateFruitMachineLineColIconNames = (numberOfElements, isWin = false) => {
-        const colElements = []
+    generateResultFruitMachineLineColData = (
+        numberOfElements,
+        resultCombination
+    ) => {
+        const {
+            icon,
+            requiredSameSiblingsCount
+        } = resultCombination
+
+        let colsData = [
+            ...Array.from(
+                {
+                    length: requiredSameSiblingsCount
+                },
+                () => ({
+                    iconName: icon,
+                    isResult: true
+                })
+            )
+        ]
+
+        if (requiredSameSiblingsCount >= numberOfElements) {
+            return colsData
+        }
+
+        const randomIconElementsCount = numberOfElements - requiredSameSiblingsCount
+        const fillElementsBeforeResult = Math.random() < 0.5  // prefer adding random icon(s) before result icons
+
+        if (randomIconElementsCount > 1) {
+            const elementsBeforeResultCount = Math.floor(Math.random() * (randomIconElementsCount)) + 1
+            const elementsAfterResultCount = randomIconElementsCount - elementsBeforeResultCount
+
+            if (elementsBeforeResultCount) {
+                const elementsBeforeResult = []
+
+                for (let colNumber = 0; colNumber < elementsBeforeResultCount; colNumber++) {
+                    const previousIconName = colNumber > 0 ? elementsBeforeResult[colNumber - 1].iconName : null
+
+                    elementsBeforeResult.push({
+                        iconName: this.getRandomColIconName(previousIconName)
+                    })
+                }
+
+                colsData = [...elementsBeforeResult, ...colsData]
+            }
+
+            if (elementsAfterResultCount) {
+                const elementsAfterResult = []
+
+                for (let colNumber = 0; colNumber < elementsAfterResultCount; colNumber++) {
+                    const previousIconName = colNumber > 0 ? elementsAfterResult[colNumber - 1].iconName : null
+
+                    elementsAfterResult.push({
+                        iconName: this.getRandomColIconName(previousIconName)
+                    })
+                }
+
+                colsData = [...colsData, ...elementsAfterResult]
+            }
+
+            return colsData
+        }
+
+        const randomIcon = {
+            iconName: this.getRandomColIconName(icon)
+        }
+
+        if (fillElementsBeforeResult) {
+            colsData = [randomIcon, ...colsData]
+        } else {
+            colsData = [...colsData, randomIcon]
+        }
+
+        return colsData
+    }
+
+    generateRandomFruitMachineLineColData = (numberOfElements) => {
+        const colsData = []
 
         for (let colNumber = 0; colNumber < numberOfElements; colNumber++) {
-            colElements.push({
-                iconName: this.getColIconName(colNumber > 0 ? colElements[colNumber - 1].iconName : null, isWin)
+            const previousIconName = colNumber > 0 ? colsData[colNumber - 1].iconName : null
+
+            colsData.push({
+                iconName: this.getRandomColIconName(previousIconName)
             })
         }
 
-        return colElements
+        return colsData
     }
 
-    spin = async (currentSpinCount = 0, targetSpinCount = 100) => {
-        const newLines = [...this.state.lines]
+    generateFruitMachineLineColData = (
+        numberOfElements,
+        isResultSpin = false,
+        resultCombination = null
+    ) => {
+        if (isResultSpin && resultCombination) {
+            return this.generateResultFruitMachineLineColData(numberOfElements, resultCombination)
+        } else {
+            return this.generateRandomFruitMachineLineColData(numberOfElements)
+        }
+    }
+
+    getResultData = async () => {
+        const data = await this.getRandomGameResult()
+
+        if (!data) {
+            return null
+        }
+
+        if (!data.result) {
+            this.setError()
+
+            return null
+        }
+
+        return data
+    }
+
+    spinUpdateLines = async (lines, numberOfLines, isResultSpin) => {
+        const newLines = [...lines]
         const prependedElement = newLines.pop()
 
-        prependedElement.cols = await this.getRandomColIcons(this.state.numberOfLines)
-
+        prependedElement.cols = await this.getRandomColIcons(numberOfLines, isResultSpin)
         newLines.unshift(prependedElement)
 
         this.setState({
             lines: newLines
         })
+    }
+
+    spin = async (
+        currentSpinCount = 0,
+        targetSpinCount = 10,
+        resultSpin,
+        apiResultSpin,
+        isWin = null,
+        userAccountBalance = null
+    ) => {
+        if (!resultSpin || resultSpin > targetSpinCount) {
+            resultSpin = targetSpinCount
+        }
+
+        const {
+            numberOfLines,
+            slideAnimationTimeMs,
+            lines
+        } = this.state
+
+        const isApiResultSpin = currentSpinCount === apiResultSpin
+        const isResultSpin = currentSpinCount === resultSpin
+        const isLastSpin = currentSpinCount === targetSpinCount
+
+        if (isApiResultSpin) {
+            const resultData = await this.getResultData()
+
+            this.setState({
+                result: resultData.result,
+                resultCurrencyName: resultData.currencyName
+            })
+
+            isWin = resultData.isWin
+            userAccountBalance = resultData.userAccountBalance
+        }
+
+        if (isResultSpin) {
+            await this.setSlideAnimationVariable(125)
+        }
+
+        if (isLastSpin && isWin !== null) {
+            this.setState({
+                isWin,
+                userAccountBalance
+            })
+        }
+
+        await this.spinUpdateLines(lines, numberOfLines, isResultSpin)
 
         await new Promise((resolve) => {
             setTimeout(() => {
                 if (currentSpinCount < targetSpinCount) {
-                    this.spin(++currentSpinCount).then(resolve)
+                    this.spin(
+                        ++currentSpinCount,
+                        targetSpinCount,
+                        resultSpin,
+                        apiResultSpin,
+                        isWin,
+                        userAccountBalance
+                    ).then(resolve)
                 } else {
                     resolve()
                 }
-            }, this.state.slideAnimationTimeMs)
+            }, slideAnimationTimeMs)
+        })
+    }
+
+    setResult = () => {
+        const {
+            costValue,
+            gameMultiplierValue,
+            currencyName,
+            resultCurrencyName,
+            userAccountBalance,
+            result
+        } = this.state
+
+        const costMessage = (
+            'Zapłacono: ' + costValue * gameMultiplierValue + ' ' + currencyName
+        )
+        const winMessage = (
+            'Wylosowano: ' + result.value * gameMultiplierValue + ' ' + resultCurrencyName
+        )
+
+        if (this.state.user) {
+            this.props.dispatch({type: SET_USER_ACCOUNT_BALANCE, payload: userAccountBalance})
+        }
+
+        this.setState({
+            costMessage,
+            winMessage,
         })
     }
 
     runLottery = async () => {
+        const {
+            minSpinCount,
+            maxSpinCount,
+            numberOfLines
+        } = this.state
+
         if (!this.hasRequiredAccountBalance()) {
             return false
         }
@@ -318,12 +567,25 @@ class FruitMachine extends AbstractLotteryComponent {
             isLotteryRunning: true
         })
 
-        this.setSlideAnimationVariable()
-        await this.spin()
+        if (this.state.user) {
+            const {
+                costValue,
+                gameMultiplierValue
+            } = this.state
 
-        this.setState({
-            isLotteryRunning: false,
-        })
+            this.props.dispatch({ type: UPDATE_USER_ACCOUNT_BALANCE, payload: -(costValue * gameMultiplierValue) })
+        }
+
+        await this.setSlideAnimationVariable()
+        await this.setWinningCombinations()
+
+        const targetSpinCount = Math.floor(Math.random() * (maxSpinCount - minSpinCount + 1)) + minSpinCount
+        const resultSpin = targetSpinCount - Math.floor(Math.random() * (numberOfLines))
+        const apiResultSpin = resultSpin > 10 ? Math.floor(targetSpinCount / 2) : Math.floor(minSpinCount / 2)
+
+        await this.spin(0, targetSpinCount, resultSpin, apiResultSpin)
+
+        this.setResult()
     }
 
     render() {

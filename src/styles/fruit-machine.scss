@@ -1,4 +1,5 @@
 @import 'variables';
+@import 'lottery';
 
 :root {
   --slideAnimationTime: 2s;
@@ -16,8 +17,7 @@
   &--line {
     height: 20%;
     width: 100%;
-    padding: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(128, 128, 128, 0.1);
 
     &--element {
       display: inline-flex;
@@ -25,6 +25,11 @@
       height: 100%;
       place-content: center;
       color: $custom-bg-primary;
+      align-items: center;
+
+      &.result-line-element {
+        border: 3px dashed yellow;
+      }
     }
   }
 }
