@@ -197,35 +197,35 @@ class FruitMachine extends AbstractLotteryComponent {
     }
 
     generateFruitMachineWinningCombinations = () => {
-        const {
-            gameValuesData,
-            numberOfLines,
-            minWinningSameCols
-        } = this.state
+        const { numberOfLines, minWinningSameCols } = this.state;
 
-        console.log(gameValuesData)
-
-        const winningCombinations = []
+        const winningCombinations = [];
+        const availableValues = [...this.state.gameValuesData]
 
         for (let iconIndex = 0; iconIndex < AVAILABLE_ICON_NAMES.length; iconIndex++) {
-            const icon = AVAILABLE_ICON_NAMES[iconIndex]
+            const icon = AVAILABLE_ICON_NAMES[iconIndex];
 
             for (let count = minWinningSameCols; count <= numberOfLines; count++) {
-                const value = gameValuesData[count - minWinningSameCols]
+                if (availableValues.length > 0) {
+                    const randomIndex = Math.floor(Math.random() * availableValues.length);
+                    const value = availableValues.splice(randomIndex, 1)[0];
 
-                const combination = {
-                    icon,
-                    requiredSameSiblingsCount: count,
-                    value,
+                    const combination = {
+                        icon,
+                        requiredSameSiblingsCount: count,
+                        value,
+                    };
+
+                    winningCombinations.push(combination);
+                } else {
+                    break
                 }
-
-                winningCombinations.push(combination)
             }
         }
 
-        console.log(winningCombinations)
+        console.log(winningCombinations);
 
-        return winningCombinations
+        return winningCombinations;
     };
 
     generateFruitMachineLineColIconNames = (numberOfElements, isWin = false) => {
