@@ -9,6 +9,23 @@ import Loader from './Loader'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {faAppleWhole, faCarrot, faCoffee, faLeaf, faLemon, faPepperHot} from '@fortawesome/free-solid-svg-icons'
 
+const AVAILABLE_ICON_NAMES = [
+    'appleWhole',
+    'carrot',
+    'coffee',
+    'leaf',
+    'lemon',
+    'pepperHot',
+]
+
+const AVAILABLE_ICONS = {
+    'appleWhole': faAppleWhole,
+    'carrot': faCarrot,
+    'coffee': faCoffee,
+    'leaf': faLeaf,
+    'lemon': faLemon,
+    'pepperHot': faPepperHot,
+}
 
 class FruitMachine extends AbstractLotteryComponent {
     constructor(props) {
@@ -23,118 +40,44 @@ class FruitMachine extends AbstractLotteryComponent {
             ...super.state,
             isLotteryRunning: false,
             numberOfLines: props.numberOfLines ? props.numberOfLines : 5,
+            isLoadingIcons: true,
+            slideAnimationTimeMs: 2000,
             lines: [
                 {
                     index: 0,
-                    type: 'normal',
-                    cols: [
-                        {
-                            'icon': faLemon,
-                        },
-                        {
-                            'icon': faAppleWhole,
-                        },
-                        {
-                            'icon': faLeaf,
-                        },
-                        {
-                            'icon': faCarrot,
-                        },
-                        {
-                            'icon': faPepperHot,
-                        },
-                    ]
+                    cols: []
                 },
                 {
                     index: 1,
-                    type: 'normal',
-                    cols: [
-                        {
-                            'icon': faLemon,
-                        },
-                        {
-                            'icon': faCarrot,
-                        },
-                        {
-                            'icon': faPepperHot,
-                        },
-                        {
-                            'icon': faAppleWhole,
-                        },
-                        {
-                            'icon': faLeaf,
-                        },
-                    ]
+                    cols: []
                 },
                 {
                     index: 2,
-                    type: 'result',
-                    cols: [
-                        {
-                            'icon': faLemon,
-                        },
-                        {
-                            'icon': faCarrot,
-                        },
-                        {
-                            'icon': faAppleWhole,
-                        },
-                        {
-                            'icon': faLeaf,
-                        },
-                        {
-                            'icon': faPepperHot,
-                        },
-                    ]
+                    cols: []
                 },
                 {
                     index: 3,
-                    type: 'normal',
-                    cols: [
-                        {
-                            'icon': faPepperHot,
-                        },
-                        {
-                            'icon': faLemon,
-                        },
-                        {
-                            'icon': faCarrot,
-                        },
-                        {
-                            'icon': faAppleWhole,
-                        },
-                        {
-                            'icon': faLeaf,
-                        },
-                    ]
+                    cols: []
                 },
                 {
                     index: 4,
-                    type: 'normal',
-                    cols: [
-                        {
-                            'icon': faLemon,
-                        },
-                        {
-                            'icon': faCarrot,
-                        },
-                        {
-                            'icon': faAppleWhole,
-                        },
-                        {
-                            'icon': faPepperHot,
-                        },
-                        {
-                            'icon': faLeaf,
-                        },
-                    ]
+                    cols: []
                 },
             ]
         };
     }
 
     async componentDidMount() {
+        await this.setRandomIcons()
         await this.lotteryComponentDidMount()
+        this.updateSlideAnimationVariable()
+    }
+
+    updateSlideAnimationVariable = () => {
+        document.documentElement.style.setProperty(
+            '--slideAnimationTime',
+            `${this.state.slideAnimationTimeMs / 1000}s`
+        )
     }
 
     isRunLotteryAvailable = () => {
@@ -153,6 +96,67 @@ class FruitMachine extends AbstractLotteryComponent {
         this.setState({
             errorMessage
         })
+    }
+    
+    getRandomColIcons = async (numberOfLines, isWin = false) => {
+       const randomIcons = []
+       const colIconNames = this.generateFruitMachineLineColIconNames(numberOfLines, false)
+
+        for (let colNumber = 0; colNumber < numberOfLines; colNumber++) {
+            randomIcons.push({
+                icon: AVAILABLE_ICONS[colIconNames[colNumber].iconName]
+            })
+        }
+
+        return randomIcons
+    }
+
+    setRandomIcons = async (isWin = false) => {
+        this.setState({ isLoadingIcons: true })
+
+        const {
+            numberOfLines,
+            lines
+        } = this.state
+
+        for (let rowNumber = 0; rowNumber < numberOfLines; rowNumber++) {
+            const line = lines[rowNumber]
+            line.cols = await this.getRandomColIcons(numberOfLines, isWin)
+        }
+
+        this.setState({ isLoadingIcons: false })
+    }
+
+    getColIconName = (previousIconName = null, isWin = false) => {
+        if (isWin && previousIconName) {
+            return previousIconName
+        }
+
+        let availableIcons
+
+        if (previousIconName) {
+            availableIcons = AVAILABLE_ICON_NAMES.filter(iconName => iconName !== previousIconName)
+        } else {
+            availableIcons = AVAILABLE_ICON_NAMES
+        }
+
+        return (
+            isWin && previousIconName ? previousIconName : (
+                availableIcons[Math.floor(Math.random() * availableIcons.length)]
+            )
+        )
+    }
+
+    generateFruitMachineLineColIconNames = (numberOfElements, isWin = false) => {
+        const colElements = []
+
+        for (let colNumber = 0; colNumber < numberOfElements; colNumber++) {
+            colElements.push({
+                iconName: this.getColIconName(colNumber > 0 ? colElements[colNumber - 1].iconName : null, isWin)
+            })
+        }
+
+        return colElements
     }
 
     getFruitMachineCols = (line) => {
@@ -215,6 +219,8 @@ class FruitMachine extends AbstractLotteryComponent {
         const newLines = [...this.state.lines]
         const prependedElement = newLines.pop()
 
+        prependedElement.cols = await this.getRandomColIcons(this.state.numberOfLines)
+
         newLines.unshift(prependedElement)
 
         this.setState({
@@ -228,7 +234,7 @@ class FruitMachine extends AbstractLotteryComponent {
                 } else {
                     resolve()
                 }
-            }, 125)
+            }, this.state.slideAnimationTimeMs)
         })
     }
 
@@ -242,6 +248,9 @@ class FruitMachine extends AbstractLotteryComponent {
             isLotteryRunning: true
         })
 
+        console.log(this.state.gameValuesData)
+
+        this.updateSlideAnimationVariable()
         await this.spin()
 
         this.setState({
@@ -253,6 +262,7 @@ class FruitMachine extends AbstractLotteryComponent {
         const {
             currencyName,
             isLoading,
+            isLoadingIcons,
             isLotteryRunning,
             isDemo,
             isWin,
@@ -268,7 +278,7 @@ class FruitMachine extends AbstractLotteryComponent {
 
         return (
             <div>
-                {isLoading ? <Loader/> : (
+                {isLoading || isLoadingIcons ? <Loader/> : (
                     <>
                         <div className="lottery-title"> {/* todo: move lottery title to new component if possible */}
                             {isLotteryRunning ? (

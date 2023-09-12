@@ -1,5 +1,9 @@
 @import 'variables';
 
+:root {
+  --slideAnimationTime: 2s;
+}
+
 .fruit-machine {
   margin: auto;
   border: 1px solid white;
@@ -27,12 +31,12 @@
 
 .slide--show {
   transform: translateY(30px);
-  animation: fadeIn .125s ease-out forwards;
+  animation: fadeIn var(--slideAnimationTime) ease-out forwards;
 }
 
 .slide--hide {
   transform: translateY(30px);
-  animation: fadeOut .125s ease-out forwards;
+  animation: fadeOut var(--slideAnimationTime) ease-out forwards;
 }
 
 @keyframes fadeIn {
