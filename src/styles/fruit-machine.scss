@@ -29,22 +29,56 @@
 
       &.result-line-element {
         border: 3px dashed yellow;
+
+        &.first-result {
+          border-right: 0;
+        }
+
+        &.middle-result {
+          border-left: 0;
+          border-right: 0;
+        }
+
+        &.last-result {
+          border-left: 0;
+        }
       }
     }
   }
 }
 
+.fruit-machine-buttons {
+  float: right;
+
+  @media (max-width: $mobile-max-width) {
+    margin-left: auto;
+    margin-right: auto;
+    float: initial;
+  }
+}
+
+.fruit-machine-alerts {
+  float: left;
+  width: 50%;
+
+  @media (max-width: $mobile-max-width) {
+    margin: 3% auto;
+    float: initial;
+    width: 100%;
+  }
+}
+
 .slide--show {
   transform: translateY(30px);
-  animation: fadeIn var(--slideAnimationTime) ease-out forwards;
+  animation: slideShow var(--slideAnimationTime) ease-out forwards;
 }
 
 .slide--hide {
   transform: translateY(30px);
-  animation: fadeOut var(--slideAnimationTime) ease-out forwards;
+  animation: slideHide var(--slideAnimationTime) ease-out forwards;
 }
 
-@keyframes fadeIn {
+@keyframes slideShow {
   from {
     transform: translateY(50px);
   }
@@ -53,7 +87,7 @@
   }
 }
 
-@keyframes fadeOut {
+@keyframes slideHide {
   from {
     transform: translateY(50px);
   }

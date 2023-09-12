@@ -76,11 +76,12 @@ class FruitMachine extends AbstractLotteryComponent {
             isDemo: props.isDemo || !props.user,
             gameCode: props.gameCode,
             ...super.state,
-            slideAnimationTimeMs: 75,
+            slideAnimationTimeMs: 60,
             minWinningSameCols: 3,
-            minSpinCount: 10,
+            minSpinCount: 15,
             maxSpinCount: 30,
             isLotteryRunning: false,
+            isRunAgainLotteryAvailable: false,
             numberOfLines: props.numberOfLines ? props.numberOfLines : 5,
             lines: [],
             winningCombinations: []
@@ -102,7 +103,7 @@ class FruitMachine extends AbstractLotteryComponent {
     
     getRandomColIcons = async (numberOfLines, isResultSpin = false) => {
         let resultCombination
-        const randomIcons = []
+        const colIconsData = []
 
         if (isResultSpin) {
             const { winningCombinations, result } = this.state
@@ -114,18 +115,33 @@ class FruitMachine extends AbstractLotteryComponent {
         }
 
         const colsData = this.generateFruitMachineLineColData(numberOfLines, isResultSpin, resultCombination)
+        let isFirstResult = true
 
         for (let colNumber = 0; colNumber < numberOfLines; colNumber++) {
             const colData = colsData[colNumber]
             const iconData = AVAILABLE_ICONS[colData.iconName]
-
-            randomIcons.push({
+            const isLastResult = colNumber === colsData.length - 1 || !colsData[colNumber + 1].isResult
+            const data = {
                 iconData,
-                isResult: colData.isResult || false
-            })
+                isResult: colData.isResult || false,
+                resultClassNames: null
+            }
+
+            if (colData.isResult) {
+                if (isFirstResult) {
+                    data.resultClassNames = 'first-result'
+                    isFirstResult = false
+                } else if (isLastResult) {
+                    data.resultClassNames = 'last-result'
+                } else {
+                    data.resultClassNames = 'middle-result'
+                }
+            }
+
+            colIconsData.push(data)
         }
 
-        return randomIcons
+        return colIconsData
     }
 
     getRandomColIconName = (previousIconName = null) => {
@@ -153,12 +169,12 @@ class FruitMachine extends AbstractLotteryComponent {
             cols.push(
                 <div
                     key={colNumber}
-                    className={`fruit-machine--line--element ${colElement.isResult && winMessage ? 'result-line-element blink-text' : ''}`}
+                    className={`fruit-machine--line--element${colElement.isResult && winMessage ? ' result-line-element blink-text' : ''} ${colElement.resultClassNames || ''}`}
                 >
                     <FontAwesomeIcon
                         icon={colElement.iconData.icon}
                         className="fa-5x"
-                        style={{color: colElement.iconData.color }}
+                        style={{color: colElement.iconData.color}}
                     />
                 </div>
             );
@@ -199,6 +215,68 @@ class FruitMachine extends AbstractLotteryComponent {
         }
 
         return rows
+    }
+
+    getWinningCombinationsTableRows = (winningCombinations, gameMultiplierValue) => {
+        const rows = []
+
+        for (let winningCombinationIndex = winningCombinations.length - 1; winningCombinationIndex >= 0; winningCombinationIndex--) {
+            const winningCombination = winningCombinations[winningCombinationIndex]
+            const iconData = AVAILABLE_ICONS[winningCombination.icon]
+
+            rows.push(
+                <tr key={`winning-combination-row--${winningCombinationIndex}`} className="fw-bold fs-5 align-middle">
+                    <td>
+                        <FontAwesomeIcon
+                            icon={iconData.icon}
+                            className="fa-3x"
+                            style={{color: iconData.color}}
+                        />
+                    </td>
+                    <td>
+                        { winningCombination.requiredSameSiblingsCount } x
+                    </td>
+                    <td className={winningCombination.value.isJackpot ? 'text-danger' : ''}>
+                        { winningCombination.value.value * gameMultiplierValue }
+                    </td>
+                </tr>
+            )
+        }
+
+        return rows
+    }
+
+    getWinningCombinationsTable = () => {
+        const {
+            winningCombinations,
+            gameMultiplierValue
+        } = this.state
+
+        return (
+            <table className="table table-dark">
+                <thead>
+                    <tr>
+                        <th colSpan={3}>
+                            Tabela wyników
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>
+                            Ikona
+                        </th>
+                        <th>
+                            Wymagana ilość (obok siebie w tym samym rzędzie)
+                        </th>
+                        <th>
+                            Wartość wygranej
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {this.getWinningCombinationsTableRows(winningCombinations, gameMultiplierValue)}
+                </tbody>
+            </table>
+        )
     }
 
     setRandomLines = async () => {
@@ -468,7 +546,7 @@ class FruitMachine extends AbstractLotteryComponent {
         userAccountBalance = null
     ) => {
         if (!resultSpin || resultSpin > targetSpinCount) {
-            resultSpin = targetSpinCount
+            resultSpin = targetSpinCount - 1
         }
 
         const {
@@ -548,6 +626,7 @@ class FruitMachine extends AbstractLotteryComponent {
         this.setState({
             costMessage,
             winMessage,
+            isRunAgainLotteryAvailable: true
         })
     }
 
@@ -564,7 +643,8 @@ class FruitMachine extends AbstractLotteryComponent {
 
         this.resetResult()
         this.setState({
-            isLotteryRunning: true
+            isLotteryRunning: true,
+            isRunAgainLotteryAvailable: false
         })
 
         if (this.state.user) {
@@ -576,16 +656,21 @@ class FruitMachine extends AbstractLotteryComponent {
             this.props.dispatch({ type: UPDATE_USER_ACCOUNT_BALANCE, payload: -(costValue * gameMultiplierValue) })
         }
 
-        await this.setSlideAnimationVariable()
+        await this.setSlideAnimationVariable(60)
         await this.setWinningCombinations()
 
         const targetSpinCount = Math.floor(Math.random() * (maxSpinCount - minSpinCount + 1)) + minSpinCount
         const resultSpin = targetSpinCount - Math.floor(Math.random() * (numberOfLines))
-        const apiResultSpin = resultSpin > 10 ? Math.floor(targetSpinCount / 2) : Math.floor(minSpinCount / 2)
+        const apiResultSpin = resultSpin > 10 ? Math.floor(targetSpinCount / 2 - 1) : Math.floor(minSpinCount / 2)
 
         await this.spin(0, targetSpinCount, resultSpin, apiResultSpin)
 
         this.setResult()
+    }
+
+    runAgainLottery = async () => {
+        this.resetResult()
+        await this.runLottery()
     }
 
     render() {
@@ -593,18 +678,19 @@ class FruitMachine extends AbstractLotteryComponent {
             currencyName,
             isLoading,
             isLotteryRunning,
+            isRunAgainLotteryAvailable,
             isDemo,
             isWin,
             errorMessage,
             winMessage,
             costMessage,
             costValue,
-            gameMultiplierValue
+            gameMultiplierValue,
         } = this.state
 
         const isLoadingLines = this.state.lines.length !== this.state.numberOfLines
         const costLabel = ' za ' + costValue * gameMultiplierValue + ' ' + currencyName
-        const jackpotValue = this.getJackpotValue()
+        const jackpotValue = this.getJackpotValue() * gameMultiplierValue
 
         return (
             <div>
@@ -622,14 +708,14 @@ class FruitMachine extends AbstractLotteryComponent {
                             )}
                             {jackpotValue && (
                                 <h6>
-                                    Maksymalna wygrana: <span className="text-danger">{jackpotValue} {currencyName}</span>
+                                    Maksymalna możliwa wygrana: <span className="text-danger">{jackpotValue} {currencyName}</span>
                                 </h6>
                             )}
                         </div>
-                        <div className="fruit-machine">
+                        <div className="fruit-machine d-flex">
                             {this.getFruitMachineGrid()}
                         </div>
-                        <div className="fruit-machine-alerts alerts"> {/* todo: move alerts to new component */}
+                        <div className="fruit-machine-alerts alerts mt-3 mb-5"> {/* todo: move alerts to new component */}
                             {errorMessage && (
                                 <div className="alert alert-danger">
                                     {errorMessage}
@@ -646,17 +732,28 @@ class FruitMachine extends AbstractLotteryComponent {
                                 </div>
                             )}
                         </div>
-                        <div className="fruit-machine-buttons mt-3 mb-5">{/* todo: move buttons to new component if possible */}
-                            <button
-                                className={`btn btn-warning play-button btn-lg text-dark fw-bold my-2`}
-                                onClick={this.runLottery}
-                                disabled={!this.isRunLotteryAvailable()}
-                            >
-                                Losuj {costLabel}
-                            </button>
+                        {/* todo: move buttons to new component if possible */}
+                        <div className="fruit-machine-buttons mt-3 mb-5">
+                            {isRunAgainLotteryAvailable ? (
+                                <button
+                                    className={`btn btn-warning play-button btn-lg text-dark fw-bold my-2`}
+                                    onClick={this.runAgainLottery}
+                                    disabled={!this.hasRequiredAccountBalance()}
+                                >
+                                    Losuj ponownie {costLabel}
+                                </button>
+                            ) : (
+                                <button
+                                    className={`btn btn-warning play-button btn-lg text-dark fw-bold my-2`}
+                                    onClick={this.runLottery}
+                                    disabled={!this.isRunLotteryAvailable()}
+                                >
+                                    Losuj {costLabel}
+                                </button>
+                            )}
                             {!isDemo && (
                                 <GameMultiplier
-                                    disabled={isLotteryRunning}
+                                    disabled={!this.isRunLotteryAvailable() && !isRunAgainLotteryAvailable}
                                     handleGameMultiplierChange={this.changeGameMultiplier}
                                     currentMultiplier={gameMultiplierValue}
                                     availableMultipliers={[0.5, 1, 2, 5]}
@@ -672,6 +769,11 @@ class FruitMachine extends AbstractLotteryComponent {
                                 />
                             )}
                         </div>
+                        {isRunAgainLotteryAvailable && isWin !== null && (
+                            <>
+                                {this.getWinningCombinationsTable()}
+                            </>
+                        )}
                     </>
                 )}
             </div>
