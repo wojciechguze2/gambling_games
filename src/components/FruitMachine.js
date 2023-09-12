@@ -7,16 +7,18 @@ import AccountBalance from './AccountBalance'
 import TopUpAccountButton from './TopUpAccountButton'
 import Loader from './Loader'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {faAppleWhole, faCarrot, faCoffee, faLeaf, faLemon, faPepperHot} from '@fortawesome/free-solid-svg-icons'
-
-const AVAILABLE_ICON_NAMES = [
-    'appleWhole',
-    'carrot',
-    'coffee',
-    'leaf',
-    'lemon',
-    'pepperHot',
-]
+import {  // not enough free fruit icons :(
+    faAppleWhole,
+    faCarrot,
+    faCoffee,
+    faLeaf,
+    faLemon,
+    faPepperHot,
+    faHeart,
+    faBomb,
+    faBolt,
+    faBug,  // (:
+} from '@fortawesome/free-solid-svg-icons'
 
 const AVAILABLE_ICONS = {
     'appleWhole': faAppleWhole,
@@ -25,7 +27,13 @@ const AVAILABLE_ICONS = {
     'leaf': faLeaf,
     'lemon': faLemon,
     'pepperHot': faPepperHot,
+    'heart': faHeart,
+    'bomb': faBomb,
+    'bolt': faBolt,
+    'bug': faBug
 }
+
+const AVAILABLE_ICON_NAMES = Object.keys(AVAILABLE_ICONS)
 
 class FruitMachine extends AbstractLotteryComponent {
     constructor(props) {
@@ -38,46 +46,19 @@ class FruitMachine extends AbstractLotteryComponent {
             isDemo: props.isDemo || !props.user,
             gameCode: props.gameCode,
             ...super.state,
+            slideAnimationTimeMs: 2000,
+            minWinningSameCols: 3,
             isLotteryRunning: false,
             numberOfLines: props.numberOfLines ? props.numberOfLines : 5,
-            isLoadingIcons: true,
-            slideAnimationTimeMs: 2000,
-            lines: [
-                {
-                    index: 0,
-                    cols: []
-                },
-                {
-                    index: 1,
-                    cols: []
-                },
-                {
-                    index: 2,
-                    cols: []
-                },
-                {
-                    index: 3,
-                    cols: []
-                },
-                {
-                    index: 4,
-                    cols: []
-                },
-            ]
+            lines: [],
         };
     }
 
     async componentDidMount() {
-        await this.setRandomIcons()
         await this.lotteryComponentDidMount()
-        this.updateSlideAnimationVariable()
-    }
-
-    updateSlideAnimationVariable = () => {
-        document.documentElement.style.setProperty(
-            '--slideAnimationTime',
-            `${this.state.slideAnimationTimeMs / 1000}s`
-        )
+        await this.setRandomLines()
+        await this.generateFruitMachineWinningCombinations()
+        this.setSlideAnimationVariable()
     }
 
     isRunLotteryAvailable = () => {
@@ -85,17 +66,6 @@ class FruitMachine extends AbstractLotteryComponent {
             !this.state.isLotteryRunning
             && this.hasRequiredAccountBalance()
         )
-    }
-
-    setError = (errorMessage = null) => {
-        if (!errorMessage) {
-            errorMessage = 'Wystąpił niezidentyfikowany błąd. Prosimy o kontakt.'
-        }
-
-        this.resetResult()
-        this.setState({
-            errorMessage
-        })
     }
     
     getRandomColIcons = async (numberOfLines, isWin = false) => {
@@ -109,22 +79,6 @@ class FruitMachine extends AbstractLotteryComponent {
         }
 
         return randomIcons
-    }
-
-    setRandomIcons = async (isWin = false) => {
-        this.setState({ isLoadingIcons: true })
-
-        const {
-            numberOfLines,
-            lines
-        } = this.state
-
-        for (let rowNumber = 0; rowNumber < numberOfLines; rowNumber++) {
-            const line = lines[rowNumber]
-            line.cols = await this.getRandomColIcons(numberOfLines, isWin)
-        }
-
-        this.setState({ isLoadingIcons: false })
     }
 
     getColIconName = (previousIconName = null, isWin = false) => {
@@ -145,18 +99,6 @@ class FruitMachine extends AbstractLotteryComponent {
                 availableIcons[Math.floor(Math.random() * availableIcons.length)]
             )
         )
-    }
-
-    generateFruitMachineLineColIconNames = (numberOfElements, isWin = false) => {
-        const colElements = []
-
-        for (let colNumber = 0; colNumber < numberOfElements; colNumber++) {
-            colElements.push({
-                iconName: this.getColIconName(colNumber > 0 ? colElements[colNumber - 1].iconName : null, isWin)
-            })
-        }
-
-        return colElements
     }
 
     getFruitMachineCols = (line) => {
@@ -215,6 +157,89 @@ class FruitMachine extends AbstractLotteryComponent {
         return rows
     }
 
+    setRandomLines = async () => {
+        const {
+            numberOfLines
+        } = this.state
+
+        const lines = []
+
+        for (let rowNumber = 0; rowNumber < numberOfLines; rowNumber++) {
+            const line = {
+                index: rowNumber,
+                cols:  await this.getRandomColIcons(numberOfLines, false)
+            }
+
+            lines.push(line)
+        }
+
+        this.setState({ lines })
+
+        return lines
+    }
+
+    setSlideAnimationVariable = () => {
+        document.documentElement.style.setProperty(
+            '--slideAnimationTime',
+            `${this.state.slideAnimationTimeMs / 1000}s`
+        )
+    }
+
+    setError = (errorMessage = null) => {
+        if (!errorMessage) {
+            errorMessage = 'Wystąpił niezidentyfikowany błąd. Prosimy o kontakt.'
+        }
+
+        this.resetResult()
+        this.setState({
+            errorMessage
+        })
+    }
+
+    generateFruitMachineWinningCombinations = () => {
+        const {
+            gameValuesData,
+            numberOfLines,
+            minWinningSameCols
+        } = this.state
+
+        console.log(gameValuesData)
+
+        const winningCombinations = []
+
+        for (let iconIndex = 0; iconIndex < AVAILABLE_ICON_NAMES.length; iconIndex++) {
+            const icon = AVAILABLE_ICON_NAMES[iconIndex]
+
+            for (let count = minWinningSameCols; count <= numberOfLines; count++) {
+                const value = gameValuesData[count - minWinningSameCols]
+
+                const combination = {
+                    icon,
+                    requiredSameSiblingsCount: count,
+                    value,
+                }
+
+                winningCombinations.push(combination)
+            }
+        }
+
+        console.log(winningCombinations)
+
+        return winningCombinations
+    };
+
+    generateFruitMachineLineColIconNames = (numberOfElements, isWin = false) => {
+        const colElements = []
+
+        for (let colNumber = 0; colNumber < numberOfElements; colNumber++) {
+            colElements.push({
+                iconName: this.getColIconName(colNumber > 0 ? colElements[colNumber - 1].iconName : null, isWin)
+            })
+        }
+
+        return colElements
+    }
+
     spin = async (currentSpinCount = 0, targetSpinCount = 100) => {
         const newLines = [...this.state.lines]
         const prependedElement = newLines.pop()
@@ -250,7 +275,7 @@ class FruitMachine extends AbstractLotteryComponent {
 
         console.log(this.state.gameValuesData)
 
-        this.updateSlideAnimationVariable()
+        this.setSlideAnimationVariable()
         await this.spin()
 
         this.setState({
@@ -262,7 +287,6 @@ class FruitMachine extends AbstractLotteryComponent {
         const {
             currencyName,
             isLoading,
-            isLoadingIcons,
             isLotteryRunning,
             isDemo,
             isWin,
@@ -273,12 +297,13 @@ class FruitMachine extends AbstractLotteryComponent {
             gameMultiplierValue
         } = this.state
 
+        const isLoadingLines = this.state.lines.length !== this.state.numberOfLines
         const costLabel = ' za ' + costValue * gameMultiplierValue + ' ' + currencyName
         const jackpotValue = this.getJackpotValue()
 
         return (
             <div>
-                {isLoading || isLoadingIcons ? <Loader/> : (
+                {isLoading || isLoadingLines ? <Loader/> : (
                     <>
                         <div className="lottery-title"> {/* todo: move lottery title to new component if possible */}
                             {isLotteryRunning ? (
