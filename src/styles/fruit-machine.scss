@@ -14,7 +14,6 @@
     width: 100%;
     padding: 20px;
     border: 1px solid rgba(255, 255, 255, 0.5);
-    transition: transform 1s ease;
 
     &--element {
       display: inline-flex;
@@ -23,5 +22,34 @@
       place-content: center;
       color: $custom-bg-primary;
     }
+  }
+}
+
+.slide--show {
+  transform: translateY(30px);
+  animation: fadeIn .125s ease-out forwards;
+}
+
+.slide--hide {
+  transform: translateY(30px);
+  animation: fadeOut .125s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    transform: translateY(50px);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    transform: translateY(50px);
+  }
+
+  to {
+    transform: translateY(0);
   }
 }

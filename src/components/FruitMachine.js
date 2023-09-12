@@ -7,7 +7,7 @@ import AccountBalance from './AccountBalance'
 import TopUpAccountButton from './TopUpAccountButton'
 import Loader from './Loader'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCoffee } from '@fortawesome/free-solid-svg-icons'
+import {faAppleWhole, faCarrot, faCoffee, faLeaf, faLemon, faPepperHot} from '@fortawesome/free-solid-svg-icons'
 
 
 class FruitMachine extends AbstractLotteryComponent {
@@ -25,24 +25,109 @@ class FruitMachine extends AbstractLotteryComponent {
             numberOfLines: props.numberOfLines ? props.numberOfLines : 5,
             lines: [
                 {
+                    index: 0,
                     type: 'normal',
-                    visible: true,
+                    cols: [
+                        {
+                            'icon': faLemon,
+                        },
+                        {
+                            'icon': faAppleWhole,
+                        },
+                        {
+                            'icon': faLeaf,
+                        },
+                        {
+                            'icon': faCarrot,
+                        },
+                        {
+                            'icon': faPepperHot,
+                        },
+                    ]
                 },
                 {
+                    index: 1,
                     type: 'normal',
-                    visible: true,
+                    cols: [
+                        {
+                            'icon': faLemon,
+                        },
+                        {
+                            'icon': faCarrot,
+                        },
+                        {
+                            'icon': faPepperHot,
+                        },
+                        {
+                            'icon': faAppleWhole,
+                        },
+                        {
+                            'icon': faLeaf,
+                        },
+                    ]
                 },
                 {
+                    index: 2,
                     type: 'result',
-                    visible: true,
+                    cols: [
+                        {
+                            'icon': faLemon,
+                        },
+                        {
+                            'icon': faCarrot,
+                        },
+                        {
+                            'icon': faAppleWhole,
+                        },
+                        {
+                            'icon': faLeaf,
+                        },
+                        {
+                            'icon': faPepperHot,
+                        },
+                    ]
                 },
                 {
+                    index: 3,
                     type: 'normal',
-                    visible: true,
+                    cols: [
+                        {
+                            'icon': faPepperHot,
+                        },
+                        {
+                            'icon': faLemon,
+                        },
+                        {
+                            'icon': faCarrot,
+                        },
+                        {
+                            'icon': faAppleWhole,
+                        },
+                        {
+                            'icon': faLeaf,
+                        },
+                    ]
                 },
                 {
+                    index: 4,
                     type: 'normal',
-                    visible: true,
+                    cols: [
+                        {
+                            'icon': faLemon,
+                        },
+                        {
+                            'icon': faCarrot,
+                        },
+                        {
+                            'icon': faAppleWhole,
+                        },
+                        {
+                            'icon': faPepperHot,
+                        },
+                        {
+                            'icon': faLeaf,
+                        },
+                    ]
                 },
             ]
         };
@@ -59,60 +144,6 @@ class FruitMachine extends AbstractLotteryComponent {
         )
     }
 
-    getFruitMachineCols = (line) => {
-        const {
-            numberOfLines,
-        } = this.state
-        const cols = []
-
-        for (let colNumber = 0; colNumber < numberOfLines; colNumber++) {  // cols
-            cols.push(
-                <div
-                    key={colNumber}
-                    className={`fruit-machine--line--element`}
-                >
-                    <FontAwesomeIcon icon={faCoffee} className="fa-5x" />
-                </div>
-            );
-        }
-
-        return cols
-    }
-
-    getFruitMachineGrid = () => {
-        const { lines, numberOfLines } = this.state;
-        const visibleLinesLength = lines.length;
-        const rows = [];
-
-        const cyclicLines = [...lines];
-
-        for (let rowNumber = 0; rowNumber < numberOfLines; rowNumber++) {
-            const line = cyclicLines[rowNumber % visibleLinesLength];
-            const opacity = 1;
-            let translateY = 0;
-
-            if (!line.visible) {
-                translateY = '100%';
-            }
-
-            const cols = this.getFruitMachineCols(line);
-
-            rows.push(
-                <div
-                    key={rowNumber}
-                    className={`fruit-machine--line ${line.type}`}
-                    style={{ opacity, transform: `translateY(${translateY})` }}
-                    data-visible={line.visible}
-                    data-line-type={line.type}
-                >
-                    {cols}
-                </div>
-            );
-        }
-
-        return rows;
-    }
-
     setError = (errorMessage = null) => {
         if (!errorMessage) {
             errorMessage = 'Wystąpił niezidentyfikowany błąd. Prosimy o kontakt.'
@@ -124,36 +155,98 @@ class FruitMachine extends AbstractLotteryComponent {
         })
     }
 
+    getFruitMachineCols = (line) => {
+        const {
+            numberOfLines,
+        } = this.state
+        const cols = []
+
+        for (let colNumber = 0; colNumber < numberOfLines; colNumber++) {  // cols
+            const colElement = line.cols[colNumber]
+
+            cols.push(
+                <div
+                    key={colNumber}
+                    className={`fruit-machine--line--element`}
+                >
+                    <FontAwesomeIcon icon={colElement.icon} className="fa-5x" />
+                </div>
+            );
+        }
+
+        return cols
+    }
+
+    getFruitMachineGrid = () => {
+        const { lines, numberOfLines, isLotteryRunning } = this.state
+        const rows = []
+
+        for (let rowNumber = 0; rowNumber < numberOfLines; rowNumber++) {
+            const line = lines[rowNumber]
+            const opacity = 1
+            const isShowing = rowNumber < numberOfLines / rowNumber
+            const isHiding = rowNumber > numberOfLines / rowNumber
+            let slideClass = ''
+
+            if (isLotteryRunning && isShowing) {
+                slideClass = 'slide--show'
+            } else if (isLotteryRunning && isHiding) {
+                slideClass = 'slide--hide'
+            }
+
+            const cols = this.getFruitMachineCols(line)
+
+            rows.push(
+                <div
+                    key={`${line.type}-${line.index}`}
+                    className={`fruit-machine--line ${line.type} ${slideClass}`}
+                    style={{ opacity }}
+                    data-line-type={line.type}
+                >
+                    {cols}
+                </div>
+            )
+        }
+
+        return rows
+    }
+
+    spin = async (currentSpinCount = 0, targetSpinCount = 100) => {
+        const newLines = [...this.state.lines]
+        const prependedElement = newLines.pop()
+
+        newLines.unshift(prependedElement)
+
+        this.setState({
+            lines: newLines
+        })
+
+        await new Promise((resolve) => {
+            setTimeout(() => {
+                if (currentSpinCount < targetSpinCount) {
+                    this.spin(++currentSpinCount).then(resolve)
+                } else {
+                    resolve()
+                }
+            }, 125)
+        })
+    }
+
     runLottery = async () => {
         if (!this.hasRequiredAccountBalance()) {
             return false
         }
 
         this.resetResult()
+        this.setState({
+            isLotteryRunning: true
+        })
 
-        const lines = this.state.lines
-        const newLines = [...lines]
-        const prependedElement = { type: 'normal', visible: true }
-        const appendedElement = newLines.pop()
-        appendedElement.visible = false
-
-        if (appendedElement.type === 'result') {
-            newLines.unshift(appendedElement)
-        } else {
-            newLines.unshift(prependedElement)
-        }
+        await this.spin()
 
         this.setState({
-            isLotteryRunning: true,
-            lines: newLines,
-        });
-
-        setTimeout(() => {
-            this.setState({
-                isLotteryRunning: false,
-                lines: newLines.map(line => ({ ...line, visible: true })),
-            })
-        }, 1000)
+            isLotteryRunning: false,
+        })
     }
 
     render() {
