@@ -22,7 +22,7 @@ const HomeView = () => {
             title: 'Jednoręki bandyta',
             url: '/game/fruit-machine',
             description: 'Warto spróbować swojego szczęścia w najnowszej grze "Jednoręki bandyta"! Za zaledwie 100 EuroJamników masz szansę wygrać aż 50 000 EuroJamników. Zgarniaj doskonałe nagrody!',
-            imageUrl: '/images/homepage/latest-games--wheel-of-fortune.webp',
+            imageUrl: '/images/homepage/latest-games--fruit-machine.webp',
         },
     ];
 
