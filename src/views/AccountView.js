@@ -44,7 +44,7 @@ const AccountView = () => {
     return (
         <div className="account container my-5">
             {user &&
-                <div className="card w-75 m-auto">
+                <div className="card m-auto">
                     <div className="card-header">
                         <h5 className="card-title">
                             Dane użytkownika: {user.username}
