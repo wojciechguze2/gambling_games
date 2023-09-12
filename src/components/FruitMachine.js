@@ -763,7 +763,7 @@ class FruitMachine extends AbstractLotteryComponent {
                                     disabled={!this.isRunLotteryAvailable() && !isRunAgainLotteryAvailable}
                                     handleGameMultiplierChange={this.changeGameMultiplier}
                                     currentMultiplier={gameMultiplierValue}
-                                    availableMultipliers={[0.5, 1, 2, 5]}
+                                    availableMultipliers={[0.5, 1, 2, 5, 10, 25, 50, 100]}
                                 />
                             )}
                             {!isDemo && (
@@ -772,7 +772,7 @@ class FruitMachine extends AbstractLotteryComponent {
                             {!this.hasRequiredAccountBalance() && (
                                 <TopUpAccountButton
                                     handleTopUpChange={this.handleTopUpChange}
-                                    disabled={isLotteryRunning && isWin === null}
+                                    disabled={(isLotteryRunning || isRunAgainLotteryAvailable) && isWin === null}
                                 />
                             )}
                         </div>
