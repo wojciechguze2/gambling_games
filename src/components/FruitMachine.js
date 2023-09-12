@@ -197,35 +197,80 @@ class FruitMachine extends AbstractLotteryComponent {
     }
 
     generateFruitMachineWinningCombinations = () => {
-        const { numberOfLines, minWinningSameCols } = this.state;
+        const {
+            numberOfLines,
+            minWinningSameCols,
+            gameValuesData
+        } = this.state
 
         const winningCombinations = [];
-        const availableValues = [...this.state.gameValuesData]
 
         for (let iconIndex = 0; iconIndex < AVAILABLE_ICON_NAMES.length; iconIndex++) {
-            const icon = AVAILABLE_ICON_NAMES[iconIndex];
+            const icon = AVAILABLE_ICON_NAMES[iconIndex]
+            const iconCombinations = []
+            const iconCombinationsValues = []
 
             for (let count = minWinningSameCols; count <= numberOfLines; count++) {
-                if (availableValues.length > 0) {
-                    const randomIndex = Math.floor(Math.random() * availableValues.length);
-                    const value = availableValues.splice(randomIndex, 1)[0];
+                const availableCombinationValues = gameValuesData.filter(
+                    valueData => !iconCombinationsValues.includes(valueData.value)
+                )
 
-                    const combination = {
-                        icon,
-                        requiredSameSiblingsCount: count,
-                        value,
-                    };
+                const randomCombinationValueIndex = Math.floor(Math.random() * availableCombinationValues.length)
+                const uniqueIconValue = availableCombinationValues[randomCombinationValueIndex]
 
-                    winningCombinations.push(combination);
-                } else {
-                    break
+                const combination = {
+                    icon,
+                    requiredSameSiblingsCount: count,
+                    value: uniqueIconValue,
+                }
+
+                iconCombinationsValues.push(uniqueIconValue.value)
+
+                iconCombinations.push(combination)
+            }
+
+            iconCombinations.sort((a, b) => {
+                const compareResult = b.requiredSameSiblingsCount - a.requiredSameSiblingsCount
+
+                return compareResult !== 0 ? compareResult : b.value.value - a.value.value
+            })
+
+            for (let iconCombinationIndex = 0; iconCombinationIndex < iconCombinations.length; iconCombinationIndex++) {
+                const iconCombination = iconCombinations[iconCombinationIndex]
+
+                const combinationsWithHigherValue = iconCombinations.slice(
+                    iconCombinationIndex + 1
+                ).filter(
+                    c => c.value.value > iconCombination.value.value
+                )
+
+                if (combinationsWithHigherValue.length > 0) {
+                    const combinationWithHigherValue = combinationsWithHigherValue.reduce((prev, current) => {
+                        return prev.value.value > current.value.value ? prev : current;
+                    });
+
+                    [
+                        combinationWithHigherValue.value,
+                        iconCombination.value
+                    ] = [
+                        iconCombination.value,
+                        combinationWithHigherValue.value
+                    ]
+
+                    /*
+                    same as:
+                    const tmp = combinationWithHigherValue.value
+
+                    combinationWithHigherValue.value = iconCombination.value
+                    iconCombination.value = tmp
+                     */
                 }
             }
+
+            winningCombinations.push(...iconCombinations)
         }
 
-        console.log(winningCombinations);
-
-        return winningCombinations;
+        return winningCombinations
     };
 
     generateFruitMachineLineColIconNames = (numberOfElements, isWin = false) => {
@@ -272,8 +317,6 @@ class FruitMachine extends AbstractLotteryComponent {
         this.setState({
             isLotteryRunning: true
         })
-
-        console.log(this.state.gameValuesData)
 
         this.setSlideAnimationVariable()
         await this.spin()
