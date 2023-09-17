@@ -13,7 +13,7 @@ import LotteryAlerts from './LotteryAlerts'
 import LotteryTitle from './LotteryTitle'
 
 
-class WheelOfFortune extends Lottery {
+class LotteryGameWheelOfFortune extends Lottery {
     constructor(props) {
         super(props)
 
@@ -207,7 +207,7 @@ class WheelOfFortune extends Lottery {
                         <LotteryTitle
                             title={'Koło fortuny'}
                             isLotteryRunning={isSpinning || isFakeSpinning}
-                            isWin={isWin}
+                            isWin={isWin !== null && !isSpinning ? true : null}
                             jackpotValue={jackpotValue}
                             currencyName={currencyName}
                             additionalClass={'m-5'}
@@ -272,4 +272,4 @@ class WheelOfFortune extends Lottery {
     }
 }
 
-export default WheelOfFortune;
+export default LotteryGameWheelOfFortune;

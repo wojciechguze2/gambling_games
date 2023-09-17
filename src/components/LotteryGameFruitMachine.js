@@ -67,7 +67,7 @@ const AVAILABLE_ICONS = {
 
 const AVAILABLE_ICON_NAMES = Object.keys(AVAILABLE_ICONS)
 
-class FruitMachine extends Lottery {
+class LotteryGameFruitMachine extends Lottery {
     constructor(props) {
         super(props)
 
@@ -763,4 +763,4 @@ class FruitMachine extends Lottery {
     }
 }
 
-export default FruitMachine
+export default LotteryGameFruitMachine

@@ -1,4 +1,4 @@
-import WheelOfFortune from '../components/WheelOfFortune'
+import LotteryGameWheelOfFortune from '../components/LotteryGameWheelOfFortune'
 import {useDispatch, useSelector} from 'react-redux'
 
 const GameWheelOfFortuneView = () => {
@@ -7,7 +7,7 @@ const GameWheelOfFortuneView = () => {
 
     return (
         <div className="game game--wheel-of-fortune-container container text-center">
-            <WheelOfFortune
+            <LotteryGameWheelOfFortune
                 gameCode={'wheel-of-fortune'}
                 containerClass={'m-auto d-inline-flex bg-dark my-5'}
                 contentClass={'custom-bg-primary shadow-lg fw-bold border border-light border-2'}

@@ -1,4 +1,4 @@
-import NumberLottery from '../components/NumberLottery'
+import LotteryGameNumberLottery from '../components/LotteryGameNumberLottery'
 import { useDispatch, useSelector } from 'react-redux'
 
 const GameNumberLotteryView = () => {
@@ -7,7 +7,7 @@ const GameNumberLotteryView = () => {
 
     return (
         <div className="game game--number-lottery-container container text-center my-5">
-            <NumberLottery
+            <LotteryGameNumberLottery
                 gameCode={'number-lottery'}
                 isDemo={false}
                 user={user}

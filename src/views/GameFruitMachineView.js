@@ -1,4 +1,4 @@
-import FruitMachine from '../components/FruitMachine'
+import LotteryGameFruitMachine from '../components/LotteryGameFruitMachine'
 import { useDispatch, useSelector } from 'react-redux'
 
 const GameNumberLotteryView = () => {
@@ -7,7 +7,7 @@ const GameNumberLotteryView = () => {
 
     return (
         <div className="game game--fruit-machine-container container text-center my-5">
-            <FruitMachine
+            <LotteryGameFruitMachine
                 gameCode={'fruit-machine'}
                 isDemo={false}
                 user={user}

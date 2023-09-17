@@ -11,7 +11,7 @@ import LotteryAlerts from './LotteryAlerts'
 import LotteryTitle from './LotteryTitle'
 
 
-class NumberLottery extends Lottery {
+class LotteryGameNumberLottery extends Lottery {
     constructor(props) {
         super(props)
 
@@ -370,4 +370,4 @@ class NumberLottery extends Lottery {
     }
 }
 
-export default NumberLottery
+export default LotteryGameNumberLottery
