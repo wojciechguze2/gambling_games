@@ -38,7 +38,7 @@ export const getDemoGameResult = async (gameId) => {
 }
 
 export const getGameResult = async (gameId, postData) => {
-    const url = `/api/games/${gameId}/result`
+    const url = `api/games/${gameId}/result`
 
     const response = await axios.post(url, postData)
 
