@@ -3,12 +3,28 @@ import { useEffect, useState } from 'react'
 import { SET_GAMES } from '../types/gameTypes'
 import Loader from './Loader'
 import { getAllGames } from '../service/game'
+import MainHeaderCollapse from './MainHeaderCollapse'
+import { MOBILE_MAX_WIDTH_PX } from '../utils/constants'
 
 const MainHeader = () => {
     const user = useSelector(state => state.auth.user)
     const gamesData = useSelector(state => state.games)
     const [isLoading, setLoading] = useState(true)
+    const [isMobile, setIsMobile] = useState(window.matchMedia(`(max-width: ${MOBILE_MAX_WIDTH_PX}px)`).matches)
     const dispatch = useDispatch()
+
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobile(window.matchMedia(`(max-width: ${MOBILE_MAX_WIDTH_PX}px)`).matches)
+        }
+
+        window.addEventListener('resize', handleResize)
+
+        return () => {
+            window.removeEventListener('resize', handleResize)
+        }
+    }, [])
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -33,8 +49,8 @@ const MainHeader = () => {
                             <button
                                 className="navbar-toggler"
                                 type="button"
-                                data-toggle="collapse"
-                                data-target="#navbarNav"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#navbarNav"
                                 aria-controls="navbarNav"
                                 aria-expanded="false"
                                 aria-label="Toggle navigation"
@@ -46,43 +62,13 @@ const MainHeader = () => {
                                     EuroDachshund
                                 </a>
                             </div>
-                            <div className="collapse navbar-collapse" id="navbarNav">
-                                <ul className="nav navbar-nav">
-                                    {user ? (
-                                        <>
-                                            <li className="dropdown">
-                                                <button
-                                                    className="btn btn-info custom-bg-info rounded-0 dropdown-toggle"
-                                                    id="games-dropdown"
-                                                    type="button"
-                                                    role="button"
-                                                    data-bs-toggle="dropdown"
-                                                    aria-expanded="false"
-                                                >
-                                                    Zagraj
-                                                </button>
-                                                <ul className="dropdown-menu" aria-labelledby="games-dropdown">
-                                                    {gamesData && gamesData.games && gamesData.games.length && gamesData.games.map(game => (
-                                                        <li key={game.id}>
-                                                            <a className="dropdown-item" href={`/game/${game.code}`}>
-                                                                {game.name}
-                                                            </a>
-                                                        </li>
-                                                    ))}
-                                                </ul>
-                                            </li>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <li>
-                                                <a href="/game/demo" className="btn btn-info custom-bg-info rounded-0">
-                                                    Koło fortuny - demo
-                                                </a>
-                                            </li>
-                                        </>
-                                    )}
-                                </ul>
-                            </div>
+                            {!isMobile && (
+                                <MainHeaderCollapse
+                                    user={user}
+                                    gamesData={gamesData}
+                                    isMobile={isMobile}
+                                />
+                            )}
                             <ul className="nav navbar-nav navbar-right">
                                 {user ? (
                                     <>
@@ -112,6 +98,13 @@ const MainHeader = () => {
                                     </>
                                 ) }
                             </ul>
+                            {isMobile && (
+                                <MainHeaderCollapse
+                                    user={user}
+                                    gamesData={gamesData}
+                                    isMobile={isMobile}
+                                />
+                            )}
                         </div>
                     </nav>
                 </header>

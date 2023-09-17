@@ -37,7 +37,7 @@ const HomeView = () => {
                 </div>
                 <div className="text-center my-5">
                     {user ? (
-                        <div className="card custom-bg-primary text-white m-5">
+                        <div className="card custom-bg-primary text-white my-3 py-1">
                             <div className="card-header">
                                 <h5 className="card-title">Najnowsze Gry</h5>
                             </div>
@@ -46,7 +46,7 @@ const HomeView = () => {
                                     {isLoading ? <Loader/> : (
                                         <>
                                             {latestGames && latestGames.map((latestGame, index) => (
-                                                <div key={index} className="col-md-4 mb-4">
+                                                <div key={index} className="col-md-4 mb-4 my-2">
                                                     <div className="card">
                                                         <img
                                                             src={`/images/homepage/latest-games--${latestGame.code}.webp`}
@@ -72,49 +72,51 @@ const HomeView = () => {
                         </div>
                     ) : (
                         <div className="card-deck">
-                        <div className="card custom-bg-primary m-5">
-                            <div className="card-body">
-                                <p className="card-title fs-5 text-white">
-                                    Posiadasz już u nas konto?
-                                </p>
-                                <p className="card-text fs-5 text-white">
-                                    Zaloguj się, aby rozpocząć grę
-                                </p>
-                                <Link to="/login" className="btn btn-light mx-2">
-                                    Zaloguj się
-                                </Link>
+                            <div className="card custom-bg-primary my-3">
+                                <div className="card-body">
+                                    <p className="card-title fs-5 fw-bold text-white">
+                                        Posiadasz już u nas konto?
+                                    </p>
+                                    <p className="card-text fs-6 text-white">
+                                        Zaloguj się, aby rozpocząć grę
+                                    </p>
+                                    <Link to="/login" className="btn btn-light fw-bold mx-2">
+                                        Zaloguj się
+                                    </Link>
+                                </div>
+                            </div>
+                            <div className="card custom-bg-primary my-3">
+                                <div className="card-body">
+                                    <p className="card-title fs-5 fw-bold text-white">
+                                        Nie posiadasz jeszcze konta?
+                                    </p>
+                                    <p className="card-text fs-6 text-white">
+                                        Zarejestruj się, aby zdobyć&nbsp;
+                                        <span className="w-100 d-block">
+                                            <span className="rounded-2 bg-dark text-warning fw-bold">
+                                                1000 bonusowych Euro Jamników na start!
+                                            </span>
+                                        </span>
+                                    </p>
+                                    <Link to="/register" className="btn btn-warning fw-bold mx-2">
+                                        Zarejestruj się
+                                    </Link>
+                                </div>
+                            </div>
+                            <div className="card custom-bg-primary my-3">
+                                <div className="card-body">
+                                    <p className="card-title fs-5 fw-bold text-white">
+                                        Nie wiesz na czym polega gra?
+                                    </p>
+                                    <p className="card-text fs-6 text-white">
+                                        Wypróbuj wersję demo!
+                                    </p>
+                                    <Link to="/game/demo" className="btn btn-dark fw-bold mx-2">
+                                        Zagraj w demo
+                                    </Link>
+                                </div>
                             </div>
                         </div>
-                        <div className="card custom-bg-primary m-5">
-                            <div className="card-body">
-                                <p className="card-title fs-5 text-white">
-                                    Nie posiadasz jeszcze konta?
-                                </p>
-                                <p className="card-text fs-5 text-white">
-                                    Zarejestruj się, aby zdobyć&nbsp;
-                                    <span className="rounded-2 bg-dark text-warning fw-bold">
-                                        1000 bonusowych Euro Jamników na start!
-                                    </span>
-                                </p>
-                                <Link to="/register" className="btn btn-warning mx-2">
-                                    Zarejestruj się
-                                </Link>
-                            </div>
-                        </div>
-                        <div className="card custom-bg-primary m-5">
-                            <div className="card-body">
-                                <p className="card-title fs-5 text-white">
-                                    Nie wiesz na czym polega gra?
-                                </p>
-                                <p className="card-text fs-5 text-white">
-                                    Wypróbuj wersję demo!
-                                </p>
-                                <Link to="/game/demo" className="btn btn-dark mx-2">
-                                    Zagraj w demo
-                                </Link>
-                            </div>
-                        </div>
-                    </div>
                     )}
                 </div>
             </div>
