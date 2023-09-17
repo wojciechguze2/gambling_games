@@ -23,7 +23,9 @@ const TopUpAccountButton = ({ disabled, handleTopUpChange, additionalClass = '' 
         try {
             setLoading(true)
 
-            const accountBalance = await addAccountBalance(1000)
+            const response = await addAccountBalance(1000)
+
+            const accountBalance = response.data
 
             if (response.status <= 299) {  // todo: maybe add alert
                 dispatch({type: SET_USER_ACCOUNT_BALANCE, payload: accountBalance})

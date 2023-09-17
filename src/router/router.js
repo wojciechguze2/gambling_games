@@ -2,6 +2,7 @@ import React from 'react'
 import ProtectedRoute from '../components/ProtectedRoute'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Loader from '../components/Loader'
+import ScrollToTop from '../components/ScrollToTop'
 
 const LazyHomeView = React.lazy(() => import('../views/HomeView'))
 
@@ -21,6 +22,7 @@ const RoutesConfig = () => {
     return (
         <React.Suspense fallback={<Loader />}>
             <BrowserRouter>
+                <ScrollToTop />
                 <Routes>
                     <Route index element={<LazyHomeView />} />
                     <Route path="/game/demo" element={<LazyGameDemoView />} />

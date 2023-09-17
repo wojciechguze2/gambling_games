@@ -345,14 +345,19 @@ class NumberLottery extends AbstractLotteryComponent {
                                 Rozpocznij nową grę
                             </button>
                         ) : (
-                            <button
-                                className={`btn btn-warning play-button btn-lg text-dark fw-bold my-2`}
-                                onClick={this.runLottery}
-                                disabled={!this.isRunLotteryAvailable()}
-                            >
-                                Losuj {costLabel}
-                            </button>
-                        )}
+                            <>
+                                {!isLotteryRunning && selectedNumbers.length < requiredSelectedNumbersCount && (
+                                    <p className="fs-6 text-danger">Wybierz {requiredSelectedNumbersCount} liczb aby rozpocząć losowanie.</p>
+                                )}
+                                <button
+                                    className={`btn btn-warning play-button btn-lg text-dark fw-bold my-2`}
+                                    onClick={this.runLottery}
+                                    disabled={!this.isRunLotteryAvailable()}
+                                >
+                                    Losuj {costLabel}
+                                </button>
+                            </>
+                            )}
                         {!isDemo && (
                             <GameMultiplier
                                 disabled={isLotteryRunning}

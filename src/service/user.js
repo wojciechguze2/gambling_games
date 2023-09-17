@@ -19,9 +19,7 @@ export const loginUser = async (postData) => {
 }
 
 export const addAccountBalance = async (value = 1000) => {
-    const response = await axios.patch('api/user/account-balance/add', { value })
-
-    return response.data  // current account balance
+    return await axios.patch('api/user/account-balance/add', { value })
 }
 
 export const getAccountBalance = async () => {
