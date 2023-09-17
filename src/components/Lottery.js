@@ -121,6 +121,10 @@ class Lottery extends Component {
     }
 
     changeGameMultiplier = (gameMultiplierValue) => {
+        if (gameMultiplierValue === this.state.gameMultiplierValue) {
+            return
+        }
+
         this.setState({ gameMultiplierValue })
         this.resetResult()
     }

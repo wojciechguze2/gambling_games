@@ -1,8 +1,14 @@
-import React from 'react'
+import React, { useRef } from 'react'
 
 const GameMultiplier = ({ disabled, handleGameMultiplierChange, currentMultiplier, availableMultipliers }) => {
+    const dropdownMenuRef = useRef(null)
+
     const changeMultiplier = (newValue) => {
-        if (disabled || !availableMultipliers.includes(newValue)) {
+        if (dropdownMenuRef.current) {
+            dropdownMenuRef.current.classList.remove('show')
+        }
+
+        if (disabled || !availableMultipliers.includes(newValue) || newValue === currentMultiplier) {
             return false
         }
 
@@ -28,7 +34,7 @@ const GameMultiplier = ({ disabled, handleGameMultiplierChange, currentMultiplie
             >
                 x{currentMultiplier}
             </button>
-            <ul className="dropdown-menu" aria-labelledby="game-multiplier-dropdown">
+            <ul className="dropdown-menu" aria-labelledby="game-multiplier-dropdown" ref={dropdownMenuRef}>
                 {availableMultipliers.map((multiplier, index) => (
                     <li key={index}>
                         <a
@@ -46,4 +52,4 @@ const GameMultiplier = ({ disabled, handleGameMultiplierChange, currentMultiplie
     );
 };
 
-export default GameMultiplier;
+export default GameMultiplier

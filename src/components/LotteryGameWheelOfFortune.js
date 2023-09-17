@@ -210,7 +210,7 @@ class LotteryGameWheelOfFortune extends Lottery {
                             isWin={isWin !== null && !isSpinning ? true : null}
                             jackpotValue={jackpotValue}
                             currencyName={currencyName}
-                            additionalClass={'m-5'}
+                            additionalClass={'mt-5'}
                         />
                         <div className="wheel-of-fortune-container">
                             <div

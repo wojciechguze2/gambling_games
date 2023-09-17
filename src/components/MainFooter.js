@@ -1,3 +1,5 @@
+import { LINKEDIN_LINK } from '../utils/constants'
+
 const MainFooter = () => {
     return (
         <footer
@@ -30,7 +32,7 @@ const MainFooter = () => {
                             </p>
                             <ul className="list-unstyled fs-5">
                                 <li>
-                                    ...
+                                    -
                                 </li>
                             </ul>
                         </div>
@@ -40,53 +42,24 @@ const MainFooter = () => {
                             </p>
                             <ul className="list-unstyled fs-5">
                                 <li>
-                                    ...
+                                    -
                                 </li>
                             </ul>
                         </div>
                     </div>
                 </div>
             </div>
-            <div className="d-flex justify-content-end align-items-center p-3 pb-0">
-                <a
-                    href="/LINKEDIN_LINK"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="me-4"
-                    aria-label="Linkedin account"
-                >
-                    Linkedin
-                </a>
-                <a
-                    href="/GITHUB_LINK"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="me-4"
-                    aria-label="GitHub account"
-                >
-                    GitHub
-                </a>
-                <a
-                    href="/MAIL_LINK"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="me-4"
-                    aria-label="Send me an e-mail"
-                >
-                    Mail
-                </a>
-                <a
-                    href="/PHONE_LINK"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="me-4"
-                    aria-label="Call me"
-                >
-                    Phone
-                </a>
-            </div>
             <div className="d-flex justify-content-end align-items-center px-3">
-                <p className="me-4">Wojciech Guze - 09.2023</p>
+                <a
+                    href={LINKEDIN_LINK}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="me-4 text-white text-decoration-none fs-5 fw-bold"
+                >
+                    <div>
+                        Wojciech Guze - 09.2023
+                    </div>
+                </a>
             </div>
         </footer>
     )

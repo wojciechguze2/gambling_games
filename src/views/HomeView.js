@@ -37,7 +37,7 @@ const HomeView = () => {
                 </div>
                 <div className="text-center my-5">
                     {user ? (
-                        <div className="card custom-bg-primary m-5">
+                        <div className="card custom-bg-primary text-white m-5">
                             <div className="card-header">
                                 <h5 className="card-title">Najnowsze Gry</h5>
                             </div>
@@ -58,7 +58,7 @@ const HomeView = () => {
                                                             <h5 className="card-title">
                                                                 {latestGame.name}
                                                             </h5>
-                                                            <Link to={`/game/${latestGame.code}`} className="btn custom-bg-primary border-0 btn-info">
+                                                            <Link to={`/game/${latestGame.code}`} className="btn custom-bg-primary border-0 btn-info text-white">
                                                                 Zagraj
                                                             </Link>
                                                         </div>
@@ -87,9 +87,9 @@ const HomeView = () => {
                         </div>
                         <div className="card custom-bg-primary m-5">
                             <div className="card-body">
-                                <h5 className="card-title fs-5 text-white">
+                                <p className="card-title fs-5 text-white">
                                     Nie posiadasz jeszcze konta?
-                                </h5>
+                                </p>
                                 <p className="card-text fs-5 text-white">
                                     Zarejestruj się, aby zdobyć&nbsp;
                                     <span className="text-warning fw-bold">

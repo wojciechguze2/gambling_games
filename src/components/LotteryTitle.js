@@ -5,15 +5,15 @@ const LotteryTitle = ({ title, isLotteryRunning, isWin, jackpotValue, currencyNa
         <div className={`lottery-title ${additionalClass ? additionalClass : ''}`}>
             {isLotteryRunning ? (
                 isWin === null ? (
-                    <h5>Rozpoczęto losowanie!</h5>
+                    <h4>Rozpoczęto losowanie!</h4>
                 ) : (
-                    <h5>Losowanie zakończone!</h5>
+                    <h4>Losowanie zakończone!</h4>
                 )
             ) : (
-                <h5>{title}</h5>
+                <h4>{title}</h4>
             )}
             {jackpotValue && (
-                <p className="fs-6">
+                <p className="fs-5">
                     Maksymalna możliwa wygrana: <span className="text-danger fw-bold">{jackpotValue} {currencyName}</span>
                 </p>
             )}
