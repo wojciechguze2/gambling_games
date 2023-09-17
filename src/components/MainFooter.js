@@ -1,4 +1,4 @@
-import { LINKEDIN_LINK } from '../utils/constants'
+import {GITHUB_LINK, LINKEDIN_LINK} from '../utils/constants'
 
 const MainFooter = () => {
     return (
@@ -28,21 +28,45 @@ const MainFooter = () => {
                         </div>
                         <div className="col-md-4 text-center footer-middle">
                             <p className="footer-section-header fs-3">
-                                Informacje 2
+                                Regulaminy
                             </p>
                             <ul className="list-unstyled fs-5">
                                 <li>
-                                    -
+                                    <a href="/regulations" className="text-white footer-link">
+                                        Regulamin
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/privacy-policy" className="text-white footer-link">
+                                        Polityka prywatności
+                                    </a>
                                 </li>
                             </ul>
                         </div>
                         <div className="col-md-4 text-center footer-end">
                             <p className="footer-section-header fs-3">
-                                Informacje 3
+                                Więcej
                             </p>
                             <ul className="list-unstyled fs-5">
                                 <li>
-                                    -
+                                    <a
+                                        href={GITHUB_LINK}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-white footer-link"
+                                    >
+                                        GitHub
+                                    </a>
+                                    <a
+                                        href={LINKEDIN_LINK}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-white footer-link"
+                                    >
+                                        <div>
+                                            LinkedIn
+                                        </div>
+                                    </a>
                                 </li>
                             </ul>
                         </div>

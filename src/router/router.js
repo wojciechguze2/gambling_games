@@ -7,6 +7,8 @@ import ScrollToTop from '../components/ScrollToTop'
 const LazyHomeView = React.lazy(() => import('../views/HomeView'))
 const LazyAboutView = React.lazy(() => import('../views/AboutView'))
 const LazyContactView = React.lazy(() => import('../views/ContactView'))
+const LazyRegulationsView = React.lazy(() => import('../views/RegulationsView'))
+const LazyPrivacyPolicyView = React.lazy(() => import('../views/PrivacyPolicyView'))
 
 // user
 const LazyRegisterView = React.lazy(() => import('../views/RegisterView'))
@@ -29,6 +31,8 @@ const RoutesConfig = () => {
                     <Route index element={<LazyHomeView />} />
                     <Route path="/about" element={<LazyAboutView />} />
                     <Route path="/contact" element={<LazyContactView />} />
+                    <Route path="/privacy-policy" element={<LazyPrivacyPolicyView />} />
+                    <Route path="/regulations" element={<LazyRegulationsView />} />
                     <Route path="/game/demo" element={<LazyGameDemoView />} />
                     <Route path="/register" element={<LazyRegisterView />} />
                     <Route path="/login" element={<LazyLoginView />} />

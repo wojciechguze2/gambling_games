@@ -21,7 +21,7 @@ const ContactView = () => {
                             className="btn btn-primary vh-35 w-100 mt-1 d-flex justify-content-center align-items-center"
                         >
                             <div>
-                                Linkedin
+                                LinkedIn
                             </div>
                         </a>
                     </div>
