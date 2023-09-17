@@ -20,6 +20,7 @@ import {  // not enough free fruit icons :(
     faBug,  // (:
 } from '@fortawesome/free-solid-svg-icons'
 import LotteryAlerts from './LotteryAlerts'
+import LotteryTitle from './LotteryTitle'
 
 const AVAILABLE_ICONS = {
     'appleWhole': {
@@ -696,22 +697,13 @@ class FruitMachine extends Lottery {
             <div>
                 {isLoading || isLoadingLines ? <Loader/> : (
                     <>
-                        <div className="lottery-title"> {/* todo: move lottery title to new component if possible */}
-                            {isLotteryRunning ? (
-                                isWin === null ? (
-                                    <h5>Rozpoczęto losowanie!</h5>
-                                ) : (
-                                    <h5>Losowanie zakończone!</h5>
-                                )
-                            ) : (
-                                <h5>Jednoręki bandyta</h5>
-                            )}
-                            {jackpotValue && (
-                                <p className="fs-6">
-                                    Maksymalna możliwa wygrana: <span className="text-danger fw-bold">{jackpotValue} {currencyName}</span>
-                                </p>
-                            )}
-                        </div>
+                        <LotteryTitle
+                            title={'Jednoręki bandyta'}
+                            isLotteryRunning={isLotteryRunning}
+                            isWin={isWin}
+                            jackpotValue={jackpotValue}
+                            currencyName={currencyName}
+                        />
                         <div className="fruit-machine d-flex shadow-lg">
                             {this.getFruitMachineGrid()}
                         </div>
@@ -723,7 +715,6 @@ class FruitMachine extends Lottery {
                             isWin={isWin}
                             additionalClass={'fruit-machine-alerts mt-3 mb-5'}
                         />
-                        {/* todo: move buttons to new component if possible */}
                         <div className="fruit-machine-buttons mt-3 mb-5">
                             {isRunAgainLotteryAvailable ? (
                                 <button

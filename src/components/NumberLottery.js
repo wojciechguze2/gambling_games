@@ -8,6 +8,7 @@ import AccountBalance from './AccountBalance'
 import TopUpAccountButton from './TopUpAccountButton'
 import Loader from './Loader'
 import LotteryAlerts from './LotteryAlerts'
+import LotteryTitle from './LotteryTitle'
 
 
 class NumberLottery extends Lottery {
@@ -297,20 +298,14 @@ class NumberLottery extends Lottery {
             <div>
                 {isLoading ? <Loader/> : (
                 <>
-                    {isLotteryRunning ? (
-                        isWin === null ? (
-                            <h5>Rozpoczęto losowanie!</h5>
-                        ) : (
-                            <h5>Losowanie zakończone!</h5>
-                        )
-                    ) : (
-                        <h5>Wybierz {requiredSelectedNumbersCount} liczb aby rozpocząć losowanie.</h5>
-                    )}
-                    {jackpotValue && (
-                        <h6>
-                            Maksymalna wygrana: <span className="text-danger">{jackpotValue} {currencyName}</span>
-                        </h6>
-                    )}
+                    <LotteryTitle
+                        title={'Loteria liczbowa'}
+                        isLotteryRunning={isLotteryRunning}
+                        isWin={isWin}
+                        jackpotValue={jackpotValue}
+                        currencyName={currencyName}
+                        additionalClass={'m-5'}
+                    />
                     <NumberLotteryPicker
                         availableNumbersCount={availableNumbersCount}
                         isLotteryRunning={isLotteryRunning}

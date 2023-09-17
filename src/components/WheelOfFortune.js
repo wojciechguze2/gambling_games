@@ -10,6 +10,7 @@ import GameMultiplier from './GameMultiplier'
 import Loader from './Loader'
 import Lottery from './Lottery'
 import LotteryAlerts from './LotteryAlerts'
+import LotteryTitle from './LotteryTitle'
 
 
 class WheelOfFortune extends Lottery {
@@ -196,12 +197,21 @@ class WheelOfFortune extends Lottery {
             gameMultiplierValue
         } = this.state;
 
+        const jackpotValue = this.getJackpotValue() * gameMultiplierValue
         const costLabel = ' za ' + costValue * gameMultiplierValue + ' ' + currencyName
 
         return (
             <div>
                 {isLoading ? <Loader/> : (
                     <>
+                        <LotteryTitle
+                            title={'Koło fortuny'}
+                            isLotteryRunning={isSpinning || isFakeSpinning}
+                            isWin={isWin}
+                            jackpotValue={jackpotValue}
+                            currencyName={currencyName}
+                            additionalClass={'m-5'}
+                        />
                         <div className="wheel-of-fortune-container">
                             <div
                                 className={`wheel-of-fortune-win-indicator my-auto d-inline-flex ${this.hasPlayedGame() ? winIndicatorClass : '' }`}
