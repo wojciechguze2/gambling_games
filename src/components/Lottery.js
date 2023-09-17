@@ -7,7 +7,7 @@ import { getDemoGameResult, getGameData, getGameResult } from '../service/game'
 import { getAccountBalance } from '../service/user'
 
 
-class AbstractLotteryComponent extends Component {
+class Lottery extends Component {
     constructor(props) {
         super(props)
 
@@ -143,4 +143,4 @@ class AbstractLotteryComponent extends Component {
     }
 }
 
-export default AbstractLotteryComponent
+export default Lottery

@@ -1,15 +1,16 @@
 import '../styles/number-lottery.scss'
 import React from 'react'
-import AbstractLotteryComponent from './AbstractLotteryComponent'
+import Lottery from './Lottery'
 import NumberLotteryPicker from './NumberLotteryPicker'
 import { SET_USER_ACCOUNT_BALANCE, UPDATE_USER_ACCOUNT_BALANCE } from '../types/authTypes'
 import GameMultiplier from './GameMultiplier'
 import AccountBalance from './AccountBalance'
 import TopUpAccountButton from './TopUpAccountButton'
 import Loader from './Loader'
+import LotteryAlerts from './LotteryAlerts'
 
 
-class NumberLottery extends AbstractLotteryComponent {
+class NumberLottery extends Lottery {
     constructor(props) {
         super(props)
 
@@ -319,23 +320,14 @@ class NumberLottery extends AbstractLotteryComponent {
                         resultCurrencyName={resultCurrencyName}
                         gameMultiplierValue={gameMultiplierValue}
                     />
-                    <div className="number-lottery-alerts">
-                        {errorMessage && (
-                            <div className="alert alert-danger">
-                                {errorMessage}
-                            </div>
-                        )}
-                        {costMessage && !isDemo && (
-                            <div className="alert alert-warning">
-                                {costMessage}
-                            </div>
-                        )}
-                        {winMessage && !isDemo && (
-                            <div className={`alert alert-${isWin === false ? 'danger' : 'success'}`}>
-                                {winMessage}
-                            </div>
-                        )}
-                    </div>
+                    <LotteryAlerts
+                        errorMessage={errorMessage}
+                        costMessage={costMessage}
+                        winMessage={winMessage}
+                        isDemo={isDemo}
+                        isWin={isWin}
+                        additionalClass={'number-lottery-alerts'}
+                    />
                     <div className="number-lottery-buttons mt-3 mb-5">
                         {isLotteryRunning && resultNumbers && isWin !== null ? (
                             <button

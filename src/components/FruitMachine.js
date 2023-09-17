@@ -1,6 +1,6 @@
 import '../styles/fruit-machine.scss'
 import React from 'react'
-import AbstractLotteryComponent from './AbstractLotteryComponent'
+import Lottery from './Lottery'
 import { SET_USER_ACCOUNT_BALANCE, UPDATE_USER_ACCOUNT_BALANCE } from '../types/authTypes'
 import GameMultiplier from './GameMultiplier'
 import AccountBalance from './AccountBalance'
@@ -19,6 +19,7 @@ import {  // not enough free fruit icons :(
     faBolt,
     faBug,  // (:
 } from '@fortawesome/free-solid-svg-icons'
+import LotteryAlerts from './LotteryAlerts'
 
 const AVAILABLE_ICONS = {
     'appleWhole': {
@@ -65,7 +66,7 @@ const AVAILABLE_ICONS = {
 
 const AVAILABLE_ICON_NAMES = Object.keys(AVAILABLE_ICONS)
 
-class FruitMachine extends AbstractLotteryComponent {
+class FruitMachine extends Lottery {
     constructor(props) {
         super(props)
 
@@ -714,23 +715,14 @@ class FruitMachine extends AbstractLotteryComponent {
                         <div className="fruit-machine d-flex shadow-lg">
                             {this.getFruitMachineGrid()}
                         </div>
-                        <div className="fruit-machine-alerts alerts mt-3 mb-5"> {/* todo: move alerts to new component */}
-                            {errorMessage && (
-                                <div className="alert alert-danger">
-                                    {errorMessage}
-                                </div>
-                            )}
-                            {costMessage && !isDemo && (
-                                <div className="alert alert-warning">
-                                    {costMessage}
-                                </div>
-                            )}
-                            {winMessage && !isDemo && (
-                                <div className={`alert alert-${isWin === false ? 'danger' : 'success'}`}>
-                                    {winMessage}
-                                </div>
-                            )}
-                        </div>
+                        <LotteryAlerts
+                            errorMessage={errorMessage}
+                            costMessage={costMessage}
+                            winMessage={winMessage}
+                            isDemo={isDemo}
+                            isWin={isWin}
+                            additionalClass={'fruit-machine-alerts mt-3 mb-5'}
+                        />
                         {/* todo: move buttons to new component if possible */}
                         <div className="fruit-machine-buttons mt-3 mb-5">
                             {isRunAgainLotteryAvailable ? (

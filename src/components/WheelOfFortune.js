@@ -8,10 +8,11 @@ import AccountBalance from './AccountBalance'
 import TopUpAccountButton from './TopUpAccountButton'
 import GameMultiplier from './GameMultiplier'
 import Loader from './Loader'
-import AbstractLotteryComponent from './AbstractLotteryComponent'
+import Lottery from './Lottery'
+import LotteryAlerts from './LotteryAlerts'
 
 
-class WheelOfFortune extends AbstractLotteryComponent {
+class WheelOfFortune extends Lottery {
     constructor(props) {
         super(props)
 
@@ -215,17 +216,14 @@ class WheelOfFortune extends AbstractLotteryComponent {
                             </div>
                         </div>
                         <div className="mt-auto mb-5">
-                            <div className="wheel-of-fortune-alerts alerts mx-auto">
-                                {errorMessage && (
-                                    <div className="alert alert-danger">{errorMessage}</div>
-                                )}
-                                {costMessage && !isDemo && (
-                                    <div className="alert alert-warning">{costMessage}</div>
-                                )}
-                                {winMessage && !isDemo && (
-                                    <div className={`alert alert-${isWin === false ? 'danger' : 'success'}`}>{winMessage}</div>
-                                )}
-                            </div>
+                            <LotteryAlerts
+                                errorMessage={errorMessage}
+                                costMessage={costMessage}
+                                winMessage={winMessage}
+                                isDemo={isDemo}
+                                isWin={isWin}
+                                additionalClass={'wheel-of-fortune-alerts mx-auto'}
+                            />
                             <div className="wheel-of-fortune-game-buttons">
                                 <button
                                     className={`btn btn-warning play-button btn-lg text-dark fw-bold my-2 ${isSpinning || isFakeSpinning ? 'disabled' : ''}`}
