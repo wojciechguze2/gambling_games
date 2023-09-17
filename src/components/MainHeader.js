@@ -62,7 +62,7 @@ const MainHeader = () => {
                                                     Zagraj
                                                 </button>
                                                 <ul className="dropdown-menu" aria-labelledby="games-dropdown">
-                                                    {gamesData && gamesData.games && gamesData.games.map(game => (
+                                                    {gamesData && gamesData.games && gamesData.games.length && gamesData.games.map(game => (
                                                         <li key={game.id}>
                                                             <a className="dropdown-item" href={`/game/${game.code}`}>
                                                                 {game.name}
