@@ -1,7 +1,7 @@
 import axios from '../utils/axiosConfig'
 
 
-export const getAllGames = () => async () => {
+export const getAllGames = async () => {
     const url = 'api/games'
 
     const response = await axios.get(url)
