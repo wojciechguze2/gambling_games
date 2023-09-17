@@ -1,6 +1,6 @@
 import React from 'react'
 
-const LotteryTitle = ({ title, isLotteryRunning, isWin, jackpotValue, currencyName, additionalClass }) => {
+const LotteryTitle = ({ title, isLotteryRunning, isWin, isDemo, jackpotValue, currencyName, additionalClass }) => {
     return (
         <div className={`lottery-title ${additionalClass ? additionalClass : ''}`}>
             {isLotteryRunning ? (
@@ -12,7 +12,7 @@ const LotteryTitle = ({ title, isLotteryRunning, isWin, jackpotValue, currencyNa
             ) : (
                 <h4>{title}</h4>
             )}
-            {jackpotValue && (
+            {jackpotValue && !isDemo && (
                 <p className="fs-5">
                     Maksymalna możliwa wygrana: <span className="text-danger fw-bold">{jackpotValue} {currencyName}</span>
                 </p>

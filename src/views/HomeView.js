@@ -55,9 +55,9 @@ const HomeView = () => {
                                                             onClick={() => { navigate(`/game/${latestGame.code}`) }}
                                                         />
                                                         <div className="card-body custom-bg-info">
-                                                            <h5 className="card-title">
+                                                            <p className="card-title fs-5">
                                                                 {latestGame.name}
-                                                            </h5>
+                                                            </p>
                                                             <Link to={`/game/${latestGame.code}`} className="btn custom-bg-primary border-0 btn-info text-white">
                                                                 Zagraj
                                                             </Link>
@@ -74,9 +74,9 @@ const HomeView = () => {
                         <div className="card-deck">
                         <div className="card custom-bg-primary m-5">
                             <div className="card-body">
-                                <h5 className="card-title fs-5 text-white">
+                                <p className="card-title fs-5 text-white">
                                     Posiadasz już u nas konto?
-                                </h5>
+                                </p>
                                 <p className="card-text fs-5 text-white">
                                     Zaloguj się, aby rozpocząć grę
                                 </p>
@@ -92,7 +92,7 @@ const HomeView = () => {
                                 </p>
                                 <p className="card-text fs-5 text-white">
                                     Zarejestruj się, aby zdobyć&nbsp;
-                                    <span className="text-warning fw-bold">
+                                    <span className="rounded-2 bg-dark text-warning fw-bold">
                                         1000 bonusowych Euro Jamników na start!
                                     </span>
                                 </p>
@@ -103,9 +103,9 @@ const HomeView = () => {
                         </div>
                         <div className="card custom-bg-primary m-5">
                             <div className="card-body">
-                                <h5 className="card-title fs-5 text-white">
+                                <p className="card-title fs-5 text-white">
                                     Nie wiesz na czym polega gra?
-                                </h5>
+                                </p>
                                 <p className="card-text fs-5 text-white">
                                     Wypróbuj wersję demo!
                                 </p>

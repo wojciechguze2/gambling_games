@@ -691,7 +691,8 @@ class LotteryGameFruitMachine extends Lottery {
 
         const isLoadingLines = this.state.lines.length !== this.state.numberOfLines
         const costLabel = ' za ' + costValue * gameMultiplierValue + ' ' + currencyName
-        const jackpotValue = this.getJackpotValue() * gameMultiplierValue
+        const _jackpotValue = this.getJackpotValue()
+        const jackpotValue = _jackpotValue ? _jackpotValue * gameMultiplierValue : '?'
 
         return (
             <div>
@@ -701,6 +702,7 @@ class LotteryGameFruitMachine extends Lottery {
                             title={'Jednoręki bandyta'}
                             isLotteryRunning={isLotteryRunning}
                             isWin={isWin}
+                            isDemo={isDemo}
                             jackpotValue={jackpotValue}
                             currencyName={currencyName}
                         />

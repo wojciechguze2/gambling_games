@@ -27,3 +27,9 @@ export const getAccountBalance = async () => {
 
     return await axios.get(url)
 }
+
+export const deleteAccount = async () => {
+    const url = 'api/user'
+
+    return await axios.delete(url)
+}

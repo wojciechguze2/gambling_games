@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import TopUpAccountButton from '../components/TopUpAccountButton'
-import { getUser } from '../service/user'
+import { deleteAccount, getUser } from '../service/user'
+import { LOGOUT } from '../types/authTypes'
+import { useDispatch } from 'react-redux'
 
 const AccountView = () => {
     const [user, setUser] = useState(null)
+    const dispatch = useDispatch()
     const navigate = useNavigate()
 
     async function getUserData() {
@@ -40,6 +43,17 @@ const AccountView = () => {
         }));
     }
 
+    const handleAccountDelete = async () => {
+        const response = await deleteAccount()
+
+        if (response.status <= 299) {
+            dispatch({ type: LOGOUT })
+            navigate('/');
+
+            return null
+        }
+    }
+
     return (
         <div className="account container my-5">
             {user &&
@@ -62,6 +76,11 @@ const AccountView = () => {
                         <TopUpAccountButton handleTopUpChange={handleTopUpChange} additionalClass={"ms-1"} />
                         <p className="card-text">
                             Data utworzenia: {new Date(user.createdAt).toLocaleString()}
+                        </p>
+                        <p>
+                            <button onClick={handleAccountDelete} className={"btn btn-danger"}>
+                                Usuń konto
+                            </button>
                         </p>
                         <table className="table text-center">
                             <thead>

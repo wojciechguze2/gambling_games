@@ -197,7 +197,8 @@ class LotteryGameWheelOfFortune extends Lottery {
             gameMultiplierValue
         } = this.state;
 
-        const jackpotValue = this.getJackpotValue() * gameMultiplierValue
+        const _jackpotValue = this.getJackpotValue()
+        const jackpotValue = _jackpotValue ? _jackpotValue * gameMultiplierValue : '?'
         const costLabel = ' za ' + costValue * gameMultiplierValue + ' ' + currencyName
 
         return (
@@ -205,9 +206,10 @@ class LotteryGameWheelOfFortune extends Lottery {
                 {isLoading ? <Loader/> : (
                     <>
                         <LotteryTitle
-                            title={'Koło fortuny'}
+                            title={`Koło fortuny${isDemo ? ' DEMO' : ''}`}
                             isLotteryRunning={isSpinning || isFakeSpinning}
                             isWin={isWin !== null && !isSpinning ? true : null}
+                            isDemo={isDemo}
                             jackpotValue={jackpotValue}
                             currencyName={currencyName}
                             additionalClass={'mt-5'}

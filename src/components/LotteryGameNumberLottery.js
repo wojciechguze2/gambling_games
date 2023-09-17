@@ -292,7 +292,8 @@ class LotteryGameNumberLottery extends Lottery {
         } = this.state
 
         const costLabel = ' za ' + costValue * gameMultiplierValue + ' ' + currencyName
-        const jackpotValue = this.getJackpotValue()
+        const _jackpotValue = this.getJackpotValue()
+        const jackpotValue = _jackpotValue ? _jackpotValue * gameMultiplierValue : '?'
 
         return (
             <div>
@@ -302,6 +303,7 @@ class LotteryGameNumberLottery extends Lottery {
                         title={'Loteria liczbowa'}
                         isLotteryRunning={isLotteryRunning}
                         isWin={isWin}
+                        isDemo={isDemo}
                         jackpotValue={jackpotValue}
                         currencyName={currencyName}
                         additionalClass={'m-5'}

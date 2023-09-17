@@ -140,10 +140,16 @@ class Lottery extends Component {
 
     getJackpotValue = () => {
         if (this.state.gameValuesData) {
-            return this.state.gameValuesData.find(value => value.isJackpot === true).value
+            const jackpotData = this.state.gameValuesData.find(value => value.isJackpot === true)
+
+            if (jackpotData && jackpotData.value && !isNaN(jackpotData.value)) {
+                return jackpotData.value
+            } else {
+                return null
+            }
         }
 
-        return '?'
+        return null
     }
 }
 
