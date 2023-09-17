@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import axios from '../utils/axiosConfig'
 import { SET_USER_ACCOUNT_BALANCE } from '../types/authTypes'
 import Loader from './Loader'
+import { addAccountBalance } from '../service/user'
 
 const TopUpAccountButton = ({ disabled, handleTopUpChange, additionalClass = '' }) => {
     const user = useSelector(state => state.auth.user)
@@ -20,12 +20,10 @@ const TopUpAccountButton = ({ disabled, handleTopUpChange, additionalClass = '' 
             return
         }
 
-        const url = 'api/user/account-balance/add'
-
         try {
             setLoading(true)
-            const response = await axios.patch(url, { value: 1000 })
-            const accountBalance = response.data
+
+            const accountBalance = await addAccountBalance(1000)
 
             if (response.status <= 299) {  // todo: maybe add alert
                 dispatch({type: SET_USER_ACCOUNT_BALANCE, payload: accountBalance})

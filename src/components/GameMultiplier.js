@@ -1,8 +1,4 @@
-import React, { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import axios from '../utils/axiosConfig'
-import { SET_USER_ACCOUNT_BALANCE } from '../types/authTypes'
-import Loader from "./Loader";
+import React from 'react'
 
 const GameMultiplier = ({ disabled, handleGameMultiplierChange, currentMultiplier, availableMultipliers }) => {
     const changeMultiplier = (newValue) => {

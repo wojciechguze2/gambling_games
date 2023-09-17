@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import axios from '../utils/axiosConfig'
 import { SET_USER_ACCOUNT_BALANCE } from '../types/authTypes'
 import Loader from "./Loader";
+import {getAccountBalance} from "../service/user";
 
 const AccountBalance = ({ disabled }) => {
     const user = useSelector(state => state.auth.user)
@@ -19,10 +19,9 @@ const AccountBalance = ({ disabled }) => {
         }
 
         setLoading(true)
-        const url = 'api/user/account-balance'
 
         try {
-            const response = await axios.get(url)
+            const response = await getAccountBalance()
 
             if (response.status <= 299) {
                 dispatch({type: SET_USER_ACCOUNT_BALANCE, payload: response.data})

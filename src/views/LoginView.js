@@ -4,7 +4,7 @@ import { encodeRequestValue } from '../utils/securityHelper'
 import Loader from '../components/Loader'
 import { useDispatch } from 'react-redux'
 import { SET_USER } from '../types/authTypes'
-import axios from '../utils/axiosConfig'
+import { loginUser } from '../service/user'
 
 const LoginView = () => {
     const [
@@ -32,15 +32,23 @@ const LoginView = () => {
         setSuccess(null)
         setIsLoading(true)
 
-        const url = '/api/user/login';
+        if (!username) {
+            setError('Nazwa użytkownika jest wymagana.')
 
-        const postData = {
-            username,
-            initiallyEncryptedPassword: encodeRequestValue(password)
-        };
+            return
+        }
+
+        if (!password) {
+            setError('Hasło jest wymagane.')
+
+            return
+        }
 
         try {
-            const response = await axios.post(url, postData)
+            const response = await loginUser({
+                username,
+                initiallyEncryptedPassword: encodeRequestValue(password)
+            })
 
             if (response.status <= 299) {
                 setSuccess('Zalogowano pomyślnie.')
@@ -70,7 +78,7 @@ const LoginView = () => {
 
     return (
         <div className="container mt-5 text-center">
-            <div className="card custom-bg-primary text-white w-50 m-auto">
+            <div className="card custom-bg-primary text-white m-auto security-card">
                 <div className="card-body">
                     <h2 className="card-title">
                         Logowanie

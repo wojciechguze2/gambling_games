@@ -63,3 +63,15 @@ html, body {
 .custom-bg-info {
   background-color: #7dd9fc;
 }
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.security-card {
+  width: 50%;
+
+  @media (max-width: $mobile-max-width) {
+    width: 100%;
+  }
+}

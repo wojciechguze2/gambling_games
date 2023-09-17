@@ -1,8 +1,8 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useState } from 'react'
 import { SET_GAMES } from '../types/gameTypes'
-import axios from '../utils/axiosConfig'
 import Loader from './Loader'
+import { getAllGames } from '../service/game'
 
 const MainHeader = () => {
     const user = useSelector(state => state.auth.user)
@@ -10,21 +10,17 @@ const MainHeader = () => {
     const [isLoading, setLoading] = useState(true)
     const dispatch = useDispatch()
 
-    // todo: consider moving api calls to separate dir/file f.e service/games.js
-    const getGames = () => async (dispatch) => {
-        const url = 'api/games'
-        const response = await axios.get(url)
-
-        await dispatch({ type: SET_GAMES, payload: response.data })
-        setLoading(false)
-    }
-
     useEffect(() => {
-        if (!gamesData || !gamesData.games) {
-            dispatch(getGames())
-        } else {
-            setLoading(false)
+        const fetchData = async () => {
+            if (!gamesData || !gamesData.games) {
+                const games = await getAllGames()
+                dispatch({ type: SET_GAMES, payload: games })
+            }
         }
+
+        fetchData().then(() => {
+            setLoading(false)
+        })
     }, [])
 
     return (

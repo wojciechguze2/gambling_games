@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { encodeRequestValue } from '../utils/securityHelper'
 import { Link, useNavigate } from 'react-router-dom'
 import Loader from '../components/Loader'
-import axios from '../utils/axiosConfig'
+import {registerUser} from "../service/user";
 
 const RegisterView = () => {
     const [
@@ -29,15 +29,23 @@ const RegisterView = () => {
         setSuccess(null)
         setIsLoading(true)
 
-        const url = '/api/user/register'
+        if (!username) {
+            setError('Nazwa użytkownika jest wymagana.')
 
-        const postData = {
-            username,
-            initiallyEncryptedPassword: encodeRequestValue(password)
+            return
+        }
+
+        if (!password) {
+            setError('Hasło jest wymagane.')
+
+            return
         }
 
         try {
-            const response = await axios.post(url, postData)
+            const response = await registerUser({
+                username,
+                initiallyEncryptedPassword: encodeRequestValue(password)
+            })
 
             if (response.status <= 299) {
                 setSuccess('Konto zostało utworzone pomyślnie. Zostaniesz przekierowany na stronę logowania.')
@@ -63,7 +71,7 @@ const RegisterView = () => {
 
     return (
         <div className="container mt-5 text-center">
-            <div className="card custom-bg-primary text-white w-50 m-auto">
+            <div className="card custom-bg-primary text-white security-card m-auto">
                 <div className="card-body">
                     <h2 className="card-title">
                         Rejestracja

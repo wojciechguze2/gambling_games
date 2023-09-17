@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
-import axios from '../utils/axiosConfig'
 import {
     SET_USER_ACCOUNT_BALANCE,
     UPDATE_USER_ACCOUNT_BALANCE
 } from '../types/authTypes'
+import { getDemoGameResult, getGameData, getGameResult } from '../service/game'
+import { getAccountBalance } from '../service/user'
 
 
 class AbstractLotteryComponent extends Component {
@@ -33,25 +34,20 @@ class AbstractLotteryComponent extends Component {
     }
 
     setGameData = async () => {
-        const gameCode = this.props.gameCode
+        const data = await getGameData(this.props.gameCode)
 
-        const url = `/api/games/${gameCode}`
-        const response = await axios.get(url)
-
-        const game = response.data.game
-
+        const game = data.game
         const gameId = game.id
         const gameValuesData = game.GameValues
-        const costValue = response.data.costValue
-        const currencyName = response.data.currencyName
+        const costValue = data.costValue
+        const currencyName = data.currencyName
 
         await this.setState({ gameId, gameValuesData, costValue, currencyName })
     }
 
     setAccountBalance = async () => {
         if (this.state.user) {
-            const url = 'api/user/account-balance'
-            const response = await axios.get(url)
+            const response = await getAccountBalance()
 
             if (response.status <= 299) {
                 this.props.dispatch({ type: SET_USER_ACCOUNT_BALANCE, payload: response.data })
@@ -62,21 +58,19 @@ class AbstractLotteryComponent extends Component {
     getRandomGameResult = async () => {
         try {
             if (this.state.isDemo) {
-                const url = `/api/games/${this.state.gameId}/demo`
-                const response = await axios.get(url)
-
-                return response.data
+                return await getDemoGameResult(this.state.gameId)
             } else {
-                const url = `/api/games/${this.state.gameId}/result`
-                const {costValue, gameMultiplierValue} = this.state
+                const {
+                    costValue,
+                    gameMultiplierValue
+                } = this.state
+
                 const postData = {
                     costValue: costValue * gameMultiplierValue,
                     gameMultiplier: gameMultiplierValue
                 }
 
-                const response = await axios.post(url, postData)
-
-                return response.data
+                return await getGameResult(this.state.gameId, postData)
             }
         } catch (err) {
             const errorResponse = (err || {}).response

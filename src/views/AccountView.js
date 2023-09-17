@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from 'react'
-import axios from '../utils/axiosConfig'
 import { useNavigate } from 'react-router-dom'
 import TopUpAccountButton from '../components/TopUpAccountButton'
+import { getUser } from '../service/user'
 
 const AccountView = () => {
     const [user, setUser] = useState(null)
     const navigate = useNavigate()
 
-    async function getUser() {
-        const url = '/api/user'
-        const response = await axios.get(url)
+    async function getUserData() {
+        const response = await getUser()
 
         if (response.status <= 299 && response.data) {
             setUser(response.data)
@@ -19,7 +18,7 @@ const AccountView = () => {
     }
 
     useEffect(() => {
-        getUser()
+        getUserData()
     }, []);
 
     const getHistoryResultMessage = (historyElement) => {

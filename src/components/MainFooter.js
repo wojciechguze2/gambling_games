@@ -30,7 +30,7 @@ const MainFooter = () => {
                             </p>
                             <ul className="list-unstyled fs-5">
                                 <li>
-                                    Section 2 el
+                                    ...
                                 </li>
                             </ul>
                         </div>
@@ -40,7 +40,7 @@ const MainFooter = () => {
                             </p>
                             <ul className="list-unstyled fs-5">
                                 <li>
-                                    Section 3 el
+                                    ...
                                 </li>
                             </ul>
                         </div>

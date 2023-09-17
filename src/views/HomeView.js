@@ -1,30 +1,25 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
+import { getLatestGames } from '../service/game'
+import { useEffect, useState } from 'react'
+import Loader from '../components/Loader'
 
 const HomeView = () => {
+    const navigate = useNavigate()
     const user = useSelector(state => state.auth.user)
+    const [latestGames, setLatestGames] = useState(null)
+    const [isLoading, setLoading] = useState(true)
 
-    // todo: take it from api
-    const latestGames = [
-        {
-            title: 'Koło fortuny',
-            url: '/game/wheel-of-fortune',
-            description: 'Warto spróbować swojego szczęścia w najnowszej grze "Koło fortuny"! Za zaledwie 100 EuroJamników masz szansę wygrać aż 50 000 EuroJamników. Kręć kołem i zgarniaj doskonałe nagrody!',
-            imageUrl: '/images/homepage/latest-games--wheel-of-fortune.webp',
-        },
-        {
-            title: 'Loteria liczbowa',
-            url: '/game/number-lottery',
-            description: 'Warto spróbować swojego szczęścia w najnowszej grze "Loteria liczbowa"! Za zaledwie 100 EuroJamników masz szansę wygrać aż 50 000 EuroJamników. Zgarniaj doskonałe nagrody!',
-            imageUrl: '/images/homepage/latest-games--number-lottery.webp',
-        },
-        {
-            title: 'Jednoręki bandyta',
-            url: '/game/fruit-machine',
-            description: 'Warto spróbować swojego szczęścia w najnowszej grze "Jednoręki bandyta"! Za zaledwie 100 EuroJamników masz szansę wygrać aż 50 000 EuroJamników. Zgarniaj doskonałe nagrody!',
-            imageUrl: '/images/homepage/latest-games--fruit-machine.webp',
-        },
-    ];
+    useEffect(() => {
+        const fetchData = async () => {
+            const latestGamesData = await getLatestGames()
+            setLatestGames(latestGamesData)
+        }
+
+        fetchData().then(() => {
+            setLoading(false)
+        })
+    }, [])
 
     return (
         <div className="homepage">
@@ -48,28 +43,30 @@ const HomeView = () => {
                             </div>
                             <div className="card-body">
                                 <div className="row">
-                                    {latestGames.map((latestGame, index) => (
-                                        <div key={index} className="col-md-4 mb-4">
-                                            <div className="card">
-                                                <img
-                                                    src={latestGame.imageUrl}
-                                                    className="card-img-top"
-                                                    alt={latestGame.title}
-                                                />
-                                                <div className="card-body custom-bg-info">
-                                                    <h5 className="card-title">
-                                                        {latestGame.title}
-                                                    </h5>
-                                                    <p className="card-text">
-                                                        {latestGame.description}
-                                                    </p>
-                                                    <Link to={latestGame.url} className="btn custom-bg-primary border-0 btn-info">
-                                                        Zagraj
-                                                    </Link>
+                                    {isLoading ? <Loader/> : (
+                                        <>
+                                            {latestGames && latestGames.map((latestGame, index) => (
+                                                <div key={index} className="col-md-4 mb-4">
+                                                    <div className="card">
+                                                        <img
+                                                            src={`/images/homepage/latest-games--${latestGame.code}.webp`}
+                                                            className="card-img-top cursor-pointer"
+                                                            alt={latestGame.name}
+                                                            onClick={() => { navigate(`/game/${latestGame.code}`) }}
+                                                        />
+                                                        <div className="card-body custom-bg-info">
+                                                            <h5 className="card-title">
+                                                                {latestGame.name}
+                                                            </h5>
+                                                            <Link to={`/game/${latestGame.code}`} className="btn custom-bg-primary border-0 btn-info">
+                                                                Zagraj
+                                                            </Link>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                    ))}
+                                            ))}
+                                        </>
+                                    )}
                                 </div>
                             </div>
                         </div>
