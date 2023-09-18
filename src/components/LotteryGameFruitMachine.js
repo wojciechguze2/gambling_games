@@ -642,6 +642,7 @@ class LotteryGameFruitMachine extends Lottery {
             return false
         }
 
+        this.scrollToLotteryTitle()
         this.resetResult()
         this.setState({
             isLotteryRunning: true,
@@ -709,15 +710,7 @@ class LotteryGameFruitMachine extends Lottery {
                         <div className="fruit-machine d-flex shadow-lg">
                             {this.getFruitMachineGrid()}
                         </div>
-                        <LotteryAlerts
-                            errorMessage={errorMessage}
-                            costMessage={costMessage}
-                            winMessage={winMessage}
-                            isDemo={isDemo}
-                            isWin={isWin}
-                            additionalClass={'fruit-machine-alerts mt-3 mb-5'}
-                        />
-                        <div className="fruit-machine-buttons mt-3 mb-5">
+                        <div className="fruit-machine-buttons mt-3 mb-3">
                             {isRunAgainLotteryAvailable ? (
                                 <button
                                     className={`btn btn-warning play-again-button btn-lg text-dark fw-bold my-2`}
@@ -753,6 +746,14 @@ class LotteryGameFruitMachine extends Lottery {
                                 />
                             )}
                         </div>
+                        <LotteryAlerts
+                            errorMessage={errorMessage}
+                            costMessage={costMessage}
+                            winMessage={winMessage}
+                            isDemo={isDemo}
+                            isWin={isWin}
+                            additionalClass={'fruit-machine-alerts mt-3 mb-5'}
+                        />
                         {isRunAgainLotteryAvailable && isWin !== null && (
                             <>
                                 {this.getWinningCombinationsTable()}

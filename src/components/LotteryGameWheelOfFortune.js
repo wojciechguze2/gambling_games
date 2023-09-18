@@ -106,6 +106,7 @@ class LotteryGameWheelOfFortune extends Lottery {
         this.setState({
             isFakeSpinning: true,
         })
+        this.scrollToLotteryTitle()
 
         if (this.state.user) {
             const { costValue, gameMultiplierValue } = this.state
@@ -228,14 +229,6 @@ class LotteryGameWheelOfFortune extends Lottery {
                             </div>
                         </div>
                         <div className="mt-auto mb-5">
-                            <LotteryAlerts
-                                errorMessage={errorMessage}
-                                costMessage={costMessage}
-                                winMessage={winMessage}
-                                isDemo={isDemo}
-                                isWin={isWin}
-                                additionalClass={'wheel-of-fortune-alerts mx-auto'}
-                            />
                             <div className="wheel-of-fortune-game-buttons">
                                 <button
                                     className={`btn btn-warning play-button btn-lg text-dark fw-bold my-2 ${isSpinning || isFakeSpinning ? 'disabled' : ''}`}
@@ -265,6 +258,14 @@ class LotteryGameWheelOfFortune extends Lottery {
                                     disabled={isSpinning || isFakeSpinning}
                                 />
                             )}
+                            <LotteryAlerts
+                                errorMessage={errorMessage}
+                                costMessage={costMessage}
+                                winMessage={winMessage}
+                                isDemo={isDemo}
+                                isWin={isWin}
+                                additionalClass={'wheel-of-fortune-alerts mx-auto mt-2'}
+                            />
                         </div>
                     </>
                 )}

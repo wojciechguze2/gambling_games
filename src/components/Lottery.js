@@ -151,6 +151,22 @@ class Lottery extends Component {
 
         return null
     }
+
+    scrollToLotteryTitle = () => {
+        setTimeout(() => {
+            const gameElements = document.getElementsByClassName('lottery-title')
+
+            if (gameElements.length > 0) {
+                const gameElement = gameElements[0]
+                const elementPosition = gameElement.getBoundingClientRect().top + window.scrollY
+
+                window.scrollTo({
+                    top: elementPosition,
+                    behavior: 'smooth',
+                })
+            }
+        }, 10)
+    }
 }
 
 export default Lottery

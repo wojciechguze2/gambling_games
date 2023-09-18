@@ -3,9 +3,9 @@ import React from 'react'
 const LotteryAlerts = ({ winMessage, costMessage, errorMessage, isDemo, isWin, additionalClass }) => {
     return (
         <div className={`number-lottery-alerts ${additionalClass}`}>
-            {errorMessage && (
-                <div className="alert alert-danger">
-                    {errorMessage}
+            {winMessage && !isDemo && (
+                <div className={`alert alert-${isWin === false ? 'danger' : 'success'}`}>
+                    {winMessage}
                 </div>
             )}
             {costMessage && !isDemo && (
@@ -13,9 +13,9 @@ const LotteryAlerts = ({ winMessage, costMessage, errorMessage, isDemo, isWin, a
                     {costMessage}
                 </div>
             )}
-            {winMessage && !isDemo && (
-                <div className={`alert alert-${isWin === false ? 'danger' : 'success'}`}>
-                    {winMessage}
+            {errorMessage && (
+                <div className="alert alert-danger">
+                    {errorMessage}
                 </div>
             )}
         </div>

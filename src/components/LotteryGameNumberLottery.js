@@ -215,6 +215,7 @@ class LotteryGameNumberLottery extends Lottery {
         this.setState({
             isLotteryRunning: true,
         })
+        this.scrollToLotteryTitle()
 
         if (this.state.user) {
             const { costValue, gameMultiplierValue } = this.state
@@ -316,15 +317,7 @@ class LotteryGameNumberLottery extends Lottery {
                         resultCurrencyName={resultCurrencyName}
                         gameMultiplierValue={gameMultiplierValue}
                     />
-                    <LotteryAlerts
-                        errorMessage={errorMessage}
-                        costMessage={costMessage}
-                        winMessage={winMessage}
-                        isDemo={isDemo}
-                        isWin={isWin}
-                        additionalClass={'number-lottery-alerts'}
-                    />
-                    <div className="number-lottery-buttons mt-3 mb-5">
+                    <div className="number-lottery-buttons mt-3 mb-3">
                         {isLotteryRunning && resultNumbers && isWin !== null ? (
                             <button
                                 className={`btn btn-warning play-button btn-lg text-dark fw-bold my-2`}
@@ -364,6 +357,14 @@ class LotteryGameNumberLottery extends Lottery {
                             />
                         )}
                     </div>
+                    <LotteryAlerts
+                        errorMessage={errorMessage}
+                        costMessage={costMessage}
+                        winMessage={winMessage}
+                        isDemo={isDemo}
+                        isWin={isWin}
+                        additionalClass={'number-lottery-alerts'}
+                    />
                 </>
                 )}
             </div>

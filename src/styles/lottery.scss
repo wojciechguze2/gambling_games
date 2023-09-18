@@ -27,7 +27,8 @@
   }
 }
 
-.play-button {
+.play-button,
+.play-again-button {
   @media (max-width: $mobile-max-width) {
     font-size: 17px;
   }
