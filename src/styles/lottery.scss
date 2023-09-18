@@ -1,6 +1,4 @@
-.blink-text {
-  animation: blink 0.75s ease infinite;
-}
+@import 'variables';
 
 @keyframes blink {
   0% {
@@ -13,5 +11,24 @@
 
   100% {
     opacity: 1;
+  }
+}
+
+.blink-text {
+  animation: blink 0.75s ease infinite;
+}
+
+.lottery-title {
+  &--jackpot {
+    @media (max-width: $mobile-max-width) {
+      width: 100%;
+      font-size: 14px;
+    }
+  }
+}
+
+.play-button {
+  @media (max-width: $mobile-max-width) {
+    font-size: 17px;
   }
 }

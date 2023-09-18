@@ -5,9 +5,9 @@ const MainHeaderCollapse = ({ user, gamesData, isMobile }) => {
                 {user ? (
                     <>
                         {isMobile ? (
-                            <ul>
+                            <ul className="list-style-inside">
                                 {gamesData && gamesData.games && gamesData.games.length && gamesData.games.map(game => (
-                                    <li key={game.id} className="py-2">
+                                    <li key={game.id} className="p-2">
                                         <a href={`/game/${game.code}`} className="text-white text-decoration-none fw-bold">
                                             {game.name}
                                         </a>

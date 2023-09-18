@@ -82,7 +82,7 @@ const AccountView = () => {
                                 Usuń konto
                             </button>
                         </p>
-                        <table className="table text-center">
+                        <table className="table text-center d-none d-lg-table">
                             <thead>
                                 <tr>
                                     <th colSpan={7}>

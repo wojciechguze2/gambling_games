@@ -306,7 +306,6 @@ class LotteryGameNumberLottery extends Lottery {
                         isDemo={isDemo}
                         jackpotValue={jackpotValue}
                         currencyName={currencyName}
-                        additionalClass={'m-5'}
                     />
                     <NumberLotteryPicker
                         availableNumbersCount={availableNumbersCount}

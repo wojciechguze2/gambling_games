@@ -13,7 +13,7 @@ const LotteryTitle = ({ title, isLotteryRunning, isWin, isDemo, jackpotValue, cu
                 <h4>{title}</h4>
             )}
             {jackpotValue && !isDemo && (
-                <p className="fs-5">
+                <p className="lottery-title--jackpot">
                     Maksymalna możliwa wygrana: <span className="text-danger fw-bold">{jackpotValue} {currencyName}</span>
                 </p>
             )}

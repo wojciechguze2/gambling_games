@@ -1,5 +1,5 @@
 // styles
-import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap/dist/css/bootstrap.min.css'
 import './styles/global.scss'
 // js
 import 'bootstrap/dist/js/bootstrap'

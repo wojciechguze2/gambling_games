@@ -45,7 +45,7 @@ const AboutView = () => {
                     </table>
                     <p className="mt-3">Jest to moja pierwsza styczność z technologiami React.js oraz Node.js.</p>
                     <p>Więcej projektów na moim <a href={GITHUB_LINK}>GitHubie</a>.</p>
-                    <img src="/logo512.webp" alt="Dachshund"></img>
+                    <img src="/logo512.webp" alt="Dachshund" className="max-vw-80"></img>
                 </div>
             </div>
         </div>
