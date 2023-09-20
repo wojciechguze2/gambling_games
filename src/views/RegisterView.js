@@ -61,6 +61,8 @@ const RegisterView = () => {
                 setError('Podany użytkownik już istnieje.')
             } else if (errorResponse.status === 400) {
                 setError('Wystąpiły błędy podczas walidacji formularza. Sprawdź poprawność wprowadzanych danych.')
+            } else if (errorResponse.status === 406) {
+                setError('Osiągnięto limit użytkowników wersji Demo. Prosimy o kontakt.')
             } else {
                 setError('Wystąpiły błędy podczas rejestacji. Prosimy o kontakt.')
             }

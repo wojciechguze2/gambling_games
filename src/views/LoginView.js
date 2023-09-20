@@ -5,6 +5,7 @@ import Loader from '../components/Loader'
 import { useDispatch } from 'react-redux'
 import { SET_USER } from '../types/authTypes'
 import { loginUser } from '../service/user'
+import MetaTags from "../components/MetaTags";
 
 const LoginView = () => {
     const [
@@ -77,61 +78,67 @@ const LoginView = () => {
     };
 
     return (
-        <div className="container mt-5 text-center">
-            <div className="card custom-bg-primary text-white m-auto security-card">
-                <div className="card-body">
-                    <h2 className="card-title">
-                        Logowanie
-                    </h2>
-                    <form onSubmit={handleSubmit}>
-                        <div className="form-group m-3">
-                            <label htmlFor="username">
-                                Nazwa użytkownika:
-                            </label>
-                            <input
-                                type="text"
-                                className="form-control"
-                                id="username"
-                                name="username"
-                                value={username}
-                                onChange={handleChange}
-                            />
-                        </div>
-                        <div className="form-group m-3">
-                            <label htmlFor="password">
-                                Hasło:
-                            </label>
-                            <input
-                                type="password"
-                                className="form-control"
-                                id="password"
-                                name="password"
-                                autoComplete="off"
-                                value={password}
-                                onChange={handleChange}
-                            />
-                        </div>
-                        {isLoading ? (
-                            <Loader />
-                        ) : (
-                            <>
-                                {error && <div className="alert alert-danger">{error}</div>}
-                                {success && <div className="alert alert-success">{success}</div>}
-                                <button type="submit" className="btn btn-dark">
-                                    Zaloguj
-                                </button>
-                                <div>
-                                    Nie posiadasz jeszcze konta?
-                                    <Link to="/register" className="text-warning text-decoration-none mx-2">
-                                        Zarejestruj się
-                                    </Link>
-                                </div>
-                            </>
-                        )}
-                    </form>
+        <>
+            <MetaTags
+                title="Logowanie - euro-jamniki.pl"
+                description="Zaloguj się, aby spróbować swojego szczęścia w grach losowych za wirtualne euro jamniki."
+            />
+            <div className="container mt-5 text-center">
+                <div className="card custom-bg-primary text-white m-auto security-card">
+                    <div className="card-body">
+                        <h2 className="card-title">
+                            Logowanie
+                        </h2>
+                        <form onSubmit={handleSubmit}>
+                            <div className="form-group m-3">
+                                <label htmlFor="username">
+                                    Nazwa użytkownika:
+                                </label>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    id="username"
+                                    name="username"
+                                    value={username}
+                                    onChange={handleChange}
+                                />
+                            </div>
+                            <div className="form-group m-3">
+                                <label htmlFor="password">
+                                    Hasło:
+                                </label>
+                                <input
+                                    type="password"
+                                    className="form-control"
+                                    id="password"
+                                    name="password"
+                                    autoComplete="off"
+                                    value={password}
+                                    onChange={handleChange}
+                                />
+                            </div>
+                            {isLoading ? (
+                                <Loader />
+                            ) : (
+                                <>
+                                    {error && <div className="alert alert-danger">{error}</div>}
+                                    {success && <div className="alert alert-success">{success}</div>}
+                                    <button type="submit" className="btn btn-dark">
+                                        Zaloguj
+                                    </button>
+                                    <div>
+                                        Nie posiadasz jeszcze konta?
+                                        <Link to="/register" className="text-warning text-decoration-none mx-2">
+                                            Zarejestruj się
+                                        </Link>
+                                    </div>
+                                </>
+                            )}
+                        </form>
+                    </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 };
 
