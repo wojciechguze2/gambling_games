@@ -22,7 +22,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build --production && gzipper --verbose ./build",
+    "build": "react-scripts build --production && gzipper compress ./build",
     "eject": "react-scripts eject"
   },
   "browserslist": {
