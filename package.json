@@ -22,7 +22,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build --production && gzipper compress ./build",
+    "build": "react-scripts build --production && purgecss --css build/static/css/*.css --content build/index.html build/static/js/*.js --output build/static/css && gzipper compress ./build",
     "eject": "react-scripts eject"
   },
   "browserslist": {
@@ -39,6 +39,7 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-    "gzipper": "^7.2.0"
+    "gzipper": "^7.2.0",
+    "purgecss": "^5.0.0"
   }
 }
