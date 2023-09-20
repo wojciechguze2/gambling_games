@@ -512,14 +512,6 @@ class LotteryGameFruitMachine extends Lottery {
     getResultData = async () => {
         const data = await this.getRandomGameResult()
 
-        await new Promise((resolve) => {  // todo: tmp
-            setTimeout(() => {
-                    resolve()
-                },
-                1000
-            )
-        })
-
         if (!data) {
             return null
         }
@@ -670,11 +662,7 @@ class LotteryGameFruitMachine extends Lottery {
 
         const targetSpinCount = Math.floor(Math.random() * (maxSpinCount - minSpinCount + 1)) + minSpinCount
         const resultSpin = targetSpinCount - Math.floor(Math.random() * (numberOfLines))
-        const apiResultSpin = (
-            resultSpin > Math.floor(minSpinCount / 2)
-                ? Math.floor(targetSpinCount / 2 - 1)
-                : Math.floor(minSpinCount / 2)
-        )
+        const apiResultSpin = 1
 
         await this.spin(0, targetSpinCount, resultSpin, apiResultSpin)
 
