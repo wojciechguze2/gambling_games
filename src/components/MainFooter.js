@@ -10,7 +10,7 @@ const MainFooter = () => {
                 <div className="container py-5">
                     <div className="row">
                         <div className="col-md-4 text-center footer-start">
-                            <p className="footer-section-header fs-3">
+                            <p className="footer-section-header fs-2 mb-0">
                                 Informacje
                             </p>
                             <ul className="list-unstyled fs-5">
@@ -27,7 +27,7 @@ const MainFooter = () => {
                             </ul>
                         </div>
                         <div className="col-md-4 text-center footer-middle">
-                            <p className="footer-section-header fs-3">
+                            <p className="footer-section-header fs-2 mb-0">
                                 Regulaminy
                             </p>
                             <ul className="list-unstyled fs-5">
@@ -44,7 +44,7 @@ const MainFooter = () => {
                             </ul>
                         </div>
                         <div className="col-md-4 text-center footer-end">
-                            <p className="footer-section-header fs-3">
+                            <p className="footer-section-header fs-2 mb-0">
                                 Więcej
                             </p>
                             <ul className="list-unstyled fs-5">

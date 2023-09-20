@@ -78,7 +78,7 @@ class LotteryGameFruitMachine extends Lottery {
             isDemo: props.isDemo || !props.user,
             gameCode: props.gameCode,
             ...super.state,
-            slideAnimationTimeMs: 70,
+            slideAnimationTimeMs: 60,
             minWinningSameCols: 3,
             minSpinCount: 20,
             maxSpinCount: 40,
@@ -265,7 +265,7 @@ class LotteryGameFruitMachine extends Lottery {
                 <thead>
                     <tr>
                         <th colSpan={3}>
-                            Tabela wyników
+                            Możliwe wygrane
                         </th>
                     </tr>
                     <tr>
@@ -571,10 +571,6 @@ class LotteryGameFruitMachine extends Lottery {
             userAccountBalance = resultData.userAccountBalance
         }
 
-        if (isResultSpin) {
-            await this.setSlideAnimationVariable(90)
-        }
-
         if (isLastSpin && isWin !== null) {
             this.setState({
                 isWin,
@@ -641,7 +637,7 @@ class LotteryGameFruitMachine extends Lottery {
             return false
         }
 
-        this.scrollToLotteryTitle()
+        this.scrollToMainContainer()
         this.resetResult()
         this.setState({
             isLotteryRunning: true,

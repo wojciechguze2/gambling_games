@@ -106,7 +106,7 @@ class LotteryGameWheelOfFortune extends Lottery {
         this.setState({
             isFakeSpinning: true,
         })
-        this.scrollToLotteryTitle()
+        this.scrollToMainContainer()
 
         if (this.state.user) {
             const { costValue, gameMultiplierValue } = this.state

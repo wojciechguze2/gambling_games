@@ -152,7 +152,7 @@ class Lottery extends Component {
         return null
     }
 
-    scrollToLotteryTitle = () => {
+    scrollToMainContainer = () => {
         setTimeout(() => {
             const gameElements = document.getElementsByClassName('main')
 

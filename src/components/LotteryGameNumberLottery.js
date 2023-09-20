@@ -215,7 +215,7 @@ class LotteryGameNumberLottery extends Lottery {
         this.setState({
             isLotteryRunning: true,
         })
-        this.scrollToLotteryTitle()
+        this.scrollToMainContainer()
 
         if (this.state.user) {
             const { costValue, gameMultiplierValue } = this.state

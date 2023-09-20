@@ -16,6 +16,7 @@
 
   @media(max-width: $mobile-max-width) {
     width: 100%;
+    max-height: 65vh;
   }
 
   &--line {
