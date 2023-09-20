@@ -78,10 +78,10 @@ class LotteryGameFruitMachine extends Lottery {
             isDemo: props.isDemo || !props.user,
             gameCode: props.gameCode,
             ...super.state,
-            slideAnimationTimeMs: 60,
+            slideAnimationTimeMs: 70,
             minWinningSameCols: 3,
-            minSpinCount: 15,
-            maxSpinCount: 30,
+            minSpinCount: 20,
+            maxSpinCount: 40,
             isLotteryRunning: false,
             isRunAgainLotteryAvailable: false,
             numberOfLines: props.numberOfLines ? props.numberOfLines : 5,
@@ -206,10 +206,9 @@ class LotteryGameFruitMachine extends Lottery {
 
             rows.push(
                 <div
-                    key={`${line.type}-${line.index}`}
-                    className={`fruit-machine--line ${line.type} ${slideClass}`}
+                    key={`${line.index}`}
+                    className={`fruit-machine--line ${slideClass}`}
                     style={{ opacity }}
-                    data-line-type={line.type}
                 >
                     {cols}
                 </div>
@@ -513,6 +512,14 @@ class LotteryGameFruitMachine extends Lottery {
     getResultData = async () => {
         const data = await this.getRandomGameResult()
 
+        await new Promise((resolve) => {  // todo: tmp
+            setTimeout(() => {
+                    resolve()
+                },
+                1000
+            )
+        })
+
         if (!data) {
             return null
         }
@@ -546,19 +553,19 @@ class LotteryGameFruitMachine extends Lottery {
         isWin = null,
         userAccountBalance = null
     ) => {
-        if (!resultSpin || resultSpin > targetSpinCount) {
-            resultSpin = targetSpinCount - 1
-        }
-
         const {
             numberOfLines,
             slideAnimationTimeMs,
             lines
         } = this.state
 
+        if (!resultSpin || resultSpin > targetSpinCount) {
+            resultSpin = targetSpinCount - 1
+        }
+
         const isApiResultSpin = currentSpinCount === apiResultSpin
         const isResultSpin = currentSpinCount === resultSpin
-        const isLastSpin = currentSpinCount === targetSpinCount
+        const isLastSpin = currentSpinCount >= targetSpinCount
 
         if (isApiResultSpin) {
             const resultData = await this.getResultData()
@@ -573,7 +580,7 @@ class LotteryGameFruitMachine extends Lottery {
         }
 
         if (isResultSpin) {
-            await this.setSlideAnimationVariable(125)
+            await this.setSlideAnimationVariable(90)
         }
 
         if (isLastSpin && isWin !== null) {
@@ -587,7 +594,7 @@ class LotteryGameFruitMachine extends Lottery {
 
         await new Promise((resolve) => {
             setTimeout(() => {
-                if (currentSpinCount < targetSpinCount) {
+                if (!isLastSpin) {
                     this.spin(
                         ++currentSpinCount,
                         targetSpinCount,
@@ -621,7 +628,7 @@ class LotteryGameFruitMachine extends Lottery {
         )
 
         if (this.state.user) {
-            this.props.dispatch({type: SET_USER_ACCOUNT_BALANCE, payload: userAccountBalance})
+            this.props.dispatch({ type: SET_USER_ACCOUNT_BALANCE, payload: userAccountBalance })
         }
 
         this.setState({
@@ -658,12 +665,16 @@ class LotteryGameFruitMachine extends Lottery {
             this.props.dispatch({ type: UPDATE_USER_ACCOUNT_BALANCE, payload: -(costValue * gameMultiplierValue) })
         }
 
-        await this.setSlideAnimationVariable(60)
+        await this.setSlideAnimationVariable(70)
         await this.setWinningCombinations()
 
         const targetSpinCount = Math.floor(Math.random() * (maxSpinCount - minSpinCount + 1)) + minSpinCount
         const resultSpin = targetSpinCount - Math.floor(Math.random() * (numberOfLines))
-        const apiResultSpin = resultSpin > 10 ? Math.floor(targetSpinCount / 2 - 1) : Math.floor(minSpinCount / 2)
+        const apiResultSpin = (
+            resultSpin > Math.floor(minSpinCount / 2)
+                ? Math.floor(targetSpinCount / 2 - 1)
+                : Math.floor(minSpinCount / 2)
+        )
 
         await this.spin(0, targetSpinCount, resultSpin, apiResultSpin)
 

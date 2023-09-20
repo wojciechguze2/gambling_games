@@ -31,7 +31,7 @@ class LotteryGameWheelOfFortune extends Lottery {
             contentAngle: 0,
             circleAngle: 360,
             fakeSpinDelay: 900,
-            spinDelay: 4950,
+            spinDelay: 4850,
         };
     }
 
@@ -168,12 +168,11 @@ class LotteryGameWheelOfFortune extends Lottery {
         )
 
         this.setState({ contentAngle: finalAngle, isSpinning: false, costMessage, winMessage })
+        document.documentElement.style.setProperty('--contentAngle', `${finalAngle}deg`)
 
         if (this.state.user) {
             this.props.dispatch({type: SET_USER_ACCOUNT_BALANCE, payload: this.state.userAccountBalance})
         }
-
-        document.documentElement.style.setProperty('--contentAngle', `${finalAngle}deg`)
     }
 
     render() {

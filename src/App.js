@@ -7,7 +7,7 @@ const App = () => {
   return (
       <div className="wrapper">
         <MainHeader />
-        <main className="min-vh-80 bg-dark text-white" role="main">
+        <main className="bg-dark text-white main" role="main">
             <RoutesConfig />
         </main>
         <MainFooter />
